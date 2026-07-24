@@ -59,7 +59,7 @@ const kpis = [
   { label: "Containers ready", value: "5", delta: "+1", trend: "up", hint: "cleared for dispatch", icon: Ship },
   { label: "Tasks due", value: "12", delta: "3 overdue", trend: "down", hint: "assigned to you", icon: CheckSquare },
   { label: "Customer follow-ups", value: "21", delta: "+4", trend: "up", hint: "next 7 days", icon: Users },
-];
+] as const;
 
 const pipelineData = [
   { month: "Jan", pipeline: 2.1, closed: 1.2 },
