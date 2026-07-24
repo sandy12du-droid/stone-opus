@@ -62,13 +62,14 @@ function QuotationDetailPage() {
       ? {
           kind: "quotation",
           id: q.id,
-          label: q.quotation_number ?? "Quotation",
+          label: q.number ?? "Quotation",
           sublabel: q.customer_company ?? q.customer_name ?? undefined,
           href: `/quotations/${q.id}`,
-          meta: { status: q.status, total: q.total_amount, currency: q.currency },
+          meta: { status: q.status, total: q.total, currency: q.currency },
         }
       : null,
   );
+
 
 
   if (!q) {
