@@ -14,7 +14,209 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      stone_collections: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          material: string
+          name: string
+          origin_country: string
+          origin_flag: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          material: string
+          name: string
+          origin_country: string
+          origin_flag?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          material?: string
+          name?: string
+          origin_country?: string
+          origin_flag?: string
+        }
+        Relationships: []
+      }
+      stone_products: {
+        Row: {
+          application_urls: string[]
+          bookmatch_urls: string[]
+          collection_id: string
+          color_family: string
+          cost_price_per_m2: number | null
+          created_at: string
+          description: string | null
+          finish: string
+          hero_gradient: string
+          id: string
+          image_url: string | null
+          is_new_arrival: boolean
+          list_price_per_m2: number
+          name: string
+          price_group: string
+          sku: string
+          tags: string[]
+          tech_specs: Json
+          thickness_mm: number
+          updated_at: string
+        }
+        Insert: {
+          application_urls?: string[]
+          bookmatch_urls?: string[]
+          collection_id: string
+          color_family: string
+          cost_price_per_m2?: number | null
+          created_at?: string
+          description?: string | null
+          finish: string
+          hero_gradient: string
+          id?: string
+          image_url?: string | null
+          is_new_arrival?: boolean
+          list_price_per_m2: number
+          name: string
+          price_group: string
+          sku: string
+          tags?: string[]
+          tech_specs?: Json
+          thickness_mm: number
+          updated_at?: string
+        }
+        Update: {
+          application_urls?: string[]
+          bookmatch_urls?: string[]
+          collection_id?: string
+          color_family?: string
+          cost_price_per_m2?: number | null
+          created_at?: string
+          description?: string | null
+          finish?: string
+          hero_gradient?: string
+          id?: string
+          image_url?: string | null
+          is_new_arrival?: boolean
+          list_price_per_m2?: number
+          name?: string
+          price_group?: string
+          sku?: string
+          tags?: string[]
+          tech_specs?: Json
+          thickness_mm?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_products_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "stone_collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_slabs: {
+        Row: {
+          area_m2: number | null
+          bin_location: string | null
+          created_at: string
+          id: string
+          length_cm: number
+          product_id: string
+          received_at: string
+          reserved_for: string | null
+          reserved_until: string | null
+          slab_number: string
+          status: Database["public"]["Enums"]["slab_status"]
+          updated_at: string
+          warehouse_id: string
+          width_cm: number
+        }
+        Insert: {
+          area_m2?: number | null
+          bin_location?: string | null
+          created_at?: string
+          id?: string
+          length_cm: number
+          product_id: string
+          received_at?: string
+          reserved_for?: string | null
+          reserved_until?: string | null
+          slab_number: string
+          status?: Database["public"]["Enums"]["slab_status"]
+          updated_at?: string
+          warehouse_id: string
+          width_cm: number
+        }
+        Update: {
+          area_m2?: number | null
+          bin_location?: string | null
+          created_at?: string
+          id?: string
+          length_cm?: number
+          product_id?: string
+          received_at?: string
+          reserved_for?: string | null
+          reserved_until?: string | null
+          slab_number?: string
+          status?: Database["public"]["Enums"]["slab_status"]
+          updated_at?: string
+          warehouse_id?: string
+          width_cm?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_slabs_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "stone_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_slabs_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "stone_warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_warehouses: {
+        Row: {
+          city: string
+          code: string
+          country: string
+          country_flag: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          city: string
+          code: string
+          country: string
+          country_flag?: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          city?: string
+          code?: string
+          country?: string
+          country_flag?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +225,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      slab_status: "available" | "reserved" | "sold" | "damaged" | "incoming"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +352,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      slab_status: ["available", "reserved", "sold", "damaged", "incoming"],
+    },
   },
 } as const
