@@ -121,6 +121,185 @@ export type Database = {
           },
         ]
       }
+      stone_quotation_events: {
+        Row: {
+          actor: string
+          created_at: string
+          id: string
+          message: string
+          quotation_id: string
+          type: string
+        }
+        Insert: {
+          actor?: string
+          created_at?: string
+          id?: string
+          message: string
+          quotation_id: string
+          type: string
+        }
+        Update: {
+          actor?: string
+          created_at?: string
+          id?: string
+          message?: string
+          quotation_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_quotation_events_quotation_id_fkey"
+            columns: ["quotation_id"]
+            isOneToOne: false
+            referencedRelation: "stone_quotations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_quotation_items: {
+        Row: {
+          created_at: string
+          description: string
+          finish: string | null
+          id: string
+          line_total: number
+          position: number
+          product_id: string | null
+          quantity: number
+          quotation_id: string
+          sku: string | null
+          slab_ids: string[]
+          thickness_mm: number | null
+          unit: string
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          finish?: string | null
+          id?: string
+          line_total?: number
+          position?: number
+          product_id?: string | null
+          quantity?: number
+          quotation_id: string
+          sku?: string | null
+          slab_ids?: string[]
+          thickness_mm?: number | null
+          unit?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          finish?: string | null
+          id?: string
+          line_total?: number
+          position?: number
+          product_id?: string | null
+          quantity?: number
+          quotation_id?: string
+          sku?: string | null
+          slab_ids?: string[]
+          thickness_mm?: number | null
+          unit?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_quotation_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "stone_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_quotation_items_quotation_id_fkey"
+            columns: ["quotation_id"]
+            isOneToOne: false
+            referencedRelation: "stone_quotations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_quotations: {
+        Row: {
+          created_at: string
+          currency: string
+          customer_company: string | null
+          customer_country: string | null
+          customer_email: string | null
+          customer_flag: string
+          customer_name: string
+          decided_at: string | null
+          id: string
+          incoterm: string
+          notes: string | null
+          number: string
+          owner_name: string
+          project_name: string | null
+          sent_at: string | null
+          status: Database["public"]["Enums"]["quotation_status"]
+          subtotal: number
+          tax_amount: number
+          tax_rate: number
+          total: number
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          customer_company?: string | null
+          customer_country?: string | null
+          customer_email?: string | null
+          customer_flag?: string
+          customer_name: string
+          decided_at?: string | null
+          id?: string
+          incoterm?: string
+          notes?: string | null
+          number?: string
+          owner_name?: string
+          project_name?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["quotation_status"]
+          subtotal?: number
+          tax_amount?: number
+          tax_rate?: number
+          total?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          customer_company?: string | null
+          customer_country?: string | null
+          customer_email?: string | null
+          customer_flag?: string
+          customer_name?: string
+          decided_at?: string | null
+          id?: string
+          incoterm?: string
+          notes?: string | null
+          number?: string
+          owner_name?: string
+          project_name?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["quotation_status"]
+          subtotal?: number
+          tax_amount?: number
+          tax_rate?: number
+          total?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       stone_slabs: {
         Row: {
           area_m2: number | null
@@ -222,9 +401,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_quotation_number: { Args: never; Returns: string }
     }
     Enums: {
+      quotation_status:
+        | "draft"
+        | "in_review"
+        | "sent"
+        | "accepted"
+        | "rejected"
+        | "expired"
+        | "cancelled"
       slab_status: "available" | "reserved" | "sold" | "damaged" | "incoming"
     }
     CompositeTypes: {
@@ -353,6 +540,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      quotation_status: [
+        "draft",
+        "in_review",
+        "sent",
+        "accepted",
+        "rejected",
+        "expired",
+        "cancelled",
+      ],
       slab_status: ["available", "reserved", "sold", "damaged", "incoming"],
     },
   },
