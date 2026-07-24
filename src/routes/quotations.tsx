@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { EntityLink } from "@/components/EntityLink";
 import { useMemo, useState } from "react";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -163,12 +164,20 @@ function QuotationsPage() {
                     <div className="flex items-center gap-2">
                       <span>{q.customer_flag}</span>
                       <div>
-                        <div className="text-[13px] font-medium">{q.customer_company ?? q.customer_name}</div>
+                        <EntityLink
+                          entity={{
+                            kind: "customer",
+                            name: q.customer_company ?? q.customer_name,
+                            sublabel: q.customer_country ?? undefined,
+                          }}
+                          className="text-[13px]"
+                        />
                         <div className="text-[11px] text-muted-foreground">{q.customer_country}</div>
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="text-[13px] text-muted-foreground">{q.project_name ?? "—"}</TableCell>
+
                   <TableCell className="text-right tabular-nums">{q.items?.length ?? 0}</TableCell>
                   <TableCell className="text-right tabular-nums font-medium">
                     {currency(Number(q.total ?? 0), q.currency)}

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { EntityLink } from "@/components/EntityLink";
 import { useMemo, useState } from "react";
 import {
   ArrowUpRight,
@@ -214,10 +215,16 @@ function PipelinePage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1.5 text-[13px]">
-                        <span>{o.flag}</span> {o.customer}
+                        <span>{o.flag}</span>
+                        <EntityLink
+                          entity={{ kind: "customer", name: o.customer, sublabel: `${o.flag} ${o.country}` }}
+                          variant="plain"
+                          className="hover:text-primary"
+                        />
                       </div>
                       <div className="text-[11px] text-muted-foreground">{o.country}</div>
                     </TableCell>
+
                     <TableCell><StageBadge stage={o.stage} /></TableCell>
                     <TableCell className="text-right font-semibold">
                       {currencyFmt(o.value, o.currency)}
