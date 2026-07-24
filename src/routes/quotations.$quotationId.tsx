@@ -28,6 +28,7 @@ import {
   updateQuotationHeader, addQuotationItem, updateQuotationItem,
   removeQuotationItem, sendQuotation, decideQuotation, deleteQuotation,
 } from "@/lib/quotations.functions";
+import { useSetBusinessContext } from "@/context/BusinessContext";
 
 export const Route = createFileRoute("/quotations/$quotationId")({
   head: () => ({
@@ -56,6 +57,21 @@ function QuotationDetailPage() {
   const { data: q } = useSuspenseQuery(quotationDetailOptions(quotationId));
   const qc = useQueryClient();
   const router = useRouter();
+
+  useSetBusinessContext(
+    q
+      ? {
+          kind: "quotation",
+          id: q.id,
+          label: q.number ?? "Quotation",
+          sublabel: q.customer_company ?? q.customer_name ?? undefined,
+          href: `/quotations/${q.id}`,
+          meta: { status: q.status, total: q.total, currency: q.currency },
+        }
+      : null,
+  );
+
+
 
   if (!q) {
     return <AppShell title="Quotation"><div className="text-sm text-muted-foreground">Quotation not found.</div></AppShell>;

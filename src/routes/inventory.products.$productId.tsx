@@ -18,6 +18,7 @@ import {
   aggregateProduct, areaFmt, currency, productDetailOptions,
 } from "@/lib/inventory-queries";
 import { cn } from "@/lib/utils";
+import { useSetBusinessContext } from "@/context/BusinessContext";
 
 export const Route = createFileRoute("/inventory/products/$productId")({
   head: () => ({
@@ -50,6 +51,19 @@ function ProductDetailPage() {
   const { productId } = Route.useParams();
   const { data: p, isLoading, isError, error } = useQuery(productDetailOptions(productId));
   const [zoom, setZoom] = useState(false);
+
+  useSetBusinessContext(
+    p
+      ? {
+          kind: "inventory",
+          id: p.id,
+          label: p.name,
+          sublabel: p.sku ?? undefined,
+          href: `/inventory/products/${p.id}`,
+        }
+      : null,
+  );
+
 
   if (isLoading) {
     return (

@@ -19,6 +19,7 @@ import {
   projectProgress, currency, fmtDate, PROJECT_STATUSES,
 } from "@/lib/projects-queries";
 import { addWorkOrder, advanceWorkOrder, updateProjectStatus } from "@/lib/projects.functions";
+import { useSetBusinessContext } from "@/context/BusinessContext";
 
 export const Route = createFileRoute("/projects/$projectId")({
   head: ({ loaderData }) => {
@@ -52,7 +53,20 @@ export const Route = createFileRoute("/projects/$projectId")({
 function ProjectDetail() {
   const { projectId } = Route.useParams();
   const { data: project } = useSuspenseQuery(projectDetailOptions(projectId));
+  useSetBusinessContext(
+    project
+      ? {
+          kind: "project",
+          id: project.id,
+          label: project.name,
+          sublabel: `${project.code}${project.customer_name ? ` · ${project.customer_name}` : ""}`,
+          href: `/projects/${project.id}`,
+          meta: { status: project.status, priority: project.priority },
+        }
+      : null,
+  );
   if (!project) return null;
+
 
   const qc = useQueryClient();
   const advance = useServerFn(advanceWorkOrder);
