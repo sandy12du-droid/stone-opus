@@ -52,6 +52,19 @@ function ProductDetailPage() {
   const { data: p, isLoading, isError, error } = useQuery(productDetailOptions(productId));
   const [zoom, setZoom] = useState(false);
 
+  useSetBusinessContext(
+    p
+      ? {
+          kind: "inventory",
+          id: p.id,
+          label: p.name,
+          sublabel: p.code ?? undefined,
+          href: `/inventory/products/${p.id}`,
+        }
+      : null,
+  );
+
+
   if (isLoading) {
     return (
       <AppShell>
