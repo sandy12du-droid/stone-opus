@@ -282,8 +282,8 @@ function ForecastCard({
         <div className="flex items-center justify-between">
           <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{label}</div>
           <div className={cn(
-            "flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium",
-            trend.up ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700",
+            "flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-medium",
+            trend.up ? "border-success/20 bg-success/10 text-success" : "border-destructive/20 bg-destructive/10 text-destructive",
           )}>
             <Icon className="h-3 w-3" /> {trend.delta}
           </div>
@@ -303,8 +303,8 @@ function Row({ label, value, tone }: { label: string; value: string; tone?: "pos
       <span className="text-muted-foreground">{label}</span>
       <span className={cn(
         "font-semibold",
-        tone === "pos" && "text-emerald-600",
-        tone === "neg" && "text-rose-600",
+        tone === "pos" && "text-success",
+        tone === "neg" && "text-destructive",
         !tone && "text-foreground",
       )}>{value}</span>
     </div>
