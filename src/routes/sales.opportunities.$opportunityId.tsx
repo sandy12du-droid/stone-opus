@@ -234,7 +234,12 @@ function OpportunityDetailPage() {
                         <div className="text-[13px] font-medium text-foreground">{f.title}</div>
                         <div className="text-[11px] text-muted-foreground">Due {f.due} · {f.owner}</div>
                       </div>
-                      <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+                      <span className={cn(
+                        "rounded-full border px-2 py-0.5 text-[10px] font-medium capitalize",
+                        f.status === "overdue" && "border-destructive/20 bg-destructive/10 text-destructive",
+                        f.status === "done" && "border-success/20 bg-success/10 text-success",
+                        f.status === "upcoming" && "border-warning/20 bg-warning/10 text-warning",
+                      )}>
                         {f.status}
                       </span>
                     </div>
