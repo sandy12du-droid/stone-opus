@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   ArrowUpRight,
@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { CUSTOMERS, TIER_STYLES, HEALTH_STYLES, currency, type Tier } from "@/lib/crm-data";
+
 
 export const Route = createFileRoute("/crm/customers")({
   head: () => ({
@@ -43,53 +45,6 @@ export const Route = createFileRoute("/crm/customers")({
   component: CustomersPage,
 });
 
-type Tier = "Platinum" | "Gold" | "Silver" | "Emerging";
-type Health = "Healthy" | "At risk" | "Churning";
-
-interface Customer {
-  id: string;
-  name: string;
-  country: string;
-  flag: string;
-  segment: string;
-  tier: Tier;
-  ltv: number;
-  ytd: number;
-  yoy: number;
-  orders: number;
-  lastOrder: string;
-  health: Health;
-  owner: string;
-  ownerInitials: string;
-  favorite: string;
-}
-
-const CUSTOMERS: Customer[] = [
-  { id: "C-1042", name: "Vittoria Stone Group", country: "Italy", flag: "🇮🇹", segment: "Distributor", tier: "Platinum", ltv: 4820000, ytd: 682000, yoy: 14.2, orders: 128, lastOrder: "3d ago", health: "Healthy", owner: "Sofia Marin", ownerInitials: "SM", favorite: "Calacatta Viola" },
-  { id: "C-1039", name: "Al Habtoor Marble LLC", country: "UAE", flag: "🇦🇪", segment: "Fabricator", tier: "Platinum", ltv: 3150000, ytd: 495000, yoy: 22.6, orders: 96, lastOrder: "1w ago", health: "Healthy", owner: "Priya Nair", ownerInitials: "PN", favorite: "Statuario Extra" },
-  { id: "C-1036", name: "Granite World USA", country: "USA", flag: "🇺🇸", segment: "Retail chain", tier: "Gold", ltv: 2410000, ytd: 318000, yoy: -4.1, orders: 74, lastOrder: "2w ago", health: "At risk", owner: "David Ono", ownerInitials: "DO", favorite: "Absolute Black" },
-  { id: "C-1032", name: "Marmoles de Sonora", country: "Mexico", flag: "🇲🇽", segment: "Distributor", tier: "Gold", ltv: 1920000, ytd: 240000, yoy: 8.7, orders: 61, lastOrder: "4d ago", health: "Healthy", owner: "Sofia Marin", ownerInitials: "SM", favorite: "Travertino Romano" },
-  { id: "C-1028", name: "Osaka Ishi Trading", country: "Japan", flag: "🇯🇵", segment: "Distributor", tier: "Gold", ltv: 1740000, ytd: 205000, yoy: 3.4, orders: 52, lastOrder: "6d ago", health: "Healthy", owner: "David Ono", ownerInitials: "DO", favorite: "Quartz Bianco" },
-  { id: "C-1024", name: "Berlin Stein Werk", country: "Germany", flag: "🇩🇪", segment: "Fabricator", tier: "Silver", ltv: 985000, ytd: 128000, yoy: -12.8, orders: 38, lastOrder: "5w ago", health: "Churning", owner: "Priya Nair", ownerInitials: "PN", favorite: "Nero Marquina" },
-  { id: "C-1019", name: "Cape Stone Co.", country: "South Africa", flag: "🇿🇦", segment: "Distributor", tier: "Silver", ltv: 720000, ytd: 96000, yoy: 18.3, orders: 29, lastOrder: "2d ago", health: "Healthy", owner: "Sofia Marin", ownerInitials: "SM", favorite: "Verde Guatemala" },
-  { id: "C-1015", name: "Lima Marmol S.A.C.", country: "Peru", flag: "🇵🇪", segment: "Fabricator", tier: "Emerging", ltv: 310000, ytd: 84000, yoy: 42.1, orders: 14, lastOrder: "9d ago", health: "Healthy", owner: "David Ono", ownerInitials: "DO", favorite: "Onyx Miele" },
-];
-
-const TIER_STYLES: Record<Tier, string> = {
-  Platinum: "bg-primary/10 text-primary border-primary/25",
-  Gold: "bg-accent/15 text-accent-foreground border-accent/30",
-  Silver: "bg-muted text-muted-foreground border-border",
-  Emerging: "bg-info/10 text-info border-info/20",
-};
-
-const HEALTH_STYLES: Record<Health, string> = {
-  Healthy: "bg-success/10 text-success border-success/20",
-  "At risk": "bg-warning/10 text-warning border-warning/20",
-  Churning: "bg-destructive/10 text-destructive border-destructive/20",
-};
-
-const currency = (n: number) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 
 function CustomersPage() {
   const [query, setQuery] = useState("");
@@ -255,7 +210,11 @@ function CustomersPage() {
             {filtered.map((c) => (
               <TableRow key={c.id} className="cursor-pointer">
                 <TableCell>
-                  <div className="flex items-center gap-2.5">
+                  <Link
+                    to="/crm/customers/$customerId"
+                    params={{ customerId: c.id }}
+                    className="flex items-center gap-2.5 -my-1 rounded-md py-1 pr-2 transition-colors hover:bg-muted/40"
+                  >
                     <div className="grid h-8 w-8 place-items-center rounded-md bg-primary/10 text-primary">
                       <Building2 className="h-4 w-4" />
                     </div>
@@ -263,8 +222,9 @@ function CustomersPage() {
                       <div className="truncate text-sm font-medium text-foreground">{c.name}</div>
                       <div className="truncate text-xs text-muted-foreground">Prefers · {c.favorite}</div>
                     </div>
-                  </div>
+                  </Link>
                 </TableCell>
+
                 <TableCell className="text-sm text-foreground">{c.flag} {c.country}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{c.segment}</TableCell>
                 <TableCell>
