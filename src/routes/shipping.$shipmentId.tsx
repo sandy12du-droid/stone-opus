@@ -53,7 +53,20 @@ const MODE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
 function ShipmentDetail() {
   const { shipmentId } = Route.useParams();
   const { data: shipment } = useSuspenseQuery(shipmentDetailOptions(shipmentId));
+  useSetBusinessContext(
+    shipment
+      ? {
+          kind: "container",
+          id: shipment.id,
+          label: shipment.reference,
+          sublabel: `${shipment.origin_port ?? "Origin"} → ${shipment.destination_port ?? "Destination"}`,
+          href: `/shipping/${shipment.id}`,
+          meta: { status: shipment.status, mode: shipment.mode },
+        }
+      : null,
+  );
   if (!shipment) return null;
+
 
   const qc = useQueryClient();
   const updateStatus = useServerFn(updateShipmentStatus);
