@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkspaceRouteImport } from './routes/workspace'
 import { Route as ShippingRouteImport } from './routes/shipping'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReportsRouteImport } from './routes/reports'
@@ -27,6 +28,11 @@ import { Route as CrmLeadsRouteImport } from './routes/crm.leads'
 import { Route as CrmCustomersRouteImport } from './routes/crm.customers'
 import { Route as SalesOpportunitiesOpportunityIdRouteImport } from './routes/sales.opportunities.$opportunityId'
 
+const WorkspaceRoute = WorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShippingRoute = ShippingRouteImport.update({
   id: '/shipping',
   path: '/shipping',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRoute
+  '/workspace': typeof WorkspaceRoute
   '/crm/customers': typeof CrmCustomersRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRoute
+  '/workspace': typeof WorkspaceRoute
   '/crm/customers': typeof CrmCustomersRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRoute
+  '/workspace': typeof WorkspaceRoute
   '/crm/customers': typeof CrmCustomersRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/shipping'
+    | '/workspace'
     | '/crm/customers'
     | '/crm/leads'
     | '/inventory/pricing'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/shipping'
+    | '/workspace'
     | '/crm/customers'
     | '/crm/leads'
     | '/inventory/pricing'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/shipping'
+    | '/workspace'
     | '/crm/customers'
     | '/crm/leads'
     | '/inventory/pricing'
@@ -243,6 +255,7 @@ export interface RootRouteChildren {
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
   ShippingRoute: typeof ShippingRoute
+  WorkspaceRoute: typeof WorkspaceRoute
   CrmCustomersRoute: typeof CrmCustomersRoute
   CrmLeadsRoute: typeof CrmLeadsRoute
   InventoryPricingRoute: typeof InventoryPricingRoute
@@ -253,6 +266,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/workspace': {
+      id: '/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof WorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shipping': {
       id: '/shipping'
       path: '/shipping'
@@ -397,6 +417,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
   ShippingRoute: ShippingRoute,
+  WorkspaceRoute: WorkspaceRoute,
   CrmCustomersRoute: CrmCustomersRoute,
   CrmLeadsRoute: CrmLeadsRoute,
   InventoryPricingRoute: InventoryPricingRoute,
@@ -407,13 +428,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

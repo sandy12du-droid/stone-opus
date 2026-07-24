@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { RightRail } from "./RightRail";
+import { CommandPalette } from "@/components/CommandPalette";
 
 interface AppShellProps {
   children: ReactNode;
@@ -13,6 +14,7 @@ interface AppShellProps {
 export function AppShell({ children, title, subtitle, actions }: AppShellProps) {
   return (
     <div className="flex min-h-screen w-full bg-canvas text-foreground">
+      <CommandPalette />
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
