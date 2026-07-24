@@ -23,6 +23,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SalesPipelineRouteImport } from './routes/sales.pipeline'
 import { Route as SalesOpportunitiesRouteImport } from './routes/sales.opportunities'
 import { Route as QuotationsQuotationIdRouteImport } from './routes/quotations.$quotationId'
+import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
 import { Route as InventoryProductsRouteImport } from './routes/inventory.products'
 import { Route as InventoryPricingRouteImport } from './routes/inventory.pricing'
 import { Route as CrmLeadsRouteImport } from './routes/crm.leads'
@@ -100,6 +101,11 @@ const QuotationsQuotationIdRoute = QuotationsQuotationIdRouteImport.update({
   path: '/$quotationId',
   getParentRoute: () => QuotationsRoute,
 } as any)
+const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
+  id: '/$projectId',
+  path: '/$projectId',
+  getParentRoute: () => ProjectsRoute,
+} as any)
 const InventoryProductsRoute = InventoryProductsRouteImport.update({
   id: '/inventory/products',
   path: '/inventory/products',
@@ -139,7 +145,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
   '/production': typeof ProductionRoute
-  '/projects': typeof ProjectsRoute
+  '/projects': typeof ProjectsRouteWithChildren
   '/quotations': typeof QuotationsRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRouteWithChildren
+  '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
@@ -161,7 +168,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
   '/production': typeof ProductionRoute
-  '/projects': typeof ProjectsRoute
+  '/projects': typeof ProjectsRouteWithChildren
   '/quotations': typeof QuotationsRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRouteWithChildren
+  '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
@@ -184,7 +192,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
   '/production': typeof ProductionRoute
-  '/projects': typeof ProjectsRoute
+  '/projects': typeof ProjectsRouteWithChildren
   '/quotations': typeof QuotationsRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRouteWithChildren
+  '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/projects/$projectId'
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/projects/$projectId'
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/projects/$projectId'
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
@@ -275,7 +287,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   DocumentsRoute: typeof DocumentsRoute
   ProductionRoute: typeof ProductionRoute
-  ProjectsRoute: typeof ProjectsRoute
+  ProjectsRoute: typeof ProjectsRouteWithChildren
   QuotationsRoute: typeof QuotationsRouteWithChildren
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
@@ -389,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuotationsQuotationIdRouteImport
       parentRoute: typeof QuotationsRoute
     }
+    '/projects/$projectId': {
+      id: '/projects/$projectId'
+      path: '/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof ProjectsProjectIdRouteImport
+      parentRoute: typeof ProjectsRoute
+    }
     '/inventory/products': {
       id: '/inventory/products'
       path: '/inventory/products'
@@ -434,6 +453,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ProjectsRouteChildren {
+  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
+}
+
+const ProjectsRouteChildren: ProjectsRouteChildren = {
+  ProjectsProjectIdRoute: ProjectsProjectIdRoute,
+}
+
+const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
+  ProjectsRouteChildren,
+)
+
 interface QuotationsRouteChildren {
   QuotationsQuotationIdRoute: typeof QuotationsQuotationIdRoute
 }
@@ -474,7 +505,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   DocumentsRoute: DocumentsRoute,
   ProductionRoute: ProductionRoute,
-  ProjectsRoute: ProjectsRoute,
+  ProjectsRoute: ProjectsRouteWithChildren,
   QuotationsRoute: QuotationsRouteWithChildren,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
