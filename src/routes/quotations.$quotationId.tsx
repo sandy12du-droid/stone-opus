@@ -175,7 +175,7 @@ type HeaderPatch = Parameters<typeof updateQuotationHeader>[0]["data"]["patch"];
 function HeaderEditor({
   q, onSave,
 }: {
-  q: NonNullable<ReturnType<typeof quotationDetailOptions> extends { queryFn: infer F } ? Awaited<ReturnType<F extends (...args: never) => unknown ? F : never>> : never>;
+  q: import("@/lib/quotations-queries").QuotationWithItems;
   onSave: (patch: HeaderPatch) => void;
 }) {
   const readOnly = q.status !== "draft" && q.status !== "in_review";

@@ -22,6 +22,7 @@ import { Route as AiRouteImport } from './routes/ai'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SalesPipelineRouteImport } from './routes/sales.pipeline'
 import { Route as SalesOpportunitiesRouteImport } from './routes/sales.opportunities'
+import { Route as QuotationsQuotationIdRouteImport } from './routes/quotations.$quotationId'
 import { Route as InventoryProductsRouteImport } from './routes/inventory.products'
 import { Route as InventoryPricingRouteImport } from './routes/inventory.pricing'
 import { Route as CrmLeadsRouteImport } from './routes/crm.leads'
@@ -94,6 +95,11 @@ const SalesOpportunitiesRoute = SalesOpportunitiesRouteImport.update({
   path: '/sales/opportunities',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuotationsQuotationIdRoute = QuotationsQuotationIdRouteImport.update({
+  id: '/$quotationId',
+  path: '/$quotationId',
+  getParentRoute: () => QuotationsRoute,
+} as any)
 const InventoryProductsRoute = InventoryProductsRouteImport.update({
   id: '/inventory/products',
   path: '/inventory/products',
@@ -134,7 +140,7 @@ export interface FileRoutesByFullPath {
   '/documents': typeof DocumentsRoute
   '/production': typeof ProductionRoute
   '/projects': typeof ProjectsRoute
-  '/quotations': typeof QuotationsRoute
+  '/quotations': typeof QuotationsRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRoute
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRouteWithChildren
+  '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
   '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
@@ -155,7 +162,7 @@ export interface FileRoutesByTo {
   '/documents': typeof DocumentsRoute
   '/production': typeof ProductionRoute
   '/projects': typeof ProjectsRoute
-  '/quotations': typeof QuotationsRoute
+  '/quotations': typeof QuotationsRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRouteWithChildren
+  '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
   '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
@@ -177,7 +185,7 @@ export interface FileRoutesById {
   '/documents': typeof DocumentsRoute
   '/production': typeof ProductionRoute
   '/projects': typeof ProjectsRoute
-  '/quotations': typeof QuotationsRoute
+  '/quotations': typeof QuotationsRouteWithChildren
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRoute
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRouteWithChildren
+  '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
   '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
     | '/inventory/products/$productId'
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
     | '/inventory/products/$productId'
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
     | '/inventory/products/$productId'
@@ -264,7 +276,7 @@ export interface RootRouteChildren {
   DocumentsRoute: typeof DocumentsRoute
   ProductionRoute: typeof ProductionRoute
   ProjectsRoute: typeof ProjectsRoute
-  QuotationsRoute: typeof QuotationsRoute
+  QuotationsRoute: typeof QuotationsRouteWithChildren
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
   ShippingRoute: typeof ShippingRoute
@@ -370,6 +382,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalesOpportunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quotations/$quotationId': {
+      id: '/quotations/$quotationId'
+      path: '/$quotationId'
+      fullPath: '/quotations/$quotationId'
+      preLoaderRoute: typeof QuotationsQuotationIdRouteImport
+      parentRoute: typeof QuotationsRoute
+    }
     '/inventory/products': {
       id: '/inventory/products'
       path: '/inventory/products'
@@ -415,6 +434,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface QuotationsRouteChildren {
+  QuotationsQuotationIdRoute: typeof QuotationsQuotationIdRoute
+}
+
+const QuotationsRouteChildren: QuotationsRouteChildren = {
+  QuotationsQuotationIdRoute: QuotationsQuotationIdRoute,
+}
+
+const QuotationsRouteWithChildren = QuotationsRoute._addFileChildren(
+  QuotationsRouteChildren,
+)
+
 interface InventoryProductsRouteChildren {
   InventoryProductsProductIdRoute: typeof InventoryProductsProductIdRoute
 }
@@ -444,7 +475,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocumentsRoute: DocumentsRoute,
   ProductionRoute: ProductionRoute,
   ProjectsRoute: ProjectsRoute,
-  QuotationsRoute: QuotationsRoute,
+  QuotationsRoute: QuotationsRouteWithChildren,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
   ShippingRoute: ShippingRoute,
