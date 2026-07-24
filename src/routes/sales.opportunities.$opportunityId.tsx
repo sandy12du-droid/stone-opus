@@ -32,6 +32,8 @@ import {
   currencyFmt,
   getOpportunity,
   type Activity,
+  type Opportunity,
+
 } from "@/lib/sales-data";
 import { StageBadge } from "@/components/sales/StageBadge";
 
