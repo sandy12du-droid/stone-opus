@@ -44,6 +44,47 @@ export type Database = {
         }
         Relationships: []
       }
+      stone_production_events: {
+        Row: {
+          actor: string | null
+          created_at: string
+          event_type: string
+          from_stage: string | null
+          id: string
+          message: string | null
+          to_stage: string | null
+          work_order_id: string
+        }
+        Insert: {
+          actor?: string | null
+          created_at?: string
+          event_type: string
+          from_stage?: string | null
+          id?: string
+          message?: string | null
+          to_stage?: string | null
+          work_order_id: string
+        }
+        Update: {
+          actor?: string | null
+          created_at?: string
+          event_type?: string
+          from_stage?: string | null
+          id?: string
+          message?: string | null
+          to_stage?: string | null
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_production_events_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "stone_work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stone_products: {
         Row: {
           application_urls: string[]
@@ -117,6 +158,71 @@ export type Database = {
             columns: ["collection_id"]
             isOneToOne: false
             referencedRelation: "stone_collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_projects: {
+        Row: {
+          code: string
+          contract_value: number
+          created_at: string
+          currency: string
+          customer_country: string | null
+          customer_name: string | null
+          id: string
+          name: string
+          notes: string | null
+          po_number: string | null
+          priority: string
+          quotation_id: string | null
+          start_date: string | null
+          status: string
+          target_delivery_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          contract_value?: number
+          created_at?: string
+          currency?: string
+          customer_country?: string | null
+          customer_name?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          po_number?: string | null
+          priority?: string
+          quotation_id?: string | null
+          start_date?: string | null
+          status?: string
+          target_delivery_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          contract_value?: number
+          created_at?: string
+          currency?: string
+          customer_country?: string | null
+          customer_name?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          po_number?: string | null
+          priority?: string
+          quotation_id?: string | null
+          start_date?: string | null
+          status?: string
+          target_delivery_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_projects_quotation_id_fkey"
+            columns: ["quotation_id"]
+            isOneToOne: false
+            referencedRelation: "stone_quotations"
             referencedColumns: ["id"]
           },
         ]
@@ -396,12 +502,96 @@ export type Database = {
         }
         Relationships: []
       }
+      stone_work_orders: {
+        Row: {
+          assigned_to: string | null
+          code: string
+          completed_at: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          notes: string | null
+          product_id: string | null
+          project_id: string
+          quantity: number
+          slab_id: string | null
+          stage: string
+          started_at: string | null
+          status: string
+          title: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          code: string
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          product_id?: string | null
+          project_id: string
+          quantity?: number
+          slab_id?: string | null
+          stage?: string
+          started_at?: string | null
+          status?: string
+          title: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          code?: string
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          product_id?: string | null
+          project_id?: string
+          quantity?: number
+          slab_id?: string | null
+          stage?: string
+          started_at?: string | null
+          status?: string
+          title?: string
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_work_orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "stone_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_work_orders_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "stone_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_work_orders_slab_id_fkey"
+            columns: ["slab_id"]
+            isOneToOne: false
+            referencedRelation: "stone_slabs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      generate_project_code: { Args: never; Returns: string }
       generate_quotation_number: { Args: never; Returns: string }
+      generate_work_order_code: { Args: never; Returns: string }
     }
     Enums: {
       quotation_status:
