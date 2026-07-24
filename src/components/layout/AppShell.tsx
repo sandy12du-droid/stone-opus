@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { RightRail } from "./RightRail";
+import { ContextBreadcrumbs } from "./ContextBreadcrumbs";
 import { CommandPalette } from "@/components/CommandPalette";
 
 interface AppShellProps {
@@ -18,6 +19,7 @@ export function AppShell({ children, title, subtitle, actions }: AppShellProps) 
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
+        <ContextBreadcrumbs />
         <div className="flex min-h-0 flex-1">
           <main className="min-w-0 flex-1 overflow-y-auto">
             <div className="mx-auto w-full max-w-[1400px] px-8 py-8">
@@ -45,3 +47,4 @@ export function AppShell({ children, title, subtitle, actions }: AppShellProps) 
     </div>
   );
 }
+
