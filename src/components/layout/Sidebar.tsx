@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard,
+  Home,
   Sparkles,
   Users,
   UserPlus,
@@ -27,6 +28,7 @@ type NavGroup = { label?: string; items: NavItem[] };
 const groups: NavGroup[] = [
   {
     items: [
+      { label: "Workspace", to: "/workspace", icon: Home },
       { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
       { label: "AI Command Center", to: "/ai", icon: Sparkles },
     ],

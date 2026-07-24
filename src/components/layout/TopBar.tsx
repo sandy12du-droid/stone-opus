@@ -1,6 +1,7 @@
 import { Search, Plus, Bell, Moon, Sun, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { openCommandPalette } from "@/components/CommandPalette";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,18 +20,18 @@ export function TopBar() {
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-      {/* Global search */}
-      <div className="relative flex-1 max-w-xl">
+      {/* Global search — opens ⌘K palette */}
+      <button
+        onClick={openCommandPalette}
+        className="group relative flex h-9 w-full max-w-xl items-center rounded-md border border-border bg-surface-muted pl-9 pr-16 text-left text-[13px] text-muted-foreground/80 outline-none transition-colors hover:border-border-strong hover:bg-surface"
+        aria-label="Open command palette"
+      >
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <input
-          type="search"
-          placeholder="Search leads, quotations, slabs, documents…"
-          className="h-9 w-full rounded-md border border-border bg-surface-muted pl-9 pr-16 text-[13px] outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-ring focus:bg-surface"
-        />
+        <span>Search leads, quotations, slabs, documents…</span>
         <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
           ⌘K
         </kbd>
-      </div>
+      </button>
 
       <div className="flex-1" />
 
