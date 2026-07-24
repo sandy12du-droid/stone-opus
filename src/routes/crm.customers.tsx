@@ -210,7 +210,11 @@ function CustomersPage() {
             {filtered.map((c) => (
               <TableRow key={c.id} className="cursor-pointer">
                 <TableCell>
-                  <div className="flex items-center gap-2.5">
+                  <Link
+                    to="/crm/customers/$customerId"
+                    params={{ customerId: c.id }}
+                    className="flex items-center gap-2.5 -my-1 rounded-md py-1 pr-2 transition-colors hover:bg-muted/40"
+                  >
                     <div className="grid h-8 w-8 place-items-center rounded-md bg-primary/10 text-primary">
                       <Building2 className="h-4 w-4" />
                     </div>
@@ -218,8 +222,9 @@ function CustomersPage() {
                       <div className="truncate text-sm font-medium text-foreground">{c.name}</div>
                       <div className="truncate text-xs text-muted-foreground">Prefers · {c.favorite}</div>
                     </div>
-                  </div>
+                  </Link>
                 </TableCell>
+
                 <TableCell className="text-sm text-foreground">{c.flag} {c.country}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{c.segment}</TableCell>
                 <TableCell>
