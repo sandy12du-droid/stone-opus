@@ -31,7 +31,8 @@ export const Route = createFileRoute("/production")({
   component: ProductionBoard,
 });
 
-type WorkOrder = Awaited<ReturnType<typeof productionBoardOptions>["queryFn"]> extends (infer T)[] ? T : never;
+type BoardRow = Awaited<ReturnType<ReturnType<typeof productionBoardOptions>["queryFn"]>>[number];
+type WorkOrder = BoardRow & { project?: { id: string; code: string; name: string; priority: string } | null };
 
 function ProductionBoard() {
   const { data: rows } = useSuspenseQuery(productionBoardOptions());

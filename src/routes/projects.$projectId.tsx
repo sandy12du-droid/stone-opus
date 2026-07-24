@@ -22,10 +22,10 @@ import { addWorkOrder, advanceWorkOrder, updateProjectStatus } from "@/lib/proje
 
 export const Route = createFileRoute("/projects/$projectId")({
   head: ({ loaderData }) => {
-    if (!loaderData) {
+    const p = loaderData as { name: string } | undefined;
+    if (!p) {
       return { meta: [{ title: "Project — Arquane OS" }, { name: "robots", content: "noindex" }] };
     }
-    const p = loaderData;
     return {
       meta: [
         { title: `${p.name} — Projects · Arquane OS` },
