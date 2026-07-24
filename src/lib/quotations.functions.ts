@@ -163,7 +163,12 @@ export const updateQuotationItem = createServerFn({ method: "POST" })
   }) => d)
   .handler(async ({ data }) => {
     const supabaseAdmin = await admin();
-    const patch: Record<string, unknown> = {};
+    const patch: {
+      description?: string;
+      quantity?: number;
+      unit_price?: number;
+      line_total?: number;
+    } = {};
     if (data.description !== undefined) patch.description = data.description;
     if (data.quantity !== undefined) patch.quantity = data.quantity;
     if (data.unit_price !== undefined) patch.unit_price = data.unit_price;
