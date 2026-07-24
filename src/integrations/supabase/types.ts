@@ -406,6 +406,189 @@ export type Database = {
         }
         Relationships: []
       }
+      stone_shipment_events: {
+        Row: {
+          actor: string | null
+          created_at: string
+          event_type: string
+          id: string
+          location: string | null
+          message: string | null
+          occurred_at: string
+          shipment_id: string
+        }
+        Insert: {
+          actor?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          location?: string | null
+          message?: string | null
+          occurred_at?: string
+          shipment_id: string
+        }
+        Update: {
+          actor?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          location?: string | null
+          message?: string | null
+          occurred_at?: string
+          shipment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_shipment_events_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "stone_shipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_shipment_items: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          project_id: string | null
+          quantity: number
+          quotation_id: string | null
+          shipment_id: string
+          unit: string
+          volume_m3: number | null
+          weight_kg: number | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          project_id?: string | null
+          quantity?: number
+          quotation_id?: string | null
+          shipment_id: string
+          unit?: string
+          volume_m3?: number | null
+          weight_kg?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          project_id?: string | null
+          quantity?: number
+          quotation_id?: string | null
+          shipment_id?: string
+          unit?: string
+          volume_m3?: number | null
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_shipment_items_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "stone_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_shipment_items_quotation_id_fkey"
+            columns: ["quotation_id"]
+            isOneToOne: false
+            referencedRelation: "stone_quotations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_shipment_items_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "stone_shipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_shipments: {
+        Row: {
+          actual_arrival: string | null
+          actual_departure: string | null
+          bill_of_lading: string | null
+          carrier: string | null
+          container_number: string | null
+          container_type: string | null
+          created_at: string
+          currency: string
+          destination_country: string | null
+          destination_port: string | null
+          eta: string | null
+          etd: string | null
+          freight_cost: number | null
+          id: string
+          incoterm: string | null
+          mode: string
+          notes: string | null
+          origin_country: string | null
+          origin_port: string | null
+          reference: string
+          status: string
+          updated_at: string
+          volume_m3: number | null
+          weight_kg: number | null
+        }
+        Insert: {
+          actual_arrival?: string | null
+          actual_departure?: string | null
+          bill_of_lading?: string | null
+          carrier?: string | null
+          container_number?: string | null
+          container_type?: string | null
+          created_at?: string
+          currency?: string
+          destination_country?: string | null
+          destination_port?: string | null
+          eta?: string | null
+          etd?: string | null
+          freight_cost?: number | null
+          id?: string
+          incoterm?: string | null
+          mode?: string
+          notes?: string | null
+          origin_country?: string | null
+          origin_port?: string | null
+          reference: string
+          status?: string
+          updated_at?: string
+          volume_m3?: number | null
+          weight_kg?: number | null
+        }
+        Update: {
+          actual_arrival?: string | null
+          actual_departure?: string | null
+          bill_of_lading?: string | null
+          carrier?: string | null
+          container_number?: string | null
+          container_type?: string | null
+          created_at?: string
+          currency?: string
+          destination_country?: string | null
+          destination_port?: string | null
+          eta?: string | null
+          etd?: string | null
+          freight_cost?: number | null
+          id?: string
+          incoterm?: string | null
+          mode?: string
+          notes?: string | null
+          origin_country?: string | null
+          origin_port?: string | null
+          reference?: string
+          status?: string
+          updated_at?: string
+          volume_m3?: number | null
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
       stone_slabs: {
         Row: {
           area_m2: number | null
@@ -591,6 +774,7 @@ export type Database = {
     Functions: {
       generate_project_code: { Args: never; Returns: string }
       generate_quotation_number: { Args: never; Returns: string }
+      generate_shipment_reference: { Args: never; Returns: string }
       generate_work_order_code: { Args: never; Returns: string }
     }
     Enums: {
