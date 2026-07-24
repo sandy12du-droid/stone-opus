@@ -87,10 +87,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "Run sales, inventory, quotations, production, and shipping for your stone business from one intelligent workspace.",
+          "Arquane OS is the enterprise operating system for the global natural stone and quartz industry — CRM, inventory, quotations, production, shipping, and AI in one workspace.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Arquane OS — The AI Operating System for Stone Businesses" },
+      { name: "twitter:description", content: "Arquane OS is the enterprise operating system for the global natural stone and quartz industry — CRM, inventory, quotations, production, shipping, and AI in one workspace." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5176cf2a-09df-479e-bbab-047efe5b6dcc/id-preview-2fa8e36e--08ad7b55-1644-43af-be6a-025e27b73eee.lovable.app-1784860154520.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5176cf2a-09df-479e-bbab-047efe5b6dcc/id-preview-2fa8e36e--08ad7b55-1644-43af-be6a-025e27b73eee.lovable.app-1784860154520.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
