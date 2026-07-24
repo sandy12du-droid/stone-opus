@@ -4,7 +4,6 @@ import {
   Sparkles,
   Users,
   UserPlus,
-  Boxes,
   Package,
   Tag,
   FileText,
@@ -16,8 +15,11 @@ import {
   Settings,
   ChevronDown,
   Building2,
+  Target,
+  Workflow,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
 
 type NavItem = { label: string; to: string; icon: React.ComponentType<{ className?: string }> };
 type NavGroup = { label?: string; items: NavItem[] };
@@ -37,6 +39,14 @@ const groups: NavGroup[] = [
     ],
   },
   {
+    label: "Sales",
+    items: [
+      { label: "Pipeline", to: "/sales/pipeline", icon: Workflow },
+      { label: "Opportunities", to: "/sales/opportunities", icon: Target },
+    ],
+  },
+  {
+
     label: "Inventory",
     items: [
       { label: "Products", to: "/inventory/products", icon: Package },
