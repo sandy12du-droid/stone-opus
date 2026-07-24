@@ -135,13 +135,20 @@ export const advanceWorkOrder = createServerFn({ method: "POST" })
       .eq("id", data.id)
       .maybeSingle();
     const from_stage = current?.stage ?? null;
-    const patch: Record<string, unknown> = { stage: data.to_stage };
+    const nowIso = new Date().toISOString();
+    type WorkOrderPatch = Partial<{
+      stage: string;
+      status: string;
+      started_at: string;
+      completed_at: string;
+    }>;
+    const patch: WorkOrderPatch = { stage: data.to_stage };
     if (data.to_stage === "shipped" || data.to_stage === "ready") {
-      patch.completed_at = new Date().toISOString();
+      patch.completed_at = nowIso;
       if (data.to_stage === "shipped") patch.status = "completed";
     }
     if (from_stage === "queued" && data.to_stage !== "queued") {
-      patch.started_at = new Date().toISOString();
+      patch.started_at = nowIso;
     }
     const { error } = await supabaseAdmin
       .from("stone_work_orders")
