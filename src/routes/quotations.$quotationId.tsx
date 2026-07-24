@@ -57,6 +57,20 @@ function QuotationDetailPage() {
   const qc = useQueryClient();
   const router = useRouter();
 
+  useSetBusinessContext(
+    q
+      ? {
+          kind: "quotation",
+          id: q.id,
+          label: q.quotation_number ?? "Quotation",
+          sublabel: q.customer_company ?? q.customer_name ?? undefined,
+          href: `/quotations/${q.id}`,
+          meta: { status: q.status, total: q.total_amount, currency: q.currency },
+        }
+      : null,
+  );
+
+
   if (!q) {
     return <AppShell title="Quotation"><div className="text-sm text-muted-foreground">Quotation not found.</div></AppShell>;
   }
