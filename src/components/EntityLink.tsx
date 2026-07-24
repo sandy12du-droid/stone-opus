@@ -50,36 +50,37 @@ interface EntityLinkProps {
 }
 
 interface Resolved {
-  href: string;
+  to: string;
+  params?: Record<string, string>;
   entity: BusinessEntity;
 }
 
-function resolveCustomer(t: CustomerLink): Resolved | null {
+function resolveCustomer(t: CustomerLink): Resolved {
   const match =
     (t.id && CUSTOMERS.find((c) => c.id === t.id)) ||
     CUSTOMERS.find((c) => c.name.toLowerCase() === t.name.toLowerCase());
   if (match) {
+    const href = `/crm/customers/${match.id}`;
     return {
-      href: `/crm/customers/${match.id}`,
+      to: "/crm/customers/$customerId",
+      params: { customerId: match.id },
       entity: {
         kind: "customer",
         id: match.id,
         label: match.name,
         sublabel: t.sublabel ?? `${match.flag} ${match.country} · ${match.segment}`,
-        href: `/crm/customers/${match.id}`,
+        href,
       },
     };
   }
-  // Unknown customer — send the operator to the searchable list, still
-  // publish a lightweight entity so downstream modules can react.
   return {
-    href: `/crm/customers`,
+    to: "/crm/customers",
     entity: {
       kind: "customer",
       id: t.name,
       label: t.name,
       sublabel: t.sublabel,
-      href: `/crm/customers`,
+      href: "/crm/customers",
     },
   };
 }
@@ -87,36 +88,41 @@ function resolveCustomer(t: CustomerLink): Resolved | null {
 function resolve(t: EntityLinkTarget): Resolved {
   switch (t.kind) {
     case "customer":
-      return resolveCustomer(t)!;
+      return resolveCustomer(t);
     case "project":
       return {
-        href: `/projects/${t.id}`,
+        to: "/projects/$projectId",
+        params: { projectId: t.id },
         entity: { kind: "project", id: t.id, label: t.name, sublabel: t.sublabel, href: `/projects/${t.id}` },
       };
     case "quotation":
       return {
-        href: `/quotations/${t.id}`,
+        to: "/quotations/$quotationId",
+        params: { quotationId: t.id },
         entity: { kind: "quotation", id: t.id, label: t.name, sublabel: t.sublabel, href: `/quotations/${t.id}` },
       };
     case "inventory":
       return {
-        href: `/inventory/products/${t.id}`,
+        to: "/inventory/products/$productId",
+        params: { productId: t.id },
         entity: { kind: "inventory", id: t.id, label: t.name, sublabel: t.sublabel, href: `/inventory/products/${t.id}` },
       };
     case "container":
       return {
-        href: `/shipping/${t.id}`,
+        to: "/shipping/$shipmentId",
+        params: { shipmentId: t.id },
         entity: { kind: "container", id: t.id, label: t.name, sublabel: t.sublabel, href: `/shipping/${t.id}` },
       };
     case "order":
       return {
-        href: `/sales/opportunities/${t.id}`,
+        to: "/sales/opportunities/$opportunityId",
+        params: { opportunityId: t.id },
         entity: { kind: "order", id: t.id, label: t.name, sublabel: t.sublabel, href: `/sales/opportunities/${t.id}` },
       };
     case "lead":
       return {
-        href: `/crm/leads`,
-        entity: { kind: "lead", id: t.id ?? t.name, label: t.name, sublabel: t.sublabel, href: `/crm/leads` },
+        to: "/crm/leads",
+        entity: { kind: "lead", id: t.id ?? t.name, label: t.name, sublabel: t.sublabel, href: "/crm/leads" },
       };
   }
 }
@@ -133,11 +139,12 @@ const KIND_BASE: Record<BusinessEntityKind, string> = {
 
 export function EntityLink({ entity, children, className, variant = "default" }: EntityLinkProps) {
   const { setEntity } = useBusinessContext();
-  const { href, entity: resolved } = resolve(entity);
+  const { to, params, entity: resolved } = resolve(entity);
 
   return (
     <Link
-      to={href}
+      to={to as string}
+      params={params as never}
       onClick={() => setEntity(resolved)}
       className={cn(
         "font-medium transition-colors",
@@ -150,3 +157,4 @@ export function EntityLink({ entity, children, className, variant = "default" }:
     </Link>
   );
 }
+
