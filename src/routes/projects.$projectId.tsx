@@ -53,7 +53,20 @@ export const Route = createFileRoute("/projects/$projectId")({
 function ProjectDetail() {
   const { projectId } = Route.useParams();
   const { data: project } = useSuspenseQuery(projectDetailOptions(projectId));
+  useSetBusinessContext(
+    project
+      ? {
+          kind: "project",
+          id: project.id,
+          label: project.name,
+          sublabel: `${project.code}${project.customer_name ? ` · ${project.customer_name}` : ""}`,
+          href: `/projects/${project.id}`,
+          meta: { status: project.status, priority: project.priority },
+        }
+      : null,
+  );
   if (!project) return null;
+
 
   const qc = useQueryClient();
   const advance = useServerFn(advanceWorkOrder);
