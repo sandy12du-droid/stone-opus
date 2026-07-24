@@ -58,7 +58,7 @@ function ProductDetailPage() {
           kind: "inventory",
           id: p.id,
           label: p.name,
-          sublabel: p.code ?? undefined,
+          sublabel: p.sku ?? undefined,
           href: `/inventory/products/${p.id}`,
         }
       : null,
