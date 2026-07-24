@@ -19,10 +19,13 @@ import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SalesPipelineRouteImport } from './routes/sales.pipeline'
+import { Route as SalesOpportunitiesRouteImport } from './routes/sales.opportunities'
 import { Route as InventoryProductsRouteImport } from './routes/inventory.products'
 import { Route as InventoryPricingRouteImport } from './routes/inventory.pricing'
 import { Route as CrmLeadsRouteImport } from './routes/crm.leads'
 import { Route as CrmCustomersRouteImport } from './routes/crm.customers'
+import { Route as SalesOpportunitiesOpportunityIdRouteImport } from './routes/sales.opportunities.$opportunityId'
 
 const ShippingRoute = ShippingRouteImport.update({
   id: '/shipping',
@@ -74,6 +77,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SalesPipelineRoute = SalesPipelineRouteImport.update({
+  id: '/sales/pipeline',
+  path: '/sales/pipeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalesOpportunitiesRoute = SalesOpportunitiesRouteImport.update({
+  id: '/sales/opportunities',
+  path: '/sales/opportunities',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InventoryProductsRoute = InventoryProductsRouteImport.update({
   id: '/inventory/products',
   path: '/inventory/products',
@@ -94,6 +107,12 @@ const CrmCustomersRoute = CrmCustomersRouteImport.update({
   path: '/crm/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SalesOpportunitiesOpportunityIdRoute =
+  SalesOpportunitiesOpportunityIdRouteImport.update({
+    id: '/$opportunityId',
+    path: '/$opportunityId',
+    getParentRoute: () => SalesOpportunitiesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +129,9 @@ export interface FileRoutesByFullPath {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRoute
+  '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
+  '/sales/pipeline': typeof SalesPipelineRoute
+  '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +148,9 @@ export interface FileRoutesByTo {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRoute
+  '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
+  '/sales/pipeline': typeof SalesPipelineRoute
+  '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +168,9 @@ export interface FileRoutesById {
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
   '/inventory/products': typeof InventoryProductsRoute
+  '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
+  '/sales/pipeline': typeof SalesPipelineRoute
+  '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +189,9 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/sales/opportunities'
+    | '/sales/pipeline'
+    | '/sales/opportunities/$opportunityId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +208,9 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/sales/opportunities'
+    | '/sales/pipeline'
+    | '/sales/opportunities/$opportunityId'
   id:
     | '__root__'
     | '/'
@@ -193,6 +227,9 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/sales/opportunities'
+    | '/sales/pipeline'
+    | '/sales/opportunities/$opportunityId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +247,8 @@ export interface RootRouteChildren {
   CrmLeadsRoute: typeof CrmLeadsRoute
   InventoryPricingRoute: typeof InventoryPricingRoute
   InventoryProductsRoute: typeof InventoryProductsRoute
+  SalesOpportunitiesRoute: typeof SalesOpportunitiesRouteWithChildren
+  SalesPipelineRoute: typeof SalesPipelineRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -284,6 +323,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sales/pipeline': {
+      id: '/sales/pipeline'
+      path: '/sales/pipeline'
+      fullPath: '/sales/pipeline'
+      preLoaderRoute: typeof SalesPipelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sales/opportunities': {
+      id: '/sales/opportunities'
+      path: '/sales/opportunities'
+      fullPath: '/sales/opportunities'
+      preLoaderRoute: typeof SalesOpportunitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inventory/products': {
       id: '/inventory/products'
       path: '/inventory/products'
@@ -312,8 +365,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CrmCustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sales/opportunities/$opportunityId': {
+      id: '/sales/opportunities/$opportunityId'
+      path: '/$opportunityId'
+      fullPath: '/sales/opportunities/$opportunityId'
+      preLoaderRoute: typeof SalesOpportunitiesOpportunityIdRouteImport
+      parentRoute: typeof SalesOpportunitiesRoute
+    }
   }
 }
+
+interface SalesOpportunitiesRouteChildren {
+  SalesOpportunitiesOpportunityIdRoute: typeof SalesOpportunitiesOpportunityIdRoute
+}
+
+const SalesOpportunitiesRouteChildren: SalesOpportunitiesRouteChildren = {
+  SalesOpportunitiesOpportunityIdRoute: SalesOpportunitiesOpportunityIdRoute,
+}
+
+const SalesOpportunitiesRouteWithChildren =
+  SalesOpportunitiesRoute._addFileChildren(SalesOpportunitiesRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -330,6 +401,8 @@ const rootRouteChildren: RootRouteChildren = {
   CrmLeadsRoute: CrmLeadsRoute,
   InventoryPricingRoute: InventoryPricingRoute,
   InventoryProductsRoute: InventoryProductsRoute,
+  SalesOpportunitiesRoute: SalesOpportunitiesRouteWithChildren,
+  SalesPipelineRoute: SalesPipelineRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
