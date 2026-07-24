@@ -303,8 +303,8 @@ function Row({ label, value, tone }: { label: string; value: string; tone?: "pos
       <span className="text-muted-foreground">{label}</span>
       <span className={cn(
         "font-semibold",
-        tone === "pos" && "text-emerald-600",
-        tone === "neg" && "text-rose-600",
+        tone === "pos" && "text-success",
+        tone === "neg" && "text-destructive",
         !tone && "text-foreground",
       )}>{value}</span>
     </div>
