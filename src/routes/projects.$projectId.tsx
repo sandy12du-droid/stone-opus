@@ -19,6 +19,7 @@ import {
   projectProgress, currency, fmtDate, PROJECT_STATUSES,
 } from "@/lib/projects-queries";
 import { addWorkOrder, advanceWorkOrder, updateProjectStatus } from "@/lib/projects.functions";
+import { useSetBusinessContext } from "@/context/BusinessContext";
 
 export const Route = createFileRoute("/projects/$projectId")({
   head: ({ loaderData }) => {
