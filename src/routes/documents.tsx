@@ -87,8 +87,8 @@ function DocumentsPage() {
       list.push({
         id: `q-${q.id}`,
         kind: "quotation",
-        code: q.quotation_number,
-        title: q.title ?? "Untitled quotation",
+        code: q.number,
+        title: q.project_name ?? "Untitled quotation",
         party: q.customer_name ?? "—",
         amount: Number(q.total ?? 0),
         currency: q.currency ?? "USD",
@@ -102,8 +102,8 @@ function DocumentsPage() {
         list.push({
           id: `inv-${q.id}`,
           kind: "invoice",
-          code: q.quotation_number.replace("AQ-", "INV-"),
-          title: `Invoice — ${q.title ?? q.quotation_number}`,
+          code: q.number.replace("AQ-", "INV-"),
+          title: `Invoice — ${q.project_name ?? q.number}`,
           party: q.customer_name ?? "—",
           amount: Number(q.total ?? 0),
           currency: q.currency ?? "USD",
