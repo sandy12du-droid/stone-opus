@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
   CommandDialog,
@@ -26,12 +26,16 @@ import {
   Settings,
   Workflow,
   Target,
-  Boxes,
-  Receipt,
-  Container,
+  Pin,
+  PinOff,
+  Clock,
+  Star,
 } from "lucide-react";
+import type { SearchIcon, SearchResult } from "@/lib/search-providers";
+import { SEARCH_PROVIDERS, runSearch } from "@/lib/search-providers";
+import { useSearchHistory, type StoredResult } from "@/hooks/use-search-history";
 
-type Nav = { label: string; to: string; icon: React.ComponentType<{ className?: string }>; group: string; keywords?: string };
+type Nav = { label: string; to: string; icon: SearchIcon; group: string };
 
 const navItems: Nav[] = [
   { label: "Workspace", to: "/workspace", icon: Home, group: "Navigate" },
@@ -52,32 +56,27 @@ const navItems: Nav[] = [
   { label: "Settings", to: "/settings", icon: Settings, group: "Insights" },
 ];
 
-// Mock cross-domain entities so ⌘K feels universal.
-type Entity = { label: string; sub: string; to: string; icon: React.ComponentType<{ className?: string }>; group: string; keywords?: string };
-const entities: Entity[] = [
-  { label: "White Carrara", sub: "Marble · 240 slabs · Livorno", to: "/inventory/products", icon: Package, group: "Inventory", keywords: "marble italy stone" },
-  { label: "Calacatta Oro", sub: "Marble · 96 slabs · Warehouse B", to: "/inventory/products", icon: Package, group: "Inventory", keywords: "marble gold" },
-  { label: "Statuario Extra 20mm", sub: "Low stock · 3 slabs", to: "/inventory/products", icon: Package, group: "Inventory", keywords: "marble alert" },
-  { label: "Riverside Kitchens", sub: "Customer · United States · $184k open", to: "/crm/customers", icon: Users, group: "Customers", keywords: "usa kitchen" },
-  { label: "Concord Stoneworks", sub: "Lead · Texas · Discovery", to: "/crm/leads", icon: UserPlus, group: "Customers", keywords: "usa texas" },
-  { label: "Doha Interiors", sub: "Customer · Qatar · Sample review", to: "/crm/customers", icon: Users, group: "Customers", keywords: "qatar middle east" },
-  { label: "Q-2418", sub: "Quotation · Riverside Kitchens · Approved", to: "/quotations", icon: FileText, group: "Documents", keywords: "quote invoice" },
-  { label: "PRJ-118 · Ashford Residence", sub: "Project · Shop drawing uploaded", to: "/projects", icon: FolderKanban, group: "Documents", keywords: "drawing" },
-  { label: "INV-2210", sub: "Invoice · $92k · Alba Marmi", to: "/documents", icon: Receipt, group: "Documents", keywords: "invoice italy" },
-  { label: "CNT-0091 · MSC Loreto", sub: "Container · Dispatched", to: "/shipping", icon: Container, group: "Shipping", keywords: "container dispatch" },
-  { label: "CNT-0092", sub: "Container · Consolidating 4 POs", to: "/shipping", icon: Container, group: "Shipping", keywords: "container loading" },
-];
+// Rehydrate a stored (icon-less) result via provider lookup so pins/recents
+// render with the correct icon after reload.
+function hydrate(stored: StoredResult): SearchResult {
+  for (const p of SEARCH_PROVIDERS) {
+    const hit = p.search("").find((r) => r.key === stored.key);
+    if (hit) return hit;
+  }
+  return { ...stored, icon: Star };
+}
 
-const actions = [
-  { label: "New lead", to: "/crm/leads", icon: UserPlus },
-  { label: "New quotation", to: "/quotations", icon: FileText },
-  { label: "Add inventory", to: "/inventory/products", icon: Boxes },
-  { label: "Upload drawing", to: "/projects", icon: Files },
-];
+const groupResults = (results: SearchResult[]) =>
+  results.reduce<Record<string, SearchResult[]>>((acc, r) => {
+    (acc[r.group] ||= []).push(r);
+    return acc;
+  }, {});
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const { recent, pinned, recordUse, togglePin, isPinned } = useSearchHistory();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -94,69 +93,145 @@ export function CommandPalette() {
     };
   }, []);
 
-  const go = (to: string) => {
+  useEffect(() => {
+    if (!open) setQuery("");
+  }, [open]);
+
+  const results = useMemo(() => runSearch(query), [query]);
+  const grouped = useMemo(() => groupResults(results), [results]);
+  const hydratedPinned = useMemo(() => pinned.map(hydrate), [pinned]);
+  const hydratedRecent = useMemo(
+    () => recent.map(hydrate).filter((r) => !isPinned(r.key)),
+    [recent, isPinned],
+  );
+
+  const go = (r: SearchResult) => {
+    recordUse(r);
+    setOpen(false);
+    navigate({ to: r.href });
+  };
+
+  const goNav = (to: string) => {
     setOpen(false);
     navigate({ to });
   };
 
-  const grouped = <T extends { group: string }>(arr: T[]) =>
-    arr.reduce<Record<string, T[]>>((acc, item) => {
-      (acc[item.group] ||= []).push(item);
-      return acc;
-    }, {});
-
-  const navByGroup = grouped(navItems);
-  const entByGroup = grouped(entities);
+  const showHistory = query.trim().length === 0;
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Search leads, quotations, slabs, documents, containers…" />
+      <CommandInput
+        placeholder="Search customers, quotations, products, containers, countries…"
+        value={query}
+        onValueChange={setQuery}
+      />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
 
-        <CommandGroup heading="Quick actions">
-          {actions.map((a) => (
-            <CommandItem key={a.label} value={`action ${a.label}`} onSelect={() => go(a.to)}>
-              <a.icon className="mr-2 h-4 w-4 text-primary" />
-              {a.label}
+        {showHistory && hydratedPinned.length > 0 && (
+          <>
+            <CommandGroup heading="Pinned">
+              {hydratedPinned.map((r) => (
+                <ResultItem
+                  key={`pin-${r.key}`}
+                  result={r}
+                  pinned
+                  onSelect={() => go(r)}
+                  onTogglePin={() => togglePin(r)}
+                />
+              ))}
+            </CommandGroup>
+            <CommandSeparator />
+          </>
+        )}
+
+        {showHistory && hydratedRecent.length > 0 && (
+          <>
+            <CommandGroup heading="Recent">
+              {hydratedRecent.map((r) => (
+                <ResultItem
+                  key={`recent-${r.key}`}
+                  result={r}
+                  recent
+                  pinned={isPinned(r.key)}
+                  onSelect={() => go(r)}
+                  onTogglePin={() => togglePin(r)}
+                />
+              ))}
+            </CommandGroup>
+            <CommandSeparator />
+          </>
+        )}
+
+        {Object.entries(grouped).map(([group, items]) => (
+          <CommandGroup key={group} heading={group}>
+            {items.map((r) => (
+              <ResultItem
+                key={r.key}
+                result={r}
+                pinned={isPinned(r.key)}
+                onSelect={() => go(r)}
+                onTogglePin={() => togglePin(r)}
+              />
+            ))}
+          </CommandGroup>
+        ))}
+
+        <CommandSeparator />
+
+        <CommandGroup heading="Navigate">
+          {navItems.map((it) => (
+            <CommandItem key={it.to} value={`nav ${it.label}`} onSelect={() => goNav(it.to)}>
+              <it.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+              {it.label}
             </CommandItem>
           ))}
         </CommandGroup>
-
-        <CommandSeparator />
-
-        {Object.entries(entByGroup).map(([group, items]) => (
-          <CommandGroup key={group} heading={group}>
-            {items.map((it) => (
-              <CommandItem
-                key={it.label}
-                value={`${it.label} ${it.sub} ${it.keywords ?? ""}`}
-                onSelect={() => go(it.to)}
-              >
-                <it.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                <div className="flex flex-col">
-                  <span className="text-[13px] font-medium">{it.label}</span>
-                  <span className="text-[11px] text-muted-foreground">{it.sub}</span>
-                </div>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        ))}
-
-        <CommandSeparator />
-
-        {Object.entries(navByGroup).map(([group, items]) => (
-          <CommandGroup key={group} heading={group}>
-            {items.map((it) => (
-              <CommandItem key={it.to} value={`nav ${it.label}`} onSelect={() => go(it.to)}>
-                <it.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                {it.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        ))}
       </CommandList>
     </CommandDialog>
+  );
+}
+
+interface ResultItemProps {
+  result: SearchResult;
+  pinned?: boolean;
+  recent?: boolean;
+  onSelect: () => void;
+  onTogglePin: () => void;
+}
+
+function ResultItem({ result, pinned, recent, onSelect, onTogglePin }: ResultItemProps) {
+  const Icon = result.icon;
+  return (
+    <CommandItem
+      value={`${result.label} ${result.sub ?? ""} ${result.keywords ?? ""} ${result.key}`}
+      onSelect={onSelect}
+      className="group"
+    >
+      <Icon className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate text-[13px] font-medium">{result.label}</span>
+        {result.sub && (
+          <span className="truncate text-[11px] text-muted-foreground">{result.sub}</span>
+        )}
+      </div>
+      {recent && !pinned && (
+        <Clock className="ml-2 h-3.5 w-3.5 shrink-0 text-muted-foreground/60" />
+      )}
+      <button
+        type="button"
+        aria-label={pinned ? "Unpin" : "Pin"}
+        className="ml-2 rounded p-1 text-muted-foreground/70 opacity-0 transition hover:bg-surface-muted hover:text-foreground group-hover:opacity-100 data-[pinned=true]:opacity-100"
+        data-pinned={pinned || undefined}
+        onClick={(e) => {
+          e.stopPropagation();
+          onTogglePin();
+        }}
+        onMouseDown={(e) => e.preventDefault()}
+      >
+        {pinned ? <PinOff className="h-3.5 w-3.5" /> : <Pin className="h-3.5 w-3.5" />}
+      </button>
+    </CommandItem>
   );
 }
 
