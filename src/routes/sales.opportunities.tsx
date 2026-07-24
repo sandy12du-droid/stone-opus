@@ -231,9 +231,16 @@ function OpportunitiesPage() {
                       {o.name}
                     </Link>
                     <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                      <span>{o.flag}</span> {o.customer} · {o.industry}
+                      <span>{o.flag}</span>
+                      <EntityLink
+                        entity={{ kind: "customer", name: o.customer, sublabel: `${o.flag} ${o.country} · ${o.industry}` }}
+                        variant="plain"
+                        className="hover:text-primary"
+                      />
+                      <span>· {o.industry}</span>
                     </div>
                   </TableCell>
+
                   <TableCell><StageBadge stage={o.stage} /></TableCell>
                   <TableCell className="text-right font-semibold">{currencyFmt(o.value, o.currency)}</TableCell>
                   <TableCell className="text-right text-primary">
