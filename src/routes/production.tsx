@@ -31,7 +31,7 @@ export const Route = createFileRoute("/production")({
   component: ProductionBoard,
 });
 
-type BoardRow = Awaited<ReturnType<ReturnType<typeof productionBoardOptions>["queryFn"]>>[number];
+type BoardRow = Awaited<ReturnType<NonNullable<ReturnType<typeof productionBoardOptions>["queryFn"]>>>[number];
 type WorkOrder = BoardRow & { project?: { id: string; code: string; name: string; priority: string } | null };
 
 function ProductionBoard() {
