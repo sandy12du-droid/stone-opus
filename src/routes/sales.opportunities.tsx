@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { EntityLink } from "@/components/EntityLink";
+
 import { useMemo, useState } from "react";
 import {
   Download,
