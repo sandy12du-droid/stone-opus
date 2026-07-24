@@ -27,6 +27,7 @@ import { Route as InventoryPricingRouteImport } from './routes/inventory.pricing
 import { Route as CrmLeadsRouteImport } from './routes/crm.leads'
 import { Route as CrmCustomersRouteImport } from './routes/crm.customers'
 import { Route as SalesOpportunitiesOpportunityIdRouteImport } from './routes/sales.opportunities.$opportunityId'
+import { Route as InventoryProductsProductIdRouteImport } from './routes/inventory.products.$productId'
 
 const WorkspaceRoute = WorkspaceRouteImport.update({
   id: '/workspace',
@@ -119,6 +120,12 @@ const SalesOpportunitiesOpportunityIdRoute =
     path: '/$opportunityId',
     getParentRoute: () => SalesOpportunitiesRoute,
   } as any)
+const InventoryProductsProductIdRoute =
+  InventoryProductsProductIdRouteImport.update({
+    id: '/$productId',
+    path: '/$productId',
+    getParentRoute: () => InventoryProductsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -135,9 +142,10 @@ export interface FileRoutesByFullPath {
   '/crm/customers': typeof CrmCustomersRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
-  '/inventory/products': typeof InventoryProductsRoute
+  '/inventory/products': typeof InventoryProductsRouteWithChildren
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
+  '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
   '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRoutesByTo {
@@ -155,9 +163,10 @@ export interface FileRoutesByTo {
   '/crm/customers': typeof CrmCustomersRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
-  '/inventory/products': typeof InventoryProductsRoute
+  '/inventory/products': typeof InventoryProductsRouteWithChildren
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
+  '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
   '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRoutesById {
@@ -176,9 +185,10 @@ export interface FileRoutesById {
   '/crm/customers': typeof CrmCustomersRoute
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
-  '/inventory/products': typeof InventoryProductsRoute
+  '/inventory/products': typeof InventoryProductsRouteWithChildren
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
+  '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
   '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRouteTypes {
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/inventory/products'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/inventory/products/$productId'
     | '/sales/opportunities/$opportunityId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -221,6 +232,7 @@ export interface FileRouteTypes {
     | '/inventory/products'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/inventory/products/$productId'
     | '/sales/opportunities/$opportunityId'
   id:
     | '__root__'
@@ -241,6 +253,7 @@ export interface FileRouteTypes {
     | '/inventory/products'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/inventory/products/$productId'
     | '/sales/opportunities/$opportunityId'
   fileRoutesById: FileRoutesById
 }
@@ -259,7 +272,7 @@ export interface RootRouteChildren {
   CrmCustomersRoute: typeof CrmCustomersRoute
   CrmLeadsRoute: typeof CrmLeadsRoute
   InventoryPricingRoute: typeof InventoryPricingRoute
-  InventoryProductsRoute: typeof InventoryProductsRoute
+  InventoryProductsRoute: typeof InventoryProductsRouteWithChildren
   SalesOpportunitiesRoute: typeof SalesOpportunitiesRouteWithChildren
   SalesPipelineRoute: typeof SalesPipelineRoute
 }
@@ -392,8 +405,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalesOpportunitiesOpportunityIdRouteImport
       parentRoute: typeof SalesOpportunitiesRoute
     }
+    '/inventory/products/$productId': {
+      id: '/inventory/products/$productId'
+      path: '/$productId'
+      fullPath: '/inventory/products/$productId'
+      preLoaderRoute: typeof InventoryProductsProductIdRouteImport
+      parentRoute: typeof InventoryProductsRoute
+    }
   }
 }
+
+interface InventoryProductsRouteChildren {
+  InventoryProductsProductIdRoute: typeof InventoryProductsProductIdRoute
+}
+
+const InventoryProductsRouteChildren: InventoryProductsRouteChildren = {
+  InventoryProductsProductIdRoute: InventoryProductsProductIdRoute,
+}
+
+const InventoryProductsRouteWithChildren =
+  InventoryProductsRoute._addFileChildren(InventoryProductsRouteChildren)
 
 interface SalesOpportunitiesRouteChildren {
   SalesOpportunitiesOpportunityIdRoute: typeof SalesOpportunitiesOpportunityIdRoute
@@ -421,7 +452,7 @@ const rootRouteChildren: RootRouteChildren = {
   CrmCustomersRoute: CrmCustomersRoute,
   CrmLeadsRoute: CrmLeadsRoute,
   InventoryPricingRoute: InventoryPricingRoute,
-  InventoryProductsRoute: InventoryProductsRoute,
+  InventoryProductsRoute: InventoryProductsRouteWithChildren,
   SalesOpportunitiesRoute: SalesOpportunitiesRouteWithChildren,
   SalesPipelineRoute: SalesPipelineRoute,
 }
