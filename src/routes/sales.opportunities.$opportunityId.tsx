@@ -78,7 +78,7 @@ export const Route = createFileRoute("/sales/opportunities/$opportunityId")({
 });
 
 function OpportunityDetailPage() {
-  const { opp } = Route.useLoaderData();
+  const { opp } = Route.useLoaderData() as { opp: Opportunity };
   const activities = ACTIVITY_TIMELINE[opp.id] ?? DEFAULT_ACTIVITIES;
   const followups = FOLLOWUPS[opp.id] ?? DEFAULT_FOLLOWUPS;
   const stageIdx = SALES_STAGES.indexOf(opp.stage);
