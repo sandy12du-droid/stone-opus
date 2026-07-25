@@ -270,6 +270,10 @@ function ChatPane({
   input: string;
   setInput: (v: string) => void;
 }) {
+  const { active } = useBusinessContext();
+  const suggestions = getAiSuggestions(active);
+  const { primary } = suggestions;
+
   return (
     <>
       <div className="card-surface p-5">
@@ -289,6 +293,30 @@ function ChatPane({
           }
         />
 
+        {/* Active context strip */}
+        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-border bg-surface-muted/40 px-3 py-2">
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Focused on
+          </span>
+          <span className="text-[12.5px] font-medium text-foreground">
+            {suggestions.focusLabel}
+          </span>
+          {primary?.sublabel && (
+            <span className="text-[11.5px] text-muted-foreground">
+              · {primary.sublabel}
+            </span>
+          )}
+          {primary?.href && (
+            <a
+              href={primary.href}
+              className="ml-auto inline-flex items-center gap-1 text-[11.5px] font-medium text-primary hover:underline"
+            >
+              Open <ArrowUpRight className="h-3 w-3" />
+            </a>
+          )}
+        </div>
+
         {/* Transcript */}
         <div className="mt-5 space-y-4">
           {chatSample.map((m, i) => (
@@ -303,7 +331,11 @@ function ChatPane({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               rows={2}
-              placeholder="Ask Arquane AI anything… (⌘⏎ to send)"
+              placeholder={
+                primary
+                  ? `Ask Arquane AI about ${primary.label}…`
+                  : "Ask Arquane AI anything… (⌘⏎ to send)"
+              }
               className="min-h-[52px] flex-1 resize-none bg-transparent px-2 py-1 text-[14px] outline-none placeholder:text-muted-foreground"
             />
             <button className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-surface hover:text-foreground" aria-label="Attach">
@@ -318,17 +350,15 @@ function ChatPane({
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border pt-2">
             <span className="text-[11px] text-muted-foreground">Try:</span>
-            {["Draft follow-up for Doha Interiors", "What's slowing PRJ-121?", "Consolidate POs into CNT-0092"].map(
-              (p) => (
-                <button
-                  key={p}
-                  onClick={() => setInput(p)}
-                  className="rounded-full border border-border bg-surface px-2.5 py-0.5 text-[11px] text-foreground/80 hover:border-border-strong hover:bg-surface-muted"
-                >
-                  {p}
-                </button>
-              ),
-            )}
+            {suggestions.prompts.slice(0, 4).map((p) => (
+              <button
+                key={p}
+                onClick={() => setInput(p)}
+                className="rounded-full border border-border bg-surface px-2.5 py-0.5 text-[11px] text-foreground/80 hover:border-border-strong hover:bg-surface-muted"
+              >
+                {p}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -352,8 +382,11 @@ function ChatPane({
           <div className="flex items-center gap-2 text-[13px] font-semibold">
             <Lightbulb className="h-3.5 w-3.5 text-primary" /> Top insight
           </div>
-          <p className="mt-2 text-[12.5px] leading-relaxed text-foreground/90">
-            Quartz demand in Texas up 18% MoM — enrich importer list to capture 4 warm accounts.
+          <div className="mt-2 text-[12.5px] font-medium text-foreground">
+            {suggestions.insight.title}
+          </div>
+          <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">
+            {suggestions.insight.body}
           </p>
         </div>
         <div className="card-surface p-4">
@@ -361,15 +394,16 @@ function ChatPane({
             <Library className="h-3.5 w-3.5 text-primary" /> Knowledge in context
           </div>
           <ul className="mt-2 space-y-1.5 text-[12px] text-muted-foreground">
-            <li>· Arquane price book — 2025 Q3</li>
-            <li>· Global importer directory · v14</li>
-            <li>· Incoterms cheat sheet</li>
+            {suggestions.knowledge.map((k) => (
+              <li key={k}>· {k}</li>
+            ))}
           </ul>
         </div>
       </div>
     </>
   );
 }
+
 
 function ChatMessage({
   msg,
