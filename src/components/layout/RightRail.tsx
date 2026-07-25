@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useBusinessContext } from "@/context/BusinessContext";
 import { getAiSuggestions } from "@/lib/ai-context";
+import { ActivityTimeline } from "@/components/ActivityTimeline";
+import { getActivityFor, getGlobalActivity } from "@/lib/activity-data";
+
 
 
 const tabs = [
@@ -56,11 +59,12 @@ export function RightRail() {
         {tab === "ai" && <AIPanel />}
         {tab === "notifications" && <EmptyState label="No new alerts" hint="Inventory and pipeline notifications will appear here." />}
         {tab === "tasks" && <EmptyState label="No open tasks" hint="Follow-ups assigned to you show up here." />}
-        {tab === "activity" && <EmptyState label="No recent activity" hint="Team actions across the workspace will stream here." />}
+        {tab === "activity" && <ActivityPanel />}
       </div>
     </aside>
   );
 }
+
 
 function AIPanel() {
   const { active } = useBusinessContext();
@@ -118,6 +122,37 @@ function AIPanel() {
 }
 
 
+function ActivityPanel() {
+  const { active } = useBusinessContext();
+  const suggestions = getAiSuggestions(active);
+  const { primary } = suggestions;
+  const events = primary ? getActivityFor(primary) : getGlobalActivity();
+
+  return (
+    <div className="flex h-full flex-col">
+      <div className="mb-3 rounded-md border border-dashed border-border bg-surface-muted/40 px-2.5 py-2">
+        <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          Activity for
+        </div>
+        <div className="mt-0.5 flex items-center justify-between gap-2">
+          <div className="min-w-0 text-[12px] font-medium text-foreground truncate">
+            {suggestions.focusLabel}
+          </div>
+          {primary?.href && (
+            <Link
+              to={primary.href}
+              className="inline-flex shrink-0 items-center gap-0.5 text-[10.5px] font-medium text-primary hover:underline"
+            >
+              Open <ArrowUpRight className="h-3 w-3" />
+            </Link>
+          )}
+        </div>
+      </div>
+      <ActivityTimeline events={events} />
+    </div>
+  );
+}
+
 function EmptyState({ label, hint }: { label: string; hint: string }) {
   return (
     <div className="flex h-full flex-col items-center justify-center text-center">
@@ -127,3 +162,4 @@ function EmptyState({ label, hint }: { label: string; hint: string }) {
     </div>
   );
 }
+
