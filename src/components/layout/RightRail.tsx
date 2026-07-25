@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useBusinessContext } from "@/context/BusinessContext";
 import { getAiSuggestions } from "@/lib/ai-context";
+import { ActivityTimeline } from "@/components/ActivityTimeline";
+import { getActivityFor, getGlobalActivity } from "@/lib/activity-data";
+
 
 
 const tabs = [
