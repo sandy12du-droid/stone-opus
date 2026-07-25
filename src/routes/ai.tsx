@@ -33,6 +33,9 @@ import {
 import { AppShell } from "@/components/layout/AppShell";
 import { openCommandPalette } from "@/components/CommandPalette";
 import { cn } from "@/lib/utils";
+import { useBusinessContext } from "@/context/BusinessContext";
+import { getAiSuggestions } from "@/lib/ai-context";
+
 
 export const Route = createFileRoute("/ai")({
   head: () => ({
