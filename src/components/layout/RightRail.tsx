@@ -56,11 +56,12 @@ export function RightRail() {
         {tab === "ai" && <AIPanel />}
         {tab === "notifications" && <EmptyState label="No new alerts" hint="Inventory and pipeline notifications will appear here." />}
         {tab === "tasks" && <EmptyState label="No open tasks" hint="Follow-ups assigned to you show up here." />}
-        {tab === "activity" && <EmptyState label="No recent activity" hint="Team actions across the workspace will stream here." />}
+        {tab === "activity" && <ActivityPanel />}
       </div>
     </aside>
   );
 }
+
 
 function AIPanel() {
   const { active } = useBusinessContext();
