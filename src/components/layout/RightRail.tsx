@@ -1,6 +1,10 @@
-import { Sparkles, Bell, CheckSquare, Activity } from "lucide-react";
+import { Sparkles, Bell, CheckSquare, Activity, ArrowUpRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useBusinessContext } from "@/context/BusinessContext";
+import { getAiSuggestions } from "@/lib/ai-context";
+
 
 const tabs = [
   { id: "ai", label: "AI", icon: Sparkles },
