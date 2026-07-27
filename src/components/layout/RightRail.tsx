@@ -40,12 +40,13 @@ export function RightRail() {
         {tabs.map((t) => {
           const Icon = t.icon;
           const active = tab === t.id;
+          const showBadge = t.id === "notifications" && unreadCount > 0;
           return (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-[12px] font-medium transition-colors",
+                "relative flex flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-[12px] font-medium transition-colors",
                 active
                   ? "bg-primary-soft text-primary"
                   : "text-muted-foreground hover:bg-surface-muted hover:text-foreground",
@@ -53,6 +54,11 @@ export function RightRail() {
             >
               <Icon className="h-3.5 w-3.5" />
               {t.label}
+              {showBadge && (
+                <span className="ml-0.5 rounded-full bg-destructive px-1.5 py-[1px] text-[9px] font-semibold leading-none text-destructive-foreground">
+                  {unreadCount}
+                </span>
+              )}
             </button>
           );
         })}
