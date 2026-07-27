@@ -66,7 +66,7 @@ export function RightRail() {
 
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
         {tab === "ai" && <AIPanel />}
-        {tab === "notifications" && <EmptyState label="No new alerts" hint="Inventory and pipeline notifications will appear here." />}
+        {tab === "notifications" && <NotificationsPanel />}
         {tab === "tasks" && <EmptyState label="No open tasks" hint="Follow-ups assigned to you show up here." />}
         {tab === "activity" && <ActivityPanel />}
       </div>
