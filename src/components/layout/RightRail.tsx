@@ -22,6 +22,7 @@ type TabId = (typeof tabs)[number]["id"];
 
 export function RightRail() {
   const [tab, setTab] = useState<TabId>("ai");
+  const { unreadCount } = useNotifications();
 
   return (
     <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-[340px] shrink-0 flex-col border-l border-border bg-surface xl:flex">
