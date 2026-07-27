@@ -71,15 +71,40 @@ export function TopBar() {
       </Button>
 
       {/* Notifications */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="relative h-9 w-9 text-muted-foreground hover:text-foreground"
-        aria-label="Notifications"
-      >
-        <Bell className="h-4 w-4" />
-        <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-accent" />
-      </Button>
+      <Popover open={notifOpen} onOpenChange={setNotifOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative h-9 w-9 text-muted-foreground hover:text-foreground"
+            aria-label={
+              unreadCount > 0
+                ? `Notifications, ${unreadCount} unread`
+                : "Notifications"
+            }
+          >
+            <Bell className="h-4 w-4" />
+            {unreadCount > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-semibold leading-none text-destructive-foreground">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="end"
+          sideOffset={8}
+          className="flex h-[520px] w-[380px] flex-col p-3"
+        >
+          <div className="mb-2 flex items-center justify-between px-1">
+            <div className="text-[13px] font-semibold">Notifications</div>
+            <span className="chip">{unreadCount} unread</span>
+          </div>
+          <div className="min-h-0 flex-1">
+            <NotificationsPanel compact onNavigate={() => setNotifOpen(false)} />
+          </div>
+        </PopoverContent>
+      </Popover>
 
       {/* User */}
       <DropdownMenu>
