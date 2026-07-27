@@ -10,6 +10,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { NotificationsPanel } from "@/components/NotificationsPanel";
+import { useNotifications } from "@/hooks/use-notifications";
 
 export function TopBar() {
   const [dark, setDark] = useState(false);
