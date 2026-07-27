@@ -6,6 +6,8 @@ import { useBusinessContext } from "@/context/BusinessContext";
 import { getAiSuggestions } from "@/lib/ai-context";
 import { ActivityTimeline } from "@/components/ActivityTimeline";
 import { getActivityFor, getGlobalActivity } from "@/lib/activity-data";
+import { NotificationsPanel } from "@/components/NotificationsPanel";
+import { useNotifications } from "@/hooks/use-notifications";
 
 
 
