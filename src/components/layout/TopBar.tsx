@@ -16,6 +16,8 @@ import { useNotifications } from "@/hooks/use-notifications";
 
 export function TopBar() {
   const [dark, setDark] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
