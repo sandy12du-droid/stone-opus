@@ -51,7 +51,7 @@ export const Route = createFileRoute("/workspace/executive")({
 
 const northStars = [
   { label: "Net Revenue (QTD)", value: "$12.4M", target: "$14.0M", progress: 88, delta: "+9.2%", trend: "up" as const, icon: DollarSign },
-  { label: "Gross Margin", value: "37.8%", target: "38%", progress: 99, delta: "+120bps", trend: "up" as const, icon: Gauge },
+  { label: "Gross Margin", value: "37.8%", target: "38%", progress: 99, delta: "+120bps", trend: "up" as const, icon: GaugeIcon },
   { label: "Win Rate", value: "42%", target: "45%", progress: 93, delta: "-1.4pt", trend: "down" as const, icon: Target },
   { label: "On-Time Ship", value: "94%", target: "96%", progress: 98, delta: "+2pt", trend: "up" as const, icon: Ship },
 ];
@@ -341,9 +341,9 @@ function ExecutiveWorkspacePage() {
             <h3 className="text-[13px] font-semibold">Operational Health</h3>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            <Gauge value={71} label="OEE" tone="warning" />
-            <Gauge value={94} label="On-time" tone="success" />
-            <Gauge value={62} label="WH cover" tone="warning" suffix="d" />
+            <GaugeCard value={71} label="OEE" tone="warning" />
+            <GaugeCard value={94} label="On-time" tone="success" />
+            <GaugeCard value={62} label="WH cover" tone="warning" suffix="d" />
           </div>
           <ul className="mt-4 space-y-2 text-[12px] text-muted-foreground">
             <li className="flex items-center gap-2">
@@ -505,7 +505,7 @@ function RiskDot({ tone }: { tone: "danger" | "warning" | "info" }) {
   );
 }
 
-function Gauge({
+function GaugeCard({
   value,
   label,
   tone,
