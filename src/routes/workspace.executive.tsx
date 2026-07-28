@@ -379,7 +379,7 @@ function ExecutiveWorkspacePage() {
                 <li key={a.id} className="flex items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0">
                   <div className="min-w-0">
                     <EntityLink
-                      entity={{ kind: "customer", id: a.id, label: a.name, sublabel: `Customer · ${a.country}` }}
+                      entity={{ kind: "customer", id: a.id, name: a.name, sublabel: `Customer · ${a.country}` }}
                       className="truncate text-[13px] font-medium text-foreground hover:underline"
                     >
                       {a.name}
