@@ -29,10 +29,12 @@ const groups: NavGroup[] = [
   {
     items: [
       { label: "Workspace", to: "/workspace", icon: Home },
+      { label: "Executive", to: "/workspace/executive", icon: LayoutDashboard },
       { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
       { label: "AI Command Center", to: "/ai", icon: Sparkles },
     ],
   },
+
   {
     label: "CRM",
     items: [

@@ -20,6 +20,7 @@ import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkspaceExecutiveRouteImport } from './routes/workspace.executive'
 import { Route as ShippingShipmentIdRouteImport } from './routes/shipping.$shipmentId'
 import { Route as SalesPipelineRouteImport } from './routes/sales.pipeline'
 import { Route as SalesOpportunitiesRouteImport } from './routes/sales.opportunities'
@@ -87,6 +88,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const WorkspaceExecutiveRoute = WorkspaceExecutiveRouteImport.update({
+  id: '/executive',
+  path: '/executive',
+  getParentRoute: () => WorkspaceRoute,
 } as any)
 const ShippingShipmentIdRoute = ShippingShipmentIdRouteImport.update({
   id: '/$shipmentId',
@@ -162,7 +168,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRouteWithChildren
-  '/workspace': typeof WorkspaceRoute
+  '/workspace': typeof WorkspaceRouteWithChildren
   '/crm/customers': typeof CrmCustomersRouteWithChildren
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
   '/shipping/$shipmentId': typeof ShippingShipmentIdRoute
+  '/workspace/executive': typeof WorkspaceExecutiveRoute
   '/crm/customers/$customerId': typeof CrmCustomersCustomerIdRoute
   '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
   '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
@@ -187,7 +194,7 @@ export interface FileRoutesByTo {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRouteWithChildren
-  '/workspace': typeof WorkspaceRoute
+  '/workspace': typeof WorkspaceRouteWithChildren
   '/crm/customers': typeof CrmCustomersRouteWithChildren
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
@@ -197,6 +204,7 @@ export interface FileRoutesByTo {
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
   '/shipping/$shipmentId': typeof ShippingShipmentIdRoute
+  '/workspace/executive': typeof WorkspaceExecutiveRoute
   '/crm/customers/$customerId': typeof CrmCustomersCustomerIdRoute
   '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
   '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
@@ -213,7 +221,7 @@ export interface FileRoutesById {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/shipping': typeof ShippingRouteWithChildren
-  '/workspace': typeof WorkspaceRoute
+  '/workspace': typeof WorkspaceRouteWithChildren
   '/crm/customers': typeof CrmCustomersRouteWithChildren
   '/crm/leads': typeof CrmLeadsRoute
   '/inventory/pricing': typeof InventoryPricingRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof SalesPipelineRoute
   '/shipping/$shipmentId': typeof ShippingShipmentIdRoute
+  '/workspace/executive': typeof WorkspaceExecutiveRoute
   '/crm/customers/$customerId': typeof CrmCustomersCustomerIdRoute
   '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
   '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/sales/opportunities'
     | '/sales/pipeline'
     | '/shipping/$shipmentId'
+    | '/workspace/executive'
     | '/crm/customers/$customerId'
     | '/inventory/products/$productId'
     | '/sales/opportunities/$opportunityId'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/sales/opportunities'
     | '/sales/pipeline'
     | '/shipping/$shipmentId'
+    | '/workspace/executive'
     | '/crm/customers/$customerId'
     | '/inventory/products/$productId'
     | '/sales/opportunities/$opportunityId'
@@ -300,6 +311,7 @@ export interface FileRouteTypes {
     | '/sales/opportunities'
     | '/sales/pipeline'
     | '/shipping/$shipmentId'
+    | '/workspace/executive'
     | '/crm/customers/$customerId'
     | '/inventory/products/$productId'
     | '/sales/opportunities/$opportunityId'
@@ -316,7 +328,7 @@ export interface RootRouteChildren {
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
   ShippingRoute: typeof ShippingRouteWithChildren
-  WorkspaceRoute: typeof WorkspaceRoute
+  WorkspaceRoute: typeof WorkspaceRouteWithChildren
   CrmCustomersRoute: typeof CrmCustomersRouteWithChildren
   CrmLeadsRoute: typeof CrmLeadsRoute
   InventoryPricingRoute: typeof InventoryPricingRoute
@@ -403,6 +415,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/workspace/executive': {
+      id: '/workspace/executive'
+      path: '/executive'
+      fullPath: '/workspace/executive'
+      preLoaderRoute: typeof WorkspaceExecutiveRouteImport
+      parentRoute: typeof WorkspaceRoute
     }
     '/shipping/$shipmentId': {
       id: '/shipping/$shipmentId'
@@ -527,6 +546,18 @@ const ShippingRouteWithChildren = ShippingRoute._addFileChildren(
   ShippingRouteChildren,
 )
 
+interface WorkspaceRouteChildren {
+  WorkspaceExecutiveRoute: typeof WorkspaceExecutiveRoute
+}
+
+const WorkspaceRouteChildren: WorkspaceRouteChildren = {
+  WorkspaceExecutiveRoute: WorkspaceExecutiveRoute,
+}
+
+const WorkspaceRouteWithChildren = WorkspaceRoute._addFileChildren(
+  WorkspaceRouteChildren,
+)
+
 interface CrmCustomersRouteChildren {
   CrmCustomersCustomerIdRoute: typeof CrmCustomersCustomerIdRoute
 }
@@ -572,7 +603,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
   ShippingRoute: ShippingRouteWithChildren,
-  WorkspaceRoute: WorkspaceRoute,
+  WorkspaceRoute: WorkspaceRouteWithChildren,
   CrmCustomersRoute: CrmCustomersRouteWithChildren,
   CrmLeadsRoute: CrmLeadsRoute,
   InventoryPricingRoute: InventoryPricingRoute,
