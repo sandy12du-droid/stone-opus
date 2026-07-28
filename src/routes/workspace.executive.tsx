@@ -12,7 +12,7 @@ import {
   Sparkles,
   ArrowUpRight,
   Flag,
-  Gauge,
+  Gauge as GaugeIcon,
   CircleDot,
 } from "lucide-react";
 import {
