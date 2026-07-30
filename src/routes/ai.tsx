@@ -35,6 +35,8 @@ import { openCommandPalette } from "@/components/CommandPalette";
 import { cn } from "@/lib/utils";
 import { useBusinessContext } from "@/context/BusinessContext";
 import { getAiSuggestions } from "@/lib/ai-context";
+import { AGENT_REGISTRY, TRIGGER_LABEL, agentsForScope } from "@/lib/agents";
+import { StatusPill } from "@/components/shared";
 
 
 export const Route = createFileRoute("/ai")({
