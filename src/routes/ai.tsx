@@ -96,13 +96,12 @@ const recentTasks = [
   { title: "Translated shop drawing notes → IT", status: "done" as const, when: "5h ago", agent: "Docs Translator" },
 ];
 
-const agents = [
-  { name: "Lead Enricher", role: "Verifies emails, matches import history, scores buying power", runs: 214, status: "active" as const },
-  { name: "Quote Coach", role: "Suggests bundles, incoterms, and follow-up cadence", runs: 96, status: "active" as const },
-  { name: "Logistics Planner", role: "Consolidates POs into containers and books freight", runs: 41, status: "active" as const },
-  { name: "Pricing Advisor", role: "Watches FX, market averages, and margin floors", runs: 58, status: "active" as const },
-  { name: "CEO Agent", role: "Daily digest and cross-domain recommendations", runs: 12, status: "beta" as const },
-];
+const agents = AGENT_REGISTRY.map((a) => ({
+  name: a.name,
+  role: a.role,
+  runs: a.runs30d,
+  status: a.status,
+}));
 
 const insights = [
   { title: "Quartz demand in Texas up 18% MoM", body: "Enrich importer list and prioritize 4 warm accounts.", tone: "opportunity" as const },
@@ -522,11 +521,15 @@ function TaskStatus({ status }: { status: "done" | "running" | "review" }) {
 }
 
 function AgentsPane() {
+  const { active } = useBusinessContext();
+  const activeKind = (Object.keys(active) as Array<keyof typeof active>)[0];
+  const scoped = new Set(agentsForScope(activeKind ?? null).map((a) => a.id));
+
   return (
     <div className="card-surface p-5">
       <PaneHeader
         title="AI Agents"
-        desc="Specialized agents wired to your business surfaces."
+        desc="Specialized agents wired to your business surfaces — scopes, tools, triggers and guardrails."
         right={
           <button className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground">
             <Plus className="h-3.5 w-3.5" /> New agent
@@ -534,22 +537,58 @@ function AgentsPane() {
         }
       />
       <ul className="mt-5 grid gap-3 md:grid-cols-2">
-        {agents.map((a) => (
+        {AGENT_REGISTRY.map((a) => (
           <li
-            key={a.name}
+            key={a.id}
             className="flex items-start gap-3 rounded-lg border border-border bg-surface-muted/40 p-4"
           >
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
               <Bot className="h-4 w-4" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <div className="truncate text-[13.5px] font-semibold">{a.name}</div>
-                {a.status === "beta" && <span className="chip text-[10px]">beta</span>}
+                {a.status !== "active" && (
+                  <span className="chip text-[10px]">{a.status}</span>
+                )}
+                {scoped.has(a.id) && (
+                  <StatusPill tone="primary" className="text-[10px]">
+                    in scope
+                  </StatusPill>
+                )}
               </div>
               <p className="mt-0.5 text-[12px] leading-snug text-muted-foreground">{a.role}</p>
-              <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
-                <span>{a.runs} runs · 30d</span>
+
+              <div className="mt-2 flex flex-wrap gap-1">
+                {a.tools.map((t) => (
+                  <span
+                    key={t.id}
+                    className={cn(
+                      "rounded border px-1.5 py-0.5 text-[10.5px]",
+                      t.needsApproval
+                        ? "border-warning/30 bg-warning/10 text-warning"
+                        : "border-border bg-surface text-muted-foreground",
+                    )}
+                    title={t.needsApproval ? "Requires approval" : "Read-only tool"}
+                  >
+                    {t.label}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-2 text-[11px] text-muted-foreground">
+                {a.triggers.map((t) => TRIGGER_LABEL[t]).join(" · ")}
+              </div>
+              <ul className="mt-1.5 space-y-0.5">
+                {a.guardrails.map((g) => (
+                  <li key={g} className="text-[11px] text-muted-foreground">
+                    · {g}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-2.5 flex items-center justify-between text-[11px] text-muted-foreground">
+                <span>{a.runs30d} runs · 30d</span>
                 <button className="inline-flex items-center gap-1 font-medium text-primary hover:underline">
                   Configure <ChevronRight className="h-3 w-3" />
                 </button>
