@@ -26,6 +26,7 @@ import {
 import { AppShell } from "@/components/layout/AppShell";
 import { openCommandPalette } from "@/components/CommandPalette";
 import { cn } from "@/lib/utils";
+import { SectionLabel, StatCard, ToneDot } from "@/components/shared";
 
 export const Route = createFileRoute("/workspace")({
   head: () => ({
@@ -249,7 +250,7 @@ function WorkspacePage() {
         <SectionLabel>Business Snapshot</SectionLabel>
         <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
           {snapshot.map((s) => (
-            <SnapshotCard key={s.label} {...s} />
+            <StatCard key={s.label} {...s} />
           ))}
         </div>
       </section>
@@ -366,7 +367,7 @@ function WorkspacePage() {
                   key={n.text}
                   className="flex items-start gap-3 rounded-md border border-border bg-surface-muted/40 px-3 py-2.5"
                 >
-                  <ToneDot tone={n.tone} />
+                  <ToneDot tone={n.tone} className="mt-1.5" />
                   <div className="min-w-0 flex-1 text-[13px]">{n.text}</div>
                   <span className="shrink-0 text-[11px] text-muted-foreground">{n.time}</span>
                 </li>
@@ -400,13 +401,6 @@ function WorkspacePage() {
 
 /* ------------------------------------------------------------------ */
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-      {children}
-    </div>
-  );
-}
 
 function SectionHeader({
   title,
@@ -428,43 +422,6 @@ function SectionHeader({
   );
 }
 
-function SnapshotCard({
-  label,
-  value,
-  delta,
-  trend,
-  hint,
-  icon: Icon,
-}: {
-  label: string;
-  value: string;
-  delta: string;
-  trend: "up" | "down" | "flat";
-  hint: string;
-  icon: React.ComponentType<{ className?: string }>;
-}) {
-  const trendColor =
-    trend === "up"
-      ? "text-success"
-      : trend === "down"
-        ? "text-destructive"
-        : "text-muted-foreground";
-  return (
-    <div className="card-surface p-4">
-      <div className="flex items-start justify-between">
-        <span className="text-[11px] font-medium text-muted-foreground">{label}</span>
-        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary-soft text-primary">
-          <Icon className="h-3 w-3" />
-        </div>
-      </div>
-      <div className="mt-2 text-[20px] font-semibold tracking-tight text-foreground">{value}</div>
-      <div className="mt-0.5 flex items-center justify-between text-[11px]">
-        <span className={cn("font-medium", trendColor)}>{delta}</span>
-        <span className="truncate text-muted-foreground">{hint}</span>
-      </div>
-    </div>
-  );
-}
 
 function ActivityCard({
   title,
@@ -495,14 +452,3 @@ function ActivityCard({
   );
 }
 
-function ToneDot({ tone }: { tone: "success" | "info" | "warning" | "danger" }) {
-  const color =
-    tone === "success"
-      ? "bg-success"
-      : tone === "warning"
-        ? "bg-warning"
-        : tone === "danger"
-          ? "bg-destructive"
-          : "bg-info";
-  return <span className={cn("mt-1.5 h-2 w-2 shrink-0 rounded-full", color)} />;
-}
