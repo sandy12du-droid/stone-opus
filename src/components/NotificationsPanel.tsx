@@ -15,6 +15,8 @@ import {
   type NotificationTone,
 } from "@/lib/notifications-data";
 import { useBusinessContext } from "@/context/BusinessContext";
+import { AgentApprovalsFeed } from "@/components/ai/AgentApprovalsFeed";
+import { usePendingApprovals } from "@/lib/agent-runtime";
 
 const FILTERS: { id: "all" | "unread" | NotificationCategory; label: string }[] = [
   { id: "all", label: "All" },
@@ -45,6 +47,10 @@ export function NotificationsPanel({
   const { setEntity } = useBusinessContext();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["id"]>("all");
+  const pendingApprovals = usePendingApprovals();
+  const showApprovals =
+    pendingApprovals.length > 0 &&
+    (filter === "all" || filter === "unread" || filter === "approvals");
 
   const filtered = useMemo(() => {
     if (filter === "all") return items;
@@ -102,8 +108,9 @@ export function NotificationsPanel({
         })}
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        {filtered.length === 0 ? (
+      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto">
+        {showApprovals && <AgentApprovalsFeed compact={compact} />}
+        {filtered.length === 0 && !showApprovals ? (
           <div className="flex h-full flex-col items-center justify-center text-center">
             <div className="mb-2 h-9 w-9 rounded-full bg-surface-muted" />
             <div className="text-[12.5px] font-medium text-foreground">
