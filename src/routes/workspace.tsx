@@ -49,6 +49,16 @@ function greeting() {
   return "Good evening";
 }
 
+/** Fixed locale so SSR and client render identical text. */
+function todayLabel() {
+  return new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+
 /* ------------------------------------------------------------------ */
 
 const initialFocus = [
