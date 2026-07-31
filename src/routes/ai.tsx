@@ -37,6 +37,12 @@ import { useBusinessContext } from "@/context/BusinessContext";
 import { getAiSuggestions } from "@/lib/ai-context";
 import { AGENT_REGISTRY, TRIGGER_LABEL, agentsForScope } from "@/lib/agents";
 import { StatusPill } from "@/components/shared";
+import { AgentRunModal } from "@/components/ai/AgentRunModal";
+import { AgentTriggersPanel } from "@/components/ai/AgentTriggersPanel";
+import { AgentTestConsole } from "@/components/ai/AgentTestConsole";
+import { AgentApprovalsFeed } from "@/components/ai/AgentApprovalsFeed";
+import type { AgentDefinition } from "@/lib/agents";
+import { FlaskConical, CalendarClock } from "lucide-react";
 
 
 export const Route = createFileRoute("/ai")({
@@ -62,6 +68,7 @@ type SectionKey =
   | "commands"
   | "tasks"
   | "agents"
+  | "console"
   | "insights"
   | "prompts"
   | "knowledge"
@@ -71,7 +78,8 @@ const sidebar: { key: SectionKey; label: string; icon: React.ComponentType<{ cla
   { key: "chat", label: "Chat", icon: Sparkles },
   { key: "commands", label: "Quick Commands", icon: Zap, count: 8 },
   { key: "tasks", label: "Recent Tasks", icon: Clock, count: 6 },
-  { key: "agents", label: "AI Agents", icon: Bot, count: 5 },
+  { key: "agents", label: "AI Agents", icon: Bot, count: 6 },
+  { key: "console", label: "Test Console", icon: FlaskConical },
   { key: "insights", label: "Insights", icon: Lightbulb, count: 4 },
   { key: "prompts", label: "Saved Prompts", icon: BookMarked, count: 9 },
   { key: "knowledge", label: "Knowledge", icon: Library, count: 34 },
@@ -230,6 +238,7 @@ function AiCommandCenter() {
           {section === "commands" && <QuickCommandsPane />}
           {section === "tasks" && <RecentTasksPane />}
           {section === "agents" && <AgentsPane />}
+          {section === "console" && <AgentTestConsole />}
           {section === "insights" && <InsightsPane />}
           {section === "prompts" && <SavedPromptsPane />}
           {section === "knowledge" && <KnowledgePane />}
@@ -526,79 +535,119 @@ function AgentsPane() {
   const { active } = useBusinessContext();
   const activeKind = (Object.keys(active) as Array<keyof typeof active>)[0];
   const scoped = new Set(agentsForScope(activeKind ?? null).map((a) => a.id));
+  const [runAgent, setRunAgent] = useState<AgentDefinition | null>(null);
+  const [triggerAgent, setTriggerAgent] = useState<AgentDefinition | null>(null);
 
   return (
-    <div className="card-surface p-5">
-      <PaneHeader
-        title="AI Agents"
-        desc="Specialized agents wired to your business surfaces — scopes, tools, triggers and guardrails."
-        right={
-          <button className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground">
-            <Plus className="h-3.5 w-3.5" /> New agent
-          </button>
-        }
+    <div className="space-y-4">
+      <div className="card-surface p-5">
+        <PaneHeader
+          title="AI Agents"
+          desc="Specialized agents wired to your business surfaces — scopes, tools, triggers and guardrails."
+          right={
+            <button className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground">
+              <Plus className="h-3.5 w-3.5" /> New agent
+            </button>
+          }
+        />
+        <ul className="mt-5 grid gap-3 md:grid-cols-2">
+          {AGENT_REGISTRY.map((a) => (
+            <li
+              key={a.id}
+              className="flex items-start gap-3 rounded-lg border border-border bg-surface-muted/40 p-4"
+            >
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <Bot className="h-4 w-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="truncate text-[13.5px] font-semibold">{a.name}</div>
+                  {a.status !== "active" && (
+                    <span className="chip text-[10px]">{a.status}</span>
+                  )}
+                  {scoped.has(a.id) && (
+                    <StatusPill tone="primary" className="text-[10px]">
+                      in scope
+                    </StatusPill>
+                  )}
+                </div>
+                <p className="mt-0.5 text-[12px] leading-snug text-muted-foreground">{a.role}</p>
+
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {a.tools.map((t) => (
+                    <span
+                      key={t.id}
+                      className={cn(
+                        "rounded border px-1.5 py-0.5 text-[10.5px]",
+                        t.needsApproval
+                          ? "border-warning/30 bg-warning/10 text-warning"
+                          : "border-border bg-surface text-muted-foreground",
+                      )}
+                      title={t.needsApproval ? "Requires approval" : "Read-only tool"}
+                    >
+                      {t.label}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-2 text-[11px] text-muted-foreground">
+                  {a.triggers.map((t) => TRIGGER_LABEL[t]).join(" · ")}
+                </div>
+                <ul className="mt-1.5 space-y-0.5">
+                  {a.guardrails.map((g) => (
+                    <li key={g} className="text-[11px] text-muted-foreground">
+                      · {g}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted-foreground">
+                  <span>{a.runs30d} runs · 30d</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setRunAgent(a)}
+                      className="inline-flex items-center gap-1 rounded-md bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground"
+                    >
+                      <Play className="h-3 w-3" /> Run
+                    </button>
+                    <button
+                      onClick={() => setTriggerAgent(a)}
+                      className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+                    >
+                      <CalendarClock className="h-3 w-3" /> Triggers
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="card-surface p-5">
+        <PaneHeader
+          title="Approvals"
+          desc="Tool calls paused for human review. Also surfaced in the workspace Alerts feed."
+        />
+        <div className="mt-4">
+          <AgentApprovalsFeed />
+          <p className="text-[11.5px] text-muted-foreground">
+            Approval-required tools are marked amber on each agent. Run an agent to see the
+            workflow.
+          </p>
+        </div>
+      </div>
+
+      <AgentRunModal
+        agent={runAgent}
+        open={Boolean(runAgent)}
+        onOpenChange={(v) => !v && setRunAgent(null)}
       />
-      <ul className="mt-5 grid gap-3 md:grid-cols-2">
-        {AGENT_REGISTRY.map((a) => (
-          <li
-            key={a.id}
-            className="flex items-start gap-3 rounded-lg border border-border bg-surface-muted/40 p-4"
-          >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-              <Bot className="h-4 w-4" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="truncate text-[13.5px] font-semibold">{a.name}</div>
-                {a.status !== "active" && (
-                  <span className="chip text-[10px]">{a.status}</span>
-                )}
-                {scoped.has(a.id) && (
-                  <StatusPill tone="primary" className="text-[10px]">
-                    in scope
-                  </StatusPill>
-                )}
-              </div>
-              <p className="mt-0.5 text-[12px] leading-snug text-muted-foreground">{a.role}</p>
-
-              <div className="mt-2 flex flex-wrap gap-1">
-                {a.tools.map((t) => (
-                  <span
-                    key={t.id}
-                    className={cn(
-                      "rounded border px-1.5 py-0.5 text-[10.5px]",
-                      t.needsApproval
-                        ? "border-warning/30 bg-warning/10 text-warning"
-                        : "border-border bg-surface text-muted-foreground",
-                    )}
-                    title={t.needsApproval ? "Requires approval" : "Read-only tool"}
-                  >
-                    {t.label}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-2 text-[11px] text-muted-foreground">
-                {a.triggers.map((t) => TRIGGER_LABEL[t]).join(" · ")}
-              </div>
-              <ul className="mt-1.5 space-y-0.5">
-                {a.guardrails.map((g) => (
-                  <li key={g} className="text-[11px] text-muted-foreground">
-                    · {g}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-2.5 flex items-center justify-between text-[11px] text-muted-foreground">
-                <span>{a.runs30d} runs · 30d</span>
-                <button className="inline-flex items-center gap-1 font-medium text-primary hover:underline">
-                  Configure <ChevronRight className="h-3 w-3" />
-                </button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <AgentTriggersPanel
+        agent={triggerAgent}
+        open={Boolean(triggerAgent)}
+        onOpenChange={(v) => !v && setTriggerAgent(null)}
+      />
     </div>
   );
 }

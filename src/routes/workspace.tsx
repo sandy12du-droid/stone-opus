@@ -49,6 +49,16 @@ function greeting() {
   return "Good evening";
 }
 
+/** Fixed locale so SSR and client render identical text. */
+function todayLabel() {
+  return new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+
 /* ------------------------------------------------------------------ */
 
 const initialFocus = [
@@ -145,11 +155,7 @@ function WorkspacePage() {
             {greeting()}, Sanjay <span className="ml-0.5">👋</span>
           </h1>
           <div className="hidden text-right text-xs text-muted-foreground md:block">
-            {new Date().toLocaleDateString(undefined, {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-            })}
+            {todayLabel()}
           </div>
         </div>
       </section>
