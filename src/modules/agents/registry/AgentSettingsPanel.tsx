@@ -64,7 +64,10 @@ export function AgentSettingsPanel({ agent }: { agent: AgentRecord }) {
 
   return (
     <div className="space-y-3">
-      <SectionCard title="Agent settings" subtitle={`${agent.name} · ${agent.workflowId}`}>
+      <SectionCard
+        title="Agent settings"
+        right={<span className="font-mono text-[10.5px] text-muted-foreground">{agent.workflowId}</span>}
+      >
         <div className="-mt-1">
           <Row label="Enabled" hint="Paused agents ignore all triggers">
             <Toggle checked={s.enabled} onChange={(v) => set({ enabled: v })} label="Enable agent" />
@@ -142,7 +145,10 @@ export function AgentSettingsPanel({ agent }: { agent: AgentRecord }) {
         </div>
       </SectionCard>
 
-      <SectionCard title="Permissions" subtitle="What this agent is allowed to touch">
+      <SectionCard
+        title="Permissions"
+        right={<span className="text-[10.5px] text-muted-foreground">What this agent may touch</span>}
+      >
         <ul className="-mt-1 space-y-1.5">
           {ALL_PERMISSIONS.map((p) => {
             const on = agent.permissions.includes(p);
@@ -165,7 +171,10 @@ export function AgentSettingsPanel({ agent }: { agent: AgentRecord }) {
         </ul>
       </SectionCard>
 
-      <SectionCard title="Guardrails" subtitle="Enforced by the runtime, not the prompt">
+      <SectionCard
+        title="Guardrails"
+        right={<span className="text-[10.5px] text-muted-foreground">Enforced by the runtime</span>}
+      >
         <ul className="-mt-1 space-y-1">
           {agent.guardrails.map((g) => (
             <li key={g} className="flex gap-2 text-[12px] text-foreground/90">
