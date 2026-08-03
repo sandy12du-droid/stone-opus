@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Play, FlaskConical, X } from "lucide-react";
-import { useBusinessContext } from "@/context/BusinessContext";
+import { useBusinessContext, type BusinessEntity } from "@/context/BusinessContext";
 import type { AgentRecord } from "../types";
 import { getAgentService } from "../services/agent-service";
 
@@ -17,19 +17,23 @@ export function RunLauncher({
   onLaunched?: (executionId: string) => void;
   onClose?: () => void;
 }) {
-  const { entity, history } = useBusinessContext();
-  const options = [entity, ...history.filter((h) => h.id !== entity?.id)].filter(Boolean).slice(0, 6);
-  const [contextId, setContextId] = useState(entity?.id ?? "");
+  const { active, recent } = useBusinessContext();
+  const activeList = Object.values(active).filter(Boolean) as BusinessEntity[];
+  const options: BusinessEntity[] = [
+    ...activeList,
+    ...recent.filter((r) => !activeList.some((a) => a.id === r.id)),
+  ].slice(0, 8);
+  const [contextId, setContextId] = useState(options[0]?.id ?? "");
   const [prompt, setPrompt] = useState(agent.samplePrompts[0] ?? "");
   const [simulation, setSimulation] = useState(false);
 
-  const selected = options.find((o) => o!.id === contextId) ?? undefined;
+  const selected = options.find((o) => o.id === contextId);
 
   const launch = () => {
     const id = getAgentService().start({
       agentId: agent.id,
       prompt,
-      entity: selected ?? undefined,
+      entity: selected,
       contextLabel: selected?.label,
       simulation,
       triggeredBy: "manual",
@@ -65,8 +69,8 @@ export function RunLauncher({
       >
         <option value="">No context — workspace-wide</option>
         {options.map((o) => (
-          <option key={o!.id} value={o!.id}>
-            {o!.kind} · {o!.label}
+          <option key={o.id} value={o.id}>
+            {o.kind} · {o.label}
           </option>
         ))}
       </select>
@@ -100,7 +104,7 @@ export function RunLauncher({
             const id = getAgentService().start({
               agentId: agent.id,
               prompt,
-              entity: selected ?? undefined,
+              entity: selected,
               contextLabel: selected?.label,
               simulation: true,
               triggeredBy: "manual",
