@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { recordAuthEvent } from "@/lib/auth.functions";
 import { Button } from "@/components/ui/button";
 import { openCommandPalette } from "@/components/CommandPalette";
 import {
