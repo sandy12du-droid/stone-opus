@@ -28,7 +28,7 @@ import { openCommandPalette } from "@/components/CommandPalette";
 import { cn } from "@/lib/utils";
 import { SectionLabel, StatCard, ToneDot } from "@/components/shared";
 
-export const Route = createFileRoute("/workspace")({
+export const Route = createFileRoute("/_authenticated/workspace")({
   head: () => ({
     meta: [
       { title: "Workspace — Arquane OS" },

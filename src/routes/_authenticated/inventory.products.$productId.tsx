@@ -20,7 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useSetBusinessContext } from "@/context/BusinessContext";
 
-export const Route = createFileRoute("/inventory/products/$productId")({
+export const Route = createFileRoute("/_authenticated/inventory/products/$productId")({
   head: () => ({
     meta: [
       { title: "Product — Arquane OS" },

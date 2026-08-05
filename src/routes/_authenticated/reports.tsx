@@ -16,7 +16,7 @@ import { projectsListOptions, PROJECT_STATUS_LABEL } from "@/lib/projects-querie
 import { shipmentsListOptions, STATUS_LABEL as SHIP_LABEL } from "@/lib/shipping-queries";
 import { productsWithStockOptions, aggregateProduct } from "@/lib/inventory-queries";
 
-export const Route = createFileRoute("/reports")({
+export const Route = createFileRoute("/_authenticated/reports")({
   head: () => ({
     meta: [
       { title: "Reports — Arquane OS" },

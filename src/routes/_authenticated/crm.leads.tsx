@@ -31,7 +31,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/crm/leads")({
+export const Route = createFileRoute("/_authenticated/crm/leads")({
   head: () => ({
     meta: [
       { title: "Leads — Arquane OS" },

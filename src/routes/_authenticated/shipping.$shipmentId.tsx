@@ -21,7 +21,7 @@ import {
 import { updateShipmentStatus, addShipmentEvent } from "@/lib/shipping.functions";
 import { useSetBusinessContext } from "@/context/BusinessContext";
 
-export const Route = createFileRoute("/shipping/$shipmentId")({
+export const Route = createFileRoute("/_authenticated/shipping/$shipmentId")({
   head: ({ loaderData }) => {
     const s = loaderData as { reference: string } | undefined;
     if (!s) return { meta: [{ title: "Shipment — Arquane OS" }, { name: "robots", content: "noindex" }] };

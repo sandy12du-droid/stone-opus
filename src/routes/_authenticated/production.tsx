@@ -12,7 +12,7 @@ import {
 } from "@/lib/projects-queries";
 import { advanceWorkOrder } from "@/lib/projects.functions";
 
-export const Route = createFileRoute("/production")({
+export const Route = createFileRoute("/_authenticated/production")({
   head: () => ({
     meta: [
       { title: "Production — Arquane OS" },

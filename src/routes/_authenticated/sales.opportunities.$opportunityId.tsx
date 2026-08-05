@@ -37,7 +37,7 @@ import {
 } from "@/lib/sales-data";
 import { StageBadge } from "@/components/sales/StageBadge";
 
-export const Route = createFileRoute("/sales/opportunities/$opportunityId")({
+export const Route = createFileRoute("/_authenticated/sales/opportunities/$opportunityId")({
   loader: ({ params }) => {
     const opp = getOpportunity(params.opportunityId);
     if (!opp) throw notFound();
