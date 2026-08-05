@@ -36,6 +36,9 @@ export function TopBar() {
   const initials = (email ? email.slice(0, 2) : "OP").toUpperCase();
 
   async function handleSignOut() {
+    await recordAuthEvent({
+      data: { event: "sign_out", email: email ?? undefined },
+    }).catch(() => undefined);
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
