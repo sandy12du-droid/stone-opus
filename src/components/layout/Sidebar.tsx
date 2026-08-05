@@ -19,7 +19,10 @@ import {
   Target,
   Workflow,
 } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRoles } from "@/hooks/use-roles";
+import { canAccessPath } from "@/lib/permissions";
 
 
 type NavItem = { label: string; to: string; icon: React.ComponentType<{ className?: string }> };
