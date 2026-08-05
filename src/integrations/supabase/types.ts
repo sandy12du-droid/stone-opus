@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      auth_audit_logs: {
+        Row: {
+          created_at: string
+          detail: string | null
+          email: string | null
+          event: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          email?: string | null
+          event: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          email?: string | null
+          event?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       stone_collections: {
         Row: {
           created_at: string
@@ -807,7 +840,14 @@ export type Database = {
       is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "staff"
+      app_role:
+        | "admin"
+        | "staff"
+        | "manager"
+        | "sales"
+        | "production"
+        | "logistics"
+        | "viewer"
       quotation_status:
         | "draft"
         | "in_review"
@@ -944,7 +984,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "staff"],
+      app_role: [
+        "admin",
+        "staff",
+        "manager",
+        "sales",
+        "production",
+        "logistics",
+        "viewer",
+      ],
       quotation_status: [
         "draft",
         "in_review",

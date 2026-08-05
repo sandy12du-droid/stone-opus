@@ -19,7 +19,10 @@ import {
   Target,
   Workflow,
 } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRoles } from "@/hooks/use-roles";
+import { canAccessPath } from "@/lib/permissions";
 
 
 type NavItem = { label: string; to: string; icon: React.ComponentType<{ className?: string }> };
@@ -78,6 +81,27 @@ const groups: NavGroup[] = [
 
 export function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { roles, isAdmin } = useRoles();
+  const visibleGroups = groups
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((i) => canAccessPath(roles, i.to)),
+    }))
+    .filter((g) => g.items.length > 0);
+  const navGroups = isAdmin
+    ? visibleGroups.map((g) =>
+        g.label === "Insights"
+          ? {
+              ...g,
+              items: [
+                ...g.items,
+                { label: "Audit Logs", to: "/settings/audit-logs", icon: ShieldCheck },
+              ],
+            }
+          : g,
+      )
+    : visibleGroups;
+
 
   return (
     <aside className="sticky top-0 hidden h-screen w-[248px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
@@ -111,7 +135,7 @@ export function Sidebar() {
 
       {/* Nav */}
       <nav className="mt-4 flex-1 overflow-y-auto px-3 pb-6">
-        {groups.map((group, gi) => (
+        {navGroups.map((group, gi) => (
           <div key={gi} className={cn("mb-4", !group.label && "mb-3")}>
             {group.label && (
               <div className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/50">

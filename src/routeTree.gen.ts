@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
@@ -24,6 +26,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAiRouteImport } from './routes/_authenticated/ai'
 import { Route as AuthenticatedWorkspaceExecutiveRouteImport } from './routes/_authenticated/workspace.executive'
 import { Route as AuthenticatedShippingShipmentIdRouteImport } from './routes/_authenticated/shipping.$shipmentId'
+import { Route as AuthenticatedSettingsAuditLogsRouteImport } from './routes/_authenticated/settings.audit-logs'
 import { Route as AuthenticatedSalesPipelineRouteImport } from './routes/_authenticated/sales.pipeline'
 import { Route as AuthenticatedSalesOpportunitiesRouteImport } from './routes/_authenticated/sales.opportunities'
 import { Route as AuthenticatedQuotationsQuotationIdRouteImport } from './routes/_authenticated/quotations.$quotationId'
@@ -36,9 +39,19 @@ import { Route as AuthenticatedSalesOpportunitiesOpportunityIdRouteImport } from
 import { Route as AuthenticatedInventoryProductsProductIdRouteImport } from './routes/_authenticated/inventory.products.$productId'
 import { Route as AuthenticatedCrmCustomersCustomerIdRouteImport } from './routes/_authenticated/crm.customers.$customerId'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -112,6 +125,12 @@ const AuthenticatedShippingShipmentIdRoute =
     path: '/$shipmentId',
     getParentRoute: () => AuthenticatedShippingRoute,
   } as any)
+const AuthenticatedSettingsAuditLogsRoute =
+  AuthenticatedSettingsAuditLogsRouteImport.update({
+    id: '/audit-logs',
+    path: '/audit-logs',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
 const AuthenticatedSalesPipelineRoute =
   AuthenticatedSalesPipelineRouteImport.update({
     id: '/sales/pipeline',
@@ -180,7 +199,9 @@ const AuthenticatedCrmCustomersCustomerIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/ai': typeof AuthenticatedAiRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/documents': typeof AuthenticatedDocumentsRoute
@@ -188,7 +209,7 @@ export interface FileRoutesByFullPath {
   '/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -199,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
@@ -207,7 +229,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/ai': typeof AuthenticatedAiRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/documents': typeof AuthenticatedDocumentsRoute
@@ -215,7 +239,7 @@ export interface FileRoutesByTo {
   '/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -226,6 +250,7 @@ export interface FileRoutesByTo {
   '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
@@ -236,7 +261,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/ai': typeof AuthenticatedAiRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/documents': typeof AuthenticatedDocumentsRoute
@@ -244,7 +271,7 @@ export interface FileRoutesById {
   '/_authenticated/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/_authenticated/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
-  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/_authenticated/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/_authenticated/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -255,6 +282,7 @@ export interface FileRoutesById {
   '/_authenticated/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/_authenticated/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/_authenticated/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/_authenticated/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/_authenticated/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/_authenticated/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/_authenticated/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
@@ -265,7 +293,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/ai'
     | '/dashboard'
     | '/documents'
@@ -284,6 +314,7 @@ export interface FileRouteTypes {
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/settings/audit-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
     | '/crm/customers/$customerId'
@@ -292,7 +323,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/ai'
     | '/dashboard'
     | '/documents'
@@ -311,6 +344,7 @@ export interface FileRouteTypes {
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/settings/audit-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
     | '/crm/customers/$customerId'
@@ -320,7 +354,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/_authenticated/ai'
     | '/_authenticated/dashboard'
     | '/_authenticated/documents'
@@ -339,6 +375,7 @@ export interface FileRouteTypes {
     | '/_authenticated/quotations/$quotationId'
     | '/_authenticated/sales/opportunities'
     | '/_authenticated/sales/pipeline'
+    | '/_authenticated/settings/audit-logs'
     | '/_authenticated/shipping/$shipmentId'
     | '/_authenticated/workspace/executive'
     | '/_authenticated/crm/customers/$customerId'
@@ -349,16 +386,32 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -458,6 +511,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/shipping/$shipmentId'
       preLoaderRoute: typeof AuthenticatedShippingShipmentIdRouteImport
       parentRoute: typeof AuthenticatedShippingRoute
+    }
+    '/_authenticated/settings/audit-logs': {
+      id: '/_authenticated/settings/audit-logs'
+      path: '/audit-logs'
+      fullPath: '/settings/audit-logs'
+      preLoaderRoute: typeof AuthenticatedSettingsAuditLogsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
     }
     '/_authenticated/sales/pipeline': {
       id: '/_authenticated/sales/pipeline'
@@ -567,6 +627,19 @@ const AuthenticatedQuotationsRouteWithChildren =
     AuthenticatedQuotationsRouteChildren,
   )
 
+interface AuthenticatedSettingsRouteChildren {
+  AuthenticatedSettingsAuditLogsRoute: typeof AuthenticatedSettingsAuditLogsRoute
+}
+
+const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
+  AuthenticatedSettingsAuditLogsRoute: AuthenticatedSettingsAuditLogsRoute,
+}
+
+const AuthenticatedSettingsRouteWithChildren =
+  AuthenticatedSettingsRoute._addFileChildren(
+    AuthenticatedSettingsRouteChildren,
+  )
+
 interface AuthenticatedShippingRouteChildren {
   AuthenticatedShippingShipmentIdRoute: typeof AuthenticatedShippingShipmentIdRoute
 }
@@ -647,7 +720,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRouteWithChildren
   AuthenticatedQuotationsRoute: typeof AuthenticatedQuotationsRouteWithChildren
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
-  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRouteWithChildren
   AuthenticatedShippingRoute: typeof AuthenticatedShippingRouteWithChildren
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
   AuthenticatedCrmCustomersRoute: typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -666,7 +739,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProjectsRoute: AuthenticatedProjectsRouteWithChildren,
   AuthenticatedQuotationsRoute: AuthenticatedQuotationsRouteWithChildren,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
-  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRouteWithChildren,
   AuthenticatedShippingRoute: AuthenticatedShippingRouteWithChildren,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
   AuthenticatedCrmCustomersRoute: AuthenticatedCrmCustomersRouteWithChildren,
@@ -685,7 +758,9 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
