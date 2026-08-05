@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2, Mountain } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { recordAuthEvent } from "@/lib/auth.functions";
+import { sanitizeRedirect } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +11,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 export const Route = createFileRoute("/login")({
   ssr: false,
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect: sanitizeRedirect(search["redirect"]),
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — Arquane OS" },
@@ -34,13 +39,14 @@ const REMEMBER_KEY = "arquane.login.email";
 function LoginPage() {
   const navigate = useNavigate();
   const router = useRouter();
+  const { redirect } = Route.useSearch();
+  const destination = redirect ?? "/workspace";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem(REMEMBER_KEY);
@@ -49,43 +55,34 @@ function LoginPage() {
       setRemember(true);
     }
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/workspace", replace: true });
+      if (data.user) navigate({ to: destination, replace: true });
     });
-  }, [navigate]);
+  }, [navigate, destination]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    setNotice(null);
     setLoading(true);
+    const address = email.trim();
     const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
+      email: address,
       password,
     });
     setLoading(false);
     if (signInError) {
       setError(signInError.message);
+      void recordAuthEvent({
+        data: { event: "failed_login", email: address, detail: signInError.message },
+      }).catch(() => undefined);
       return;
     }
-    if (remember) localStorage.setItem(REMEMBER_KEY, email.trim());
+    if (remember) localStorage.setItem(REMEMBER_KEY, address);
     else localStorage.removeItem(REMEMBER_KEY);
-    await router.invalidate();
-    navigate({ to: "/workspace", replace: true });
-  }
-
-  async function handleForgotPassword() {
-    setError(null);
-    setNotice(null);
-    if (!email.trim()) {
-      setError("Enter your email address first, then select Forgot password.");
-      return;
-    }
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-      email.trim(),
-      { redirectTo: `${window.location.origin}/reset-password` },
+    void recordAuthEvent({ data: { event: "sign_in", email: address } }).catch(
+      () => undefined,
     );
-    if (resetError) setError(resetError.message);
-    else setNotice("Password reset instructions sent to your email.");
+    await router.invalidate();
+    navigate({ to: destination, replace: true });
   }
 
   return (
@@ -126,7 +123,9 @@ function LoginPage() {
             Welcome back
           </h1>
           <p className="mt-1.5 text-sm text-muted-foreground">
-            Sign in to your workspace to continue.
+            {redirect
+              ? "Sign in to continue to the page you requested."
+              : "Sign in to your workspace to continue."}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -175,23 +174,17 @@ function LoginPage() {
                 />
                 Remember me
               </label>
-              <button
-                type="button"
-                onClick={handleForgotPassword}
+              <Link
+                to="/forgot-password"
                 className="text-[13px] font-medium text-primary transition-colors hover:underline"
               >
                 Forgot password?
-              </button>
+              </Link>
             </div>
 
             {error && (
               <p role="alert" className="text-[13px] text-destructive">
                 {error}
-              </p>
-            )}
-            {notice && (
-              <p role="status" className="text-[13px] text-muted-foreground">
-                {notice}
               </p>
             )}
 
