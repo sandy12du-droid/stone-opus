@@ -17,11 +17,28 @@ import { useNotifications } from "@/hooks/use-notifications";
 export function TopBar() {
   const [dark, setDark] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
   const { unreadCount } = useNotifications();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
+  }, []);
+
+  const initials = (email ? email.slice(0, 2) : "OP").toUpperCase();
+
+  async function handleSignOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/login", replace: true });
+  }
+
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/70">
