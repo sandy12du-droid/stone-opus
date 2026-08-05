@@ -22,7 +22,7 @@ import {
 } from "@/lib/inventory-queries";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/inventory/products")({
+export const Route = createFileRoute("/_authenticated/inventory/products")({
   head: () => ({
     meta: [
       { title: "Inventory Intelligence — Arquane OS" },

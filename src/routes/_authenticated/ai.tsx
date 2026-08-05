@@ -45,7 +45,7 @@ import type { AgentDefinition } from "@/lib/agents";
 import { FlaskConical, CalendarClock } from "lucide-react";
 
 
-export const Route = createFileRoute("/ai")({
+export const Route = createFileRoute("/_authenticated/ai")({
   head: () => ({
     meta: [
       { title: "Arquane AI Command Center — Arquane OS" },

@@ -21,7 +21,7 @@ import {
 import { addWorkOrder, advanceWorkOrder, updateProjectStatus } from "@/lib/projects.functions";
 import { useSetBusinessContext } from "@/context/BusinessContext";
 
-export const Route = createFileRoute("/projects/$projectId")({
+export const Route = createFileRoute("/_authenticated/projects/$projectId")({
   head: ({ loaderData }) => {
     const p = loaderData as { name: string } | undefined;
     if (!p) {

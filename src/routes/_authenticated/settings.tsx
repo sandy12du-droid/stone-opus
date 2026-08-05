@@ -3,7 +3,7 @@ import { Settings } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { ModulePlaceholder } from "@/components/layout/ModulePlaceholder";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Arquane OS" },

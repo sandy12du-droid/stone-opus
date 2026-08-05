@@ -32,7 +32,7 @@ import {
 } from "@/lib/sales-data";
 import { StageBadge } from "@/components/sales/StageBadge";
 
-export const Route = createFileRoute("/sales/opportunities")({
+export const Route = createFileRoute("/_authenticated/sales/opportunities")({
   head: () => ({
     meta: [
       { title: "Opportunities — Arquane OS" },

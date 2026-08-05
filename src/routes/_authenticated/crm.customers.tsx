@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 import { CUSTOMERS, TIER_STYLES, HEALTH_STYLES, currency, type Tier } from "@/lib/crm-data";
 
 
-export const Route = createFileRoute("/crm/customers")({
+export const Route = createFileRoute("/_authenticated/crm/customers")({
   head: () => ({
     meta: [
       { title: "Customers — Arquane OS" },

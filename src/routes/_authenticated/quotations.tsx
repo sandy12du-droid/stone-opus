@@ -24,7 +24,7 @@ import {
 } from "@/lib/quotations-queries";
 import { createQuotation } from "@/lib/quotations.functions";
 
-export const Route = createFileRoute("/quotations")({
+export const Route = createFileRoute("/_authenticated/quotations")({
   head: () => ({
     meta: [
       { title: "Quotations — Arquane OS" },

@@ -14,7 +14,7 @@ import { quotationsListOptions, QUOTATION_STATUS_TONE, currency, fmtDate } from 
 import { projectsListOptions, PROJECT_STATUS_LABEL } from "@/lib/projects-queries";
 import { shipmentsListOptions, STATUS_LABEL as SHIP_LABEL, STATUS_TONE as SHIP_TONE } from "@/lib/shipping-queries";
 
-export const Route = createFileRoute("/documents")({
+export const Route = createFileRoute("/_authenticated/documents")({
   head: () => ({
     meta: [
       { title: "Documents — Arquane OS" },

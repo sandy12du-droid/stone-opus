@@ -24,7 +24,7 @@ import {
 } from "@/lib/projects-queries";
 import { createProject } from "@/lib/projects.functions";
 
-export const Route = createFileRoute("/projects")({
+export const Route = createFileRoute("/_authenticated/projects")({
   head: () => ({
     meta: [
       { title: "Projects — Arquane OS" },

@@ -18,7 +18,7 @@ import {
 } from "@/lib/crm-data";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/crm/customers/$customerId")({
+export const Route = createFileRoute("/_authenticated/crm/customers/$customerId")({
   head: ({ loaderData }) => {
     const c = loaderData as { name?: string } | undefined;
     if (!c?.name) return { meta: [{ title: "Customer — Arquane OS" }, { name: "robots", content: "noindex" }] };

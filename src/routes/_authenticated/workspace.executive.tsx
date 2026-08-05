@@ -31,7 +31,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { EntityLink } from "@/components/EntityLink";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/workspace/executive")({
+export const Route = createFileRoute("/_authenticated/workspace/executive")({
   head: () => ({
     meta: [
       { title: "Executive Workspace — Arquane OS" },

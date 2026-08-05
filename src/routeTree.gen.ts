@@ -9,79 +9,40 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WorkspaceRouteImport } from './routes/workspace'
-import { Route as ShippingRouteImport } from './routes/shipping'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ReportsRouteImport } from './routes/reports'
-import { Route as QuotationsRouteImport } from './routes/quotations'
-import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as ProductionRouteImport } from './routes/production'
-import { Route as DocumentsRouteImport } from './routes/documents'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as AiRouteImport } from './routes/ai'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WorkspaceExecutiveRouteImport } from './routes/workspace.executive'
-import { Route as ShippingShipmentIdRouteImport } from './routes/shipping.$shipmentId'
-import { Route as SalesPipelineRouteImport } from './routes/sales.pipeline'
-import { Route as SalesOpportunitiesRouteImport } from './routes/sales.opportunities'
-import { Route as QuotationsQuotationIdRouteImport } from './routes/quotations.$quotationId'
-import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
-import { Route as InventoryProductsRouteImport } from './routes/inventory.products'
-import { Route as InventoryPricingRouteImport } from './routes/inventory.pricing'
-import { Route as CrmLeadsRouteImport } from './routes/crm.leads'
-import { Route as CrmCustomersRouteImport } from './routes/crm.customers'
-import { Route as SalesOpportunitiesOpportunityIdRouteImport } from './routes/sales.opportunities.$opportunityId'
-import { Route as InventoryProductsProductIdRouteImport } from './routes/inventory.products.$productId'
-import { Route as CrmCustomersCustomerIdRouteImport } from './routes/crm.customers.$customerId'
+import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
+import { Route as AuthenticatedShippingRouteImport } from './routes/_authenticated/shipping'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
+import { Route as AuthenticatedQuotationsRouteImport } from './routes/_authenticated/quotations'
+import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
+import { Route as AuthenticatedProductionRouteImport } from './routes/_authenticated/production'
+import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAiRouteImport } from './routes/_authenticated/ai'
+import { Route as AuthenticatedWorkspaceExecutiveRouteImport } from './routes/_authenticated/workspace.executive'
+import { Route as AuthenticatedShippingShipmentIdRouteImport } from './routes/_authenticated/shipping.$shipmentId'
+import { Route as AuthenticatedSalesPipelineRouteImport } from './routes/_authenticated/sales.pipeline'
+import { Route as AuthenticatedSalesOpportunitiesRouteImport } from './routes/_authenticated/sales.opportunities'
+import { Route as AuthenticatedQuotationsQuotationIdRouteImport } from './routes/_authenticated/quotations.$quotationId'
+import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects.$projectId'
+import { Route as AuthenticatedInventoryProductsRouteImport } from './routes/_authenticated/inventory.products'
+import { Route as AuthenticatedInventoryPricingRouteImport } from './routes/_authenticated/inventory.pricing'
+import { Route as AuthenticatedCrmLeadsRouteImport } from './routes/_authenticated/crm.leads'
+import { Route as AuthenticatedCrmCustomersRouteImport } from './routes/_authenticated/crm.customers'
+import { Route as AuthenticatedSalesOpportunitiesOpportunityIdRouteImport } from './routes/_authenticated/sales.opportunities.$opportunityId'
+import { Route as AuthenticatedInventoryProductsProductIdRouteImport } from './routes/_authenticated/inventory.products.$productId'
+import { Route as AuthenticatedCrmCustomersCustomerIdRouteImport } from './routes/_authenticated/crm.customers.$customerId'
 
-const WorkspaceRoute = WorkspaceRouteImport.update({
-  id: '/workspace',
-  path: '/workspace',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShippingRoute = ShippingRouteImport.update({
-  id: '/shipping',
-  path: '/shipping',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportsRoute = ReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuotationsRoute = QuotationsRouteImport.update({
-  id: '/quotations',
-  path: '/quotations',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProductionRoute = ProductionRouteImport.update({
-  id: '/production',
-  path: '/production',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocumentsRoute = DocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiRoute = AiRouteImport.update({
-  id: '/ai',
-  path: '/ai',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -89,157 +50,222 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkspaceExecutiveRoute = WorkspaceExecutiveRouteImport.update({
-  id: '/executive',
-  path: '/executive',
-  getParentRoute: () => WorkspaceRoute,
+const AuthenticatedWorkspaceRoute = AuthenticatedWorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ShippingShipmentIdRoute = ShippingShipmentIdRouteImport.update({
-  id: '/$shipmentId',
-  path: '/$shipmentId',
-  getParentRoute: () => ShippingRoute,
+const AuthenticatedShippingRoute = AuthenticatedShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const SalesPipelineRoute = SalesPipelineRouteImport.update({
-  id: '/sales/pipeline',
-  path: '/sales/pipeline',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const SalesOpportunitiesRoute = SalesOpportunitiesRouteImport.update({
-  id: '/sales/opportunities',
-  path: '/sales/opportunities',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const QuotationsQuotationIdRoute = QuotationsQuotationIdRouteImport.update({
-  id: '/$quotationId',
-  path: '/$quotationId',
-  getParentRoute: () => QuotationsRoute,
+const AuthenticatedQuotationsRoute = AuthenticatedQuotationsRouteImport.update({
+  id: '/quotations',
+  path: '/quotations',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
-  id: '/$projectId',
-  path: '/$projectId',
-  getParentRoute: () => ProjectsRoute,
+const AuthenticatedProjectsRoute = AuthenticatedProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const InventoryProductsRoute = InventoryProductsRouteImport.update({
-  id: '/inventory/products',
-  path: '/inventory/products',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedProductionRoute = AuthenticatedProductionRouteImport.update({
+  id: '/production',
+  path: '/production',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const InventoryPricingRoute = InventoryPricingRouteImport.update({
-  id: '/inventory/pricing',
-  path: '/inventory/pricing',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedDocumentsRoute = AuthenticatedDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const CrmLeadsRoute = CrmLeadsRouteImport.update({
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAiRoute = AuthenticatedAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedWorkspaceExecutiveRoute =
+  AuthenticatedWorkspaceExecutiveRouteImport.update({
+    id: '/executive',
+    path: '/executive',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
+const AuthenticatedShippingShipmentIdRoute =
+  AuthenticatedShippingShipmentIdRouteImport.update({
+    id: '/$shipmentId',
+    path: '/$shipmentId',
+    getParentRoute: () => AuthenticatedShippingRoute,
+  } as any)
+const AuthenticatedSalesPipelineRoute =
+  AuthenticatedSalesPipelineRouteImport.update({
+    id: '/sales/pipeline',
+    path: '/sales/pipeline',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesOpportunitiesRoute =
+  AuthenticatedSalesOpportunitiesRouteImport.update({
+    id: '/sales/opportunities',
+    path: '/sales/opportunities',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedQuotationsQuotationIdRoute =
+  AuthenticatedQuotationsQuotationIdRouteImport.update({
+    id: '/$quotationId',
+    path: '/$quotationId',
+    getParentRoute: () => AuthenticatedQuotationsRoute,
+  } as any)
+const AuthenticatedProjectsProjectIdRoute =
+  AuthenticatedProjectsProjectIdRouteImport.update({
+    id: '/$projectId',
+    path: '/$projectId',
+    getParentRoute: () => AuthenticatedProjectsRoute,
+  } as any)
+const AuthenticatedInventoryProductsRoute =
+  AuthenticatedInventoryProductsRouteImport.update({
+    id: '/inventory/products',
+    path: '/inventory/products',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInventoryPricingRoute =
+  AuthenticatedInventoryPricingRouteImport.update({
+    id: '/inventory/pricing',
+    path: '/inventory/pricing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCrmLeadsRoute = AuthenticatedCrmLeadsRouteImport.update({
   id: '/crm/leads',
   path: '/crm/leads',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const CrmCustomersRoute = CrmCustomersRouteImport.update({
-  id: '/crm/customers',
-  path: '/crm/customers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SalesOpportunitiesOpportunityIdRoute =
-  SalesOpportunitiesOpportunityIdRouteImport.update({
+const AuthenticatedCrmCustomersRoute =
+  AuthenticatedCrmCustomersRouteImport.update({
+    id: '/crm/customers',
+    path: '/crm/customers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalesOpportunitiesOpportunityIdRoute =
+  AuthenticatedSalesOpportunitiesOpportunityIdRouteImport.update({
     id: '/$opportunityId',
     path: '/$opportunityId',
-    getParentRoute: () => SalesOpportunitiesRoute,
+    getParentRoute: () => AuthenticatedSalesOpportunitiesRoute,
   } as any)
-const InventoryProductsProductIdRoute =
-  InventoryProductsProductIdRouteImport.update({
+const AuthenticatedInventoryProductsProductIdRoute =
+  AuthenticatedInventoryProductsProductIdRouteImport.update({
     id: '/$productId',
     path: '/$productId',
-    getParentRoute: () => InventoryProductsRoute,
+    getParentRoute: () => AuthenticatedInventoryProductsRoute,
   } as any)
-const CrmCustomersCustomerIdRoute = CrmCustomersCustomerIdRouteImport.update({
-  id: '/$customerId',
-  path: '/$customerId',
-  getParentRoute: () => CrmCustomersRoute,
-} as any)
+const AuthenticatedCrmCustomersCustomerIdRoute =
+  AuthenticatedCrmCustomersCustomerIdRouteImport.update({
+    id: '/$customerId',
+    path: '/$customerId',
+    getParentRoute: () => AuthenticatedCrmCustomersRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/ai': typeof AiRoute
-  '/dashboard': typeof DashboardRoute
-  '/documents': typeof DocumentsRoute
-  '/production': typeof ProductionRoute
-  '/projects': typeof ProjectsRouteWithChildren
-  '/quotations': typeof QuotationsRouteWithChildren
-  '/reports': typeof ReportsRoute
-  '/settings': typeof SettingsRoute
-  '/shipping': typeof ShippingRouteWithChildren
-  '/workspace': typeof WorkspaceRouteWithChildren
-  '/crm/customers': typeof CrmCustomersRouteWithChildren
-  '/crm/leads': typeof CrmLeadsRoute
-  '/inventory/pricing': typeof InventoryPricingRoute
-  '/inventory/products': typeof InventoryProductsRouteWithChildren
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
-  '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
-  '/sales/pipeline': typeof SalesPipelineRoute
-  '/shipping/$shipmentId': typeof ShippingShipmentIdRoute
-  '/workspace/executive': typeof WorkspaceExecutiveRoute
-  '/crm/customers/$customerId': typeof CrmCustomersCustomerIdRoute
-  '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
-  '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
+  '/login': typeof LoginRoute
+  '/ai': typeof AuthenticatedAiRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/documents': typeof AuthenticatedDocumentsRoute
+  '/production': typeof AuthenticatedProductionRoute
+  '/projects': typeof AuthenticatedProjectsRouteWithChildren
+  '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
+  '/reports': typeof AuthenticatedReportsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/shipping': typeof AuthenticatedShippingRouteWithChildren
+  '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
+  '/crm/leads': typeof AuthenticatedCrmLeadsRoute
+  '/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
+  '/inventory/products': typeof AuthenticatedInventoryProductsRouteWithChildren
+  '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
+  '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
+  '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
+  '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
+  '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
+  '/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
+  '/inventory/products/$productId': typeof AuthenticatedInventoryProductsProductIdRoute
+  '/sales/opportunities/$opportunityId': typeof AuthenticatedSalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/ai': typeof AiRoute
-  '/dashboard': typeof DashboardRoute
-  '/documents': typeof DocumentsRoute
-  '/production': typeof ProductionRoute
-  '/projects': typeof ProjectsRouteWithChildren
-  '/quotations': typeof QuotationsRouteWithChildren
-  '/reports': typeof ReportsRoute
-  '/settings': typeof SettingsRoute
-  '/shipping': typeof ShippingRouteWithChildren
-  '/workspace': typeof WorkspaceRouteWithChildren
-  '/crm/customers': typeof CrmCustomersRouteWithChildren
-  '/crm/leads': typeof CrmLeadsRoute
-  '/inventory/pricing': typeof InventoryPricingRoute
-  '/inventory/products': typeof InventoryProductsRouteWithChildren
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
-  '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
-  '/sales/pipeline': typeof SalesPipelineRoute
-  '/shipping/$shipmentId': typeof ShippingShipmentIdRoute
-  '/workspace/executive': typeof WorkspaceExecutiveRoute
-  '/crm/customers/$customerId': typeof CrmCustomersCustomerIdRoute
-  '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
-  '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
+  '/login': typeof LoginRoute
+  '/ai': typeof AuthenticatedAiRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/documents': typeof AuthenticatedDocumentsRoute
+  '/production': typeof AuthenticatedProductionRoute
+  '/projects': typeof AuthenticatedProjectsRouteWithChildren
+  '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
+  '/reports': typeof AuthenticatedReportsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/shipping': typeof AuthenticatedShippingRouteWithChildren
+  '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
+  '/crm/leads': typeof AuthenticatedCrmLeadsRoute
+  '/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
+  '/inventory/products': typeof AuthenticatedInventoryProductsRouteWithChildren
+  '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
+  '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
+  '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
+  '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
+  '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
+  '/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
+  '/inventory/products/$productId': typeof AuthenticatedInventoryProductsProductIdRoute
+  '/sales/opportunities/$opportunityId': typeof AuthenticatedSalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/ai': typeof AiRoute
-  '/dashboard': typeof DashboardRoute
-  '/documents': typeof DocumentsRoute
-  '/production': typeof ProductionRoute
-  '/projects': typeof ProjectsRouteWithChildren
-  '/quotations': typeof QuotationsRouteWithChildren
-  '/reports': typeof ReportsRoute
-  '/settings': typeof SettingsRoute
-  '/shipping': typeof ShippingRouteWithChildren
-  '/workspace': typeof WorkspaceRouteWithChildren
-  '/crm/customers': typeof CrmCustomersRouteWithChildren
-  '/crm/leads': typeof CrmLeadsRoute
-  '/inventory/pricing': typeof InventoryPricingRoute
-  '/inventory/products': typeof InventoryProductsRouteWithChildren
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/quotations/$quotationId': typeof QuotationsQuotationIdRoute
-  '/sales/opportunities': typeof SalesOpportunitiesRouteWithChildren
-  '/sales/pipeline': typeof SalesPipelineRoute
-  '/shipping/$shipmentId': typeof ShippingShipmentIdRoute
-  '/workspace/executive': typeof WorkspaceExecutiveRoute
-  '/crm/customers/$customerId': typeof CrmCustomersCustomerIdRoute
-  '/inventory/products/$productId': typeof InventoryProductsProductIdRoute
-  '/sales/opportunities/$opportunityId': typeof SalesOpportunitiesOpportunityIdRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_authenticated/ai': typeof AuthenticatedAiRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/documents': typeof AuthenticatedDocumentsRoute
+  '/_authenticated/production': typeof AuthenticatedProductionRoute
+  '/_authenticated/projects': typeof AuthenticatedProjectsRouteWithChildren
+  '/_authenticated/quotations': typeof AuthenticatedQuotationsRouteWithChildren
+  '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/shipping': typeof AuthenticatedShippingRouteWithChildren
+  '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/_authenticated/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
+  '/_authenticated/crm/leads': typeof AuthenticatedCrmLeadsRoute
+  '/_authenticated/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
+  '/_authenticated/inventory/products': typeof AuthenticatedInventoryProductsRouteWithChildren
+  '/_authenticated/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
+  '/_authenticated/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
+  '/_authenticated/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
+  '/_authenticated/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/_authenticated/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
+  '/_authenticated/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
+  '/_authenticated/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
+  '/_authenticated/inventory/products/$productId': typeof AuthenticatedInventoryProductsProductIdRoute
+  '/_authenticated/sales/opportunities/$opportunityId': typeof AuthenticatedSalesOpportunitiesOpportunityIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/ai'
     | '/dashboard'
     | '/documents'
@@ -266,6 +292,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/ai'
     | '/dashboard'
     | '/documents'
@@ -292,121 +319,53 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/ai'
-    | '/dashboard'
-    | '/documents'
-    | '/production'
-    | '/projects'
-    | '/quotations'
-    | '/reports'
-    | '/settings'
-    | '/shipping'
-    | '/workspace'
-    | '/crm/customers'
-    | '/crm/leads'
-    | '/inventory/pricing'
-    | '/inventory/products'
-    | '/projects/$projectId'
-    | '/quotations/$quotationId'
-    | '/sales/opportunities'
-    | '/sales/pipeline'
-    | '/shipping/$shipmentId'
-    | '/workspace/executive'
-    | '/crm/customers/$customerId'
-    | '/inventory/products/$productId'
-    | '/sales/opportunities/$opportunityId'
+    | '/_authenticated'
+    | '/login'
+    | '/_authenticated/ai'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/documents'
+    | '/_authenticated/production'
+    | '/_authenticated/projects'
+    | '/_authenticated/quotations'
+    | '/_authenticated/reports'
+    | '/_authenticated/settings'
+    | '/_authenticated/shipping'
+    | '/_authenticated/workspace'
+    | '/_authenticated/crm/customers'
+    | '/_authenticated/crm/leads'
+    | '/_authenticated/inventory/pricing'
+    | '/_authenticated/inventory/products'
+    | '/_authenticated/projects/$projectId'
+    | '/_authenticated/quotations/$quotationId'
+    | '/_authenticated/sales/opportunities'
+    | '/_authenticated/sales/pipeline'
+    | '/_authenticated/shipping/$shipmentId'
+    | '/_authenticated/workspace/executive'
+    | '/_authenticated/crm/customers/$customerId'
+    | '/_authenticated/inventory/products/$productId'
+    | '/_authenticated/sales/opportunities/$opportunityId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AiRoute: typeof AiRoute
-  DashboardRoute: typeof DashboardRoute
-  DocumentsRoute: typeof DocumentsRoute
-  ProductionRoute: typeof ProductionRoute
-  ProjectsRoute: typeof ProjectsRouteWithChildren
-  QuotationsRoute: typeof QuotationsRouteWithChildren
-  ReportsRoute: typeof ReportsRoute
-  SettingsRoute: typeof SettingsRoute
-  ShippingRoute: typeof ShippingRouteWithChildren
-  WorkspaceRoute: typeof WorkspaceRouteWithChildren
-  CrmCustomersRoute: typeof CrmCustomersRouteWithChildren
-  CrmLeadsRoute: typeof CrmLeadsRoute
-  InventoryPricingRoute: typeof InventoryPricingRoute
-  InventoryProductsRoute: typeof InventoryProductsRouteWithChildren
-  SalesOpportunitiesRoute: typeof SalesOpportunitiesRouteWithChildren
-  SalesPipelineRoute: typeof SalesPipelineRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/workspace': {
-      id: '/workspace'
-      path: '/workspace'
-      fullPath: '/workspace'
-      preLoaderRoute: typeof WorkspaceRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shipping': {
-      id: '/shipping'
-      path: '/shipping'
-      fullPath: '/shipping'
-      preLoaderRoute: typeof ShippingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reports': {
-      id: '/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof ReportsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quotations': {
-      id: '/quotations'
-      path: '/quotations'
-      fullPath: '/quotations'
-      preLoaderRoute: typeof QuotationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/production': {
-      id: '/production'
-      path: '/production'
-      fullPath: '/production'
-      preLoaderRoute: typeof ProductionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents': {
-      id: '/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof DocumentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai': {
-      id: '/ai'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof AiRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -416,200 +375,317 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/workspace/executive': {
-      id: '/workspace/executive'
+    '/_authenticated/workspace': {
+      id: '/_authenticated/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof AuthenticatedWorkspaceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/shipping': {
+      id: '/_authenticated/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof AuthenticatedShippingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reports': {
+      id: '/_authenticated/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/quotations': {
+      id: '/_authenticated/quotations'
+      path: '/quotations'
+      fullPath: '/quotations'
+      preLoaderRoute: typeof AuthenticatedQuotationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projects': {
+      id: '/_authenticated/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof AuthenticatedProjectsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/production': {
+      id: '/_authenticated/production'
+      path: '/production'
+      fullPath: '/production'
+      preLoaderRoute: typeof AuthenticatedProductionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/documents': {
+      id: '/_authenticated/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof AuthenticatedDocumentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ai': {
+      id: '/_authenticated/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AuthenticatedAiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/workspace/executive': {
+      id: '/_authenticated/workspace/executive'
       path: '/executive'
       fullPath: '/workspace/executive'
-      preLoaderRoute: typeof WorkspaceExecutiveRouteImport
-      parentRoute: typeof WorkspaceRoute
+      preLoaderRoute: typeof AuthenticatedWorkspaceExecutiveRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
     }
-    '/shipping/$shipmentId': {
-      id: '/shipping/$shipmentId'
+    '/_authenticated/shipping/$shipmentId': {
+      id: '/_authenticated/shipping/$shipmentId'
       path: '/$shipmentId'
       fullPath: '/shipping/$shipmentId'
-      preLoaderRoute: typeof ShippingShipmentIdRouteImport
-      parentRoute: typeof ShippingRoute
+      preLoaderRoute: typeof AuthenticatedShippingShipmentIdRouteImport
+      parentRoute: typeof AuthenticatedShippingRoute
     }
-    '/sales/pipeline': {
-      id: '/sales/pipeline'
+    '/_authenticated/sales/pipeline': {
+      id: '/_authenticated/sales/pipeline'
       path: '/sales/pipeline'
       fullPath: '/sales/pipeline'
-      preLoaderRoute: typeof SalesPipelineRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedSalesPipelineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/sales/opportunities': {
-      id: '/sales/opportunities'
+    '/_authenticated/sales/opportunities': {
+      id: '/_authenticated/sales/opportunities'
       path: '/sales/opportunities'
       fullPath: '/sales/opportunities'
-      preLoaderRoute: typeof SalesOpportunitiesRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedSalesOpportunitiesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/quotations/$quotationId': {
-      id: '/quotations/$quotationId'
+    '/_authenticated/quotations/$quotationId': {
+      id: '/_authenticated/quotations/$quotationId'
       path: '/$quotationId'
       fullPath: '/quotations/$quotationId'
-      preLoaderRoute: typeof QuotationsQuotationIdRouteImport
-      parentRoute: typeof QuotationsRoute
+      preLoaderRoute: typeof AuthenticatedQuotationsQuotationIdRouteImport
+      parentRoute: typeof AuthenticatedQuotationsRoute
     }
-    '/projects/$projectId': {
-      id: '/projects/$projectId'
+    '/_authenticated/projects/$projectId': {
+      id: '/_authenticated/projects/$projectId'
       path: '/$projectId'
       fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof ProjectsProjectIdRouteImport
-      parentRoute: typeof ProjectsRoute
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdRouteImport
+      parentRoute: typeof AuthenticatedProjectsRoute
     }
-    '/inventory/products': {
-      id: '/inventory/products'
+    '/_authenticated/inventory/products': {
+      id: '/_authenticated/inventory/products'
       path: '/inventory/products'
       fullPath: '/inventory/products'
-      preLoaderRoute: typeof InventoryProductsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedInventoryProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/inventory/pricing': {
-      id: '/inventory/pricing'
+    '/_authenticated/inventory/pricing': {
+      id: '/_authenticated/inventory/pricing'
       path: '/inventory/pricing'
       fullPath: '/inventory/pricing'
-      preLoaderRoute: typeof InventoryPricingRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedInventoryPricingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/crm/leads': {
-      id: '/crm/leads'
+    '/_authenticated/crm/leads': {
+      id: '/_authenticated/crm/leads'
       path: '/crm/leads'
       fullPath: '/crm/leads'
-      preLoaderRoute: typeof CrmLeadsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedCrmLeadsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/crm/customers': {
-      id: '/crm/customers'
+    '/_authenticated/crm/customers': {
+      id: '/_authenticated/crm/customers'
       path: '/crm/customers'
       fullPath: '/crm/customers'
-      preLoaderRoute: typeof CrmCustomersRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedCrmCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/sales/opportunities/$opportunityId': {
-      id: '/sales/opportunities/$opportunityId'
+    '/_authenticated/sales/opportunities/$opportunityId': {
+      id: '/_authenticated/sales/opportunities/$opportunityId'
       path: '/$opportunityId'
       fullPath: '/sales/opportunities/$opportunityId'
-      preLoaderRoute: typeof SalesOpportunitiesOpportunityIdRouteImport
-      parentRoute: typeof SalesOpportunitiesRoute
+      preLoaderRoute: typeof AuthenticatedSalesOpportunitiesOpportunityIdRouteImport
+      parentRoute: typeof AuthenticatedSalesOpportunitiesRoute
     }
-    '/inventory/products/$productId': {
-      id: '/inventory/products/$productId'
+    '/_authenticated/inventory/products/$productId': {
+      id: '/_authenticated/inventory/products/$productId'
       path: '/$productId'
       fullPath: '/inventory/products/$productId'
-      preLoaderRoute: typeof InventoryProductsProductIdRouteImport
-      parentRoute: typeof InventoryProductsRoute
+      preLoaderRoute: typeof AuthenticatedInventoryProductsProductIdRouteImport
+      parentRoute: typeof AuthenticatedInventoryProductsRoute
     }
-    '/crm/customers/$customerId': {
-      id: '/crm/customers/$customerId'
+    '/_authenticated/crm/customers/$customerId': {
+      id: '/_authenticated/crm/customers/$customerId'
       path: '/$customerId'
       fullPath: '/crm/customers/$customerId'
-      preLoaderRoute: typeof CrmCustomersCustomerIdRouteImport
-      parentRoute: typeof CrmCustomersRoute
+      preLoaderRoute: typeof AuthenticatedCrmCustomersCustomerIdRouteImport
+      parentRoute: typeof AuthenticatedCrmCustomersRoute
     }
   }
 }
 
-interface ProjectsRouteChildren {
-  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
+interface AuthenticatedProjectsRouteChildren {
+  AuthenticatedProjectsProjectIdRoute: typeof AuthenticatedProjectsProjectIdRoute
 }
 
-const ProjectsRouteChildren: ProjectsRouteChildren = {
-  ProjectsProjectIdRoute: ProjectsProjectIdRoute,
+const AuthenticatedProjectsRouteChildren: AuthenticatedProjectsRouteChildren = {
+  AuthenticatedProjectsProjectIdRoute: AuthenticatedProjectsProjectIdRoute,
 }
 
-const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
-  ProjectsRouteChildren,
-)
+const AuthenticatedProjectsRouteWithChildren =
+  AuthenticatedProjectsRoute._addFileChildren(
+    AuthenticatedProjectsRouteChildren,
+  )
 
-interface QuotationsRouteChildren {
-  QuotationsQuotationIdRoute: typeof QuotationsQuotationIdRoute
+interface AuthenticatedQuotationsRouteChildren {
+  AuthenticatedQuotationsQuotationIdRoute: typeof AuthenticatedQuotationsQuotationIdRoute
 }
 
-const QuotationsRouteChildren: QuotationsRouteChildren = {
-  QuotationsQuotationIdRoute: QuotationsQuotationIdRoute,
+const AuthenticatedQuotationsRouteChildren: AuthenticatedQuotationsRouteChildren =
+  {
+    AuthenticatedQuotationsQuotationIdRoute:
+      AuthenticatedQuotationsQuotationIdRoute,
+  }
+
+const AuthenticatedQuotationsRouteWithChildren =
+  AuthenticatedQuotationsRoute._addFileChildren(
+    AuthenticatedQuotationsRouteChildren,
+  )
+
+interface AuthenticatedShippingRouteChildren {
+  AuthenticatedShippingShipmentIdRoute: typeof AuthenticatedShippingShipmentIdRoute
 }
 
-const QuotationsRouteWithChildren = QuotationsRoute._addFileChildren(
-  QuotationsRouteChildren,
-)
-
-interface ShippingRouteChildren {
-  ShippingShipmentIdRoute: typeof ShippingShipmentIdRoute
+const AuthenticatedShippingRouteChildren: AuthenticatedShippingRouteChildren = {
+  AuthenticatedShippingShipmentIdRoute: AuthenticatedShippingShipmentIdRoute,
 }
 
-const ShippingRouteChildren: ShippingRouteChildren = {
-  ShippingShipmentIdRoute: ShippingShipmentIdRoute,
+const AuthenticatedShippingRouteWithChildren =
+  AuthenticatedShippingRoute._addFileChildren(
+    AuthenticatedShippingRouteChildren,
+  )
+
+interface AuthenticatedWorkspaceRouteChildren {
+  AuthenticatedWorkspaceExecutiveRoute: typeof AuthenticatedWorkspaceExecutiveRoute
 }
 
-const ShippingRouteWithChildren = ShippingRoute._addFileChildren(
-  ShippingRouteChildren,
-)
+const AuthenticatedWorkspaceRouteChildren: AuthenticatedWorkspaceRouteChildren =
+  {
+    AuthenticatedWorkspaceExecutiveRoute: AuthenticatedWorkspaceExecutiveRoute,
+  }
 
-interface WorkspaceRouteChildren {
-  WorkspaceExecutiveRoute: typeof WorkspaceExecutiveRoute
+const AuthenticatedWorkspaceRouteWithChildren =
+  AuthenticatedWorkspaceRoute._addFileChildren(
+    AuthenticatedWorkspaceRouteChildren,
+  )
+
+interface AuthenticatedCrmCustomersRouteChildren {
+  AuthenticatedCrmCustomersCustomerIdRoute: typeof AuthenticatedCrmCustomersCustomerIdRoute
 }
 
-const WorkspaceRouteChildren: WorkspaceRouteChildren = {
-  WorkspaceExecutiveRoute: WorkspaceExecutiveRoute,
+const AuthenticatedCrmCustomersRouteChildren: AuthenticatedCrmCustomersRouteChildren =
+  {
+    AuthenticatedCrmCustomersCustomerIdRoute:
+      AuthenticatedCrmCustomersCustomerIdRoute,
+  }
+
+const AuthenticatedCrmCustomersRouteWithChildren =
+  AuthenticatedCrmCustomersRoute._addFileChildren(
+    AuthenticatedCrmCustomersRouteChildren,
+  )
+
+interface AuthenticatedInventoryProductsRouteChildren {
+  AuthenticatedInventoryProductsProductIdRoute: typeof AuthenticatedInventoryProductsProductIdRoute
 }
 
-const WorkspaceRouteWithChildren = WorkspaceRoute._addFileChildren(
-  WorkspaceRouteChildren,
-)
+const AuthenticatedInventoryProductsRouteChildren: AuthenticatedInventoryProductsRouteChildren =
+  {
+    AuthenticatedInventoryProductsProductIdRoute:
+      AuthenticatedInventoryProductsProductIdRoute,
+  }
 
-interface CrmCustomersRouteChildren {
-  CrmCustomersCustomerIdRoute: typeof CrmCustomersCustomerIdRoute
+const AuthenticatedInventoryProductsRouteWithChildren =
+  AuthenticatedInventoryProductsRoute._addFileChildren(
+    AuthenticatedInventoryProductsRouteChildren,
+  )
+
+interface AuthenticatedSalesOpportunitiesRouteChildren {
+  AuthenticatedSalesOpportunitiesOpportunityIdRoute: typeof AuthenticatedSalesOpportunitiesOpportunityIdRoute
 }
 
-const CrmCustomersRouteChildren: CrmCustomersRouteChildren = {
-  CrmCustomersCustomerIdRoute: CrmCustomersCustomerIdRoute,
+const AuthenticatedSalesOpportunitiesRouteChildren: AuthenticatedSalesOpportunitiesRouteChildren =
+  {
+    AuthenticatedSalesOpportunitiesOpportunityIdRoute:
+      AuthenticatedSalesOpportunitiesOpportunityIdRoute,
+  }
+
+const AuthenticatedSalesOpportunitiesRouteWithChildren =
+  AuthenticatedSalesOpportunitiesRoute._addFileChildren(
+    AuthenticatedSalesOpportunitiesRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAiRoute: typeof AuthenticatedAiRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDocumentsRoute: typeof AuthenticatedDocumentsRoute
+  AuthenticatedProductionRoute: typeof AuthenticatedProductionRoute
+  AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRouteWithChildren
+  AuthenticatedQuotationsRoute: typeof AuthenticatedQuotationsRouteWithChildren
+  AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedShippingRoute: typeof AuthenticatedShippingRouteWithChildren
+  AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
+  AuthenticatedCrmCustomersRoute: typeof AuthenticatedCrmCustomersRouteWithChildren
+  AuthenticatedCrmLeadsRoute: typeof AuthenticatedCrmLeadsRoute
+  AuthenticatedInventoryPricingRoute: typeof AuthenticatedInventoryPricingRoute
+  AuthenticatedInventoryProductsRoute: typeof AuthenticatedInventoryProductsRouteWithChildren
+  AuthenticatedSalesOpportunitiesRoute: typeof AuthenticatedSalesOpportunitiesRouteWithChildren
+  AuthenticatedSalesPipelineRoute: typeof AuthenticatedSalesPipelineRoute
 }
 
-const CrmCustomersRouteWithChildren = CrmCustomersRoute._addFileChildren(
-  CrmCustomersRouteChildren,
-)
-
-interface InventoryProductsRouteChildren {
-  InventoryProductsProductIdRoute: typeof InventoryProductsProductIdRoute
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAiRoute: AuthenticatedAiRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDocumentsRoute: AuthenticatedDocumentsRoute,
+  AuthenticatedProductionRoute: AuthenticatedProductionRoute,
+  AuthenticatedProjectsRoute: AuthenticatedProjectsRouteWithChildren,
+  AuthenticatedQuotationsRoute: AuthenticatedQuotationsRouteWithChildren,
+  AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedShippingRoute: AuthenticatedShippingRouteWithChildren,
+  AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
+  AuthenticatedCrmCustomersRoute: AuthenticatedCrmCustomersRouteWithChildren,
+  AuthenticatedCrmLeadsRoute: AuthenticatedCrmLeadsRoute,
+  AuthenticatedInventoryPricingRoute: AuthenticatedInventoryPricingRoute,
+  AuthenticatedInventoryProductsRoute:
+    AuthenticatedInventoryProductsRouteWithChildren,
+  AuthenticatedSalesOpportunitiesRoute:
+    AuthenticatedSalesOpportunitiesRouteWithChildren,
+  AuthenticatedSalesPipelineRoute: AuthenticatedSalesPipelineRoute,
 }
 
-const InventoryProductsRouteChildren: InventoryProductsRouteChildren = {
-  InventoryProductsProductIdRoute: InventoryProductsProductIdRoute,
-}
-
-const InventoryProductsRouteWithChildren =
-  InventoryProductsRoute._addFileChildren(InventoryProductsRouteChildren)
-
-interface SalesOpportunitiesRouteChildren {
-  SalesOpportunitiesOpportunityIdRoute: typeof SalesOpportunitiesOpportunityIdRoute
-}
-
-const SalesOpportunitiesRouteChildren: SalesOpportunitiesRouteChildren = {
-  SalesOpportunitiesOpportunityIdRoute: SalesOpportunitiesOpportunityIdRoute,
-}
-
-const SalesOpportunitiesRouteWithChildren =
-  SalesOpportunitiesRoute._addFileChildren(SalesOpportunitiesRouteChildren)
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AiRoute: AiRoute,
-  DashboardRoute: DashboardRoute,
-  DocumentsRoute: DocumentsRoute,
-  ProductionRoute: ProductionRoute,
-  ProjectsRoute: ProjectsRouteWithChildren,
-  QuotationsRoute: QuotationsRouteWithChildren,
-  ReportsRoute: ReportsRoute,
-  SettingsRoute: SettingsRoute,
-  ShippingRoute: ShippingRouteWithChildren,
-  WorkspaceRoute: WorkspaceRouteWithChildren,
-  CrmCustomersRoute: CrmCustomersRouteWithChildren,
-  CrmLeadsRoute: CrmLeadsRoute,
-  InventoryPricingRoute: InventoryPricingRoute,
-  InventoryProductsRoute: InventoryProductsRouteWithChildren,
-  SalesOpportunitiesRoute: SalesOpportunitiesRouteWithChildren,
-  SalesPipelineRoute: SalesPipelineRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

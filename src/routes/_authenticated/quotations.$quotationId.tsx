@@ -30,7 +30,7 @@ import {
 } from "@/lib/quotations.functions";
 import { useSetBusinessContext } from "@/context/BusinessContext";
 
-export const Route = createFileRoute("/quotations/$quotationId")({
+export const Route = createFileRoute("/_authenticated/quotations/$quotationId")({
   head: () => ({
     meta: [
       { title: "Quotation — Arquane OS" },

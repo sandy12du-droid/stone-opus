@@ -1,5 +1,8 @@
 import { Search, Plus, Bell, Moon, Sun, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { openCommandPalette } from "@/components/CommandPalette";
 import {
@@ -17,11 +20,28 @@ import { useNotifications } from "@/hooks/use-notifications";
 export function TopBar() {
   const [dark, setDark] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
   const { unreadCount } = useNotifications();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
+  }, []);
+
+  const initials = (email ? email.slice(0, 2) : "OP").toUpperCase();
+
+  async function handleSignOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/login", replace: true });
+  }
+
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/70">
@@ -111,21 +131,23 @@ export function TopBar() {
         <DropdownMenuTrigger asChild>
           <button className="flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-surface-muted">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
-              OP
+              {initials}
             </div>
             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-52">
           <DropdownMenuLabel>
-            <div className="font-medium">Operator</div>
-            <div className="text-xs font-normal text-muted-foreground">operator@arquane.com</div>
+            <div className="font-medium">{email ? email.split("@")[0] : "Operator"}</div>
+            <div className="text-xs font-normal text-muted-foreground">
+              {email ?? "Signed in"}
+            </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Preferences</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Sign out</DropdownMenuItem>
+          <DropdownMenuItem onSelect={handleSignOut}>Sign out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

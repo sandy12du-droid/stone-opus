@@ -20,7 +20,7 @@ import {
 } from "@/lib/shipping-queries";
 import { createShipment } from "@/lib/shipping.functions";
 
-export const Route = createFileRoute("/shipping")({
+export const Route = createFileRoute("/_authenticated/shipping")({
   head: () => ({
     meta: [
       { title: "Shipping & Logistics — Arquane OS" },

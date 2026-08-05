@@ -33,7 +33,7 @@ import {
 import { OpportunityCard } from "@/components/sales/OpportunityCard";
 import { StageBadge } from "@/components/sales/StageBadge";
 
-export const Route = createFileRoute("/sales/pipeline")({
+export const Route = createFileRoute("/_authenticated/sales/pipeline")({
   head: () => ({
     meta: [
       { title: "Sales Pipeline — Arquane OS" },

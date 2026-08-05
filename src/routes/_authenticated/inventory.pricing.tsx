@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/inventory/pricing")({
+export const Route = createFileRoute("/_authenticated/inventory/pricing")({
   head: () => ({
     meta: [
       { title: "Pricing — Arquane OS" },
