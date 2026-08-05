@@ -78,6 +78,27 @@ const groups: NavGroup[] = [
 
 export function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { roles, isAdmin } = useRoles();
+  const visibleGroups = groups
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((i) => canAccessPath(roles, i.to)),
+    }))
+    .filter((g) => g.items.length > 0);
+  const navGroups = isAdmin
+    ? visibleGroups.map((g) =>
+        g.label === "Insights"
+          ? {
+              ...g,
+              items: [
+                ...g.items,
+                { label: "Audit Logs", to: "/settings/audit-logs", icon: ShieldCheck },
+              ],
+            }
+          : g,
+      )
+    : visibleGroups;
+
 
   return (
     <aside className="sticky top-0 hidden h-screen w-[248px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">

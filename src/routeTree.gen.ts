@@ -26,6 +26,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAiRouteImport } from './routes/_authenticated/ai'
 import { Route as AuthenticatedWorkspaceExecutiveRouteImport } from './routes/_authenticated/workspace.executive'
 import { Route as AuthenticatedShippingShipmentIdRouteImport } from './routes/_authenticated/shipping.$shipmentId'
+import { Route as AuthenticatedSettingsAuditLogsRouteImport } from './routes/_authenticated/settings.audit-logs'
 import { Route as AuthenticatedSalesPipelineRouteImport } from './routes/_authenticated/sales.pipeline'
 import { Route as AuthenticatedSalesOpportunitiesRouteImport } from './routes/_authenticated/sales.opportunities'
 import { Route as AuthenticatedQuotationsQuotationIdRouteImport } from './routes/_authenticated/quotations.$quotationId'
@@ -124,6 +125,12 @@ const AuthenticatedShippingShipmentIdRoute =
     path: '/$shipmentId',
     getParentRoute: () => AuthenticatedShippingRoute,
   } as any)
+const AuthenticatedSettingsAuditLogsRoute =
+  AuthenticatedSettingsAuditLogsRouteImport.update({
+    id: '/audit-logs',
+    path: '/audit-logs',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
 const AuthenticatedSalesPipelineRoute =
   AuthenticatedSalesPipelineRouteImport.update({
     id: '/sales/pipeline',
@@ -202,7 +209,7 @@ export interface FileRoutesByFullPath {
   '/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -213,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
@@ -231,7 +239,7 @@ export interface FileRoutesByTo {
   '/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -242,6 +250,7 @@ export interface FileRoutesByTo {
   '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
@@ -262,7 +271,7 @@ export interface FileRoutesById {
   '/_authenticated/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/_authenticated/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
-  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/_authenticated/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/_authenticated/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -273,6 +282,7 @@ export interface FileRoutesById {
   '/_authenticated/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/_authenticated/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/_authenticated/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/_authenticated/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/_authenticated/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/_authenticated/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/_authenticated/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/settings/audit-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
     | '/crm/customers/$customerId'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/settings/audit-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
     | '/crm/customers/$customerId'
@@ -363,6 +375,7 @@ export interface FileRouteTypes {
     | '/_authenticated/quotations/$quotationId'
     | '/_authenticated/sales/opportunities'
     | '/_authenticated/sales/pipeline'
+    | '/_authenticated/settings/audit-logs'
     | '/_authenticated/shipping/$shipmentId'
     | '/_authenticated/workspace/executive'
     | '/_authenticated/crm/customers/$customerId'
@@ -499,6 +512,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedShippingShipmentIdRouteImport
       parentRoute: typeof AuthenticatedShippingRoute
     }
+    '/_authenticated/settings/audit-logs': {
+      id: '/_authenticated/settings/audit-logs'
+      path: '/audit-logs'
+      fullPath: '/settings/audit-logs'
+      preLoaderRoute: typeof AuthenticatedSettingsAuditLogsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
     '/_authenticated/sales/pipeline': {
       id: '/_authenticated/sales/pipeline'
       path: '/sales/pipeline'
@@ -607,6 +627,19 @@ const AuthenticatedQuotationsRouteWithChildren =
     AuthenticatedQuotationsRouteChildren,
   )
 
+interface AuthenticatedSettingsRouteChildren {
+  AuthenticatedSettingsAuditLogsRoute: typeof AuthenticatedSettingsAuditLogsRoute
+}
+
+const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
+  AuthenticatedSettingsAuditLogsRoute: AuthenticatedSettingsAuditLogsRoute,
+}
+
+const AuthenticatedSettingsRouteWithChildren =
+  AuthenticatedSettingsRoute._addFileChildren(
+    AuthenticatedSettingsRouteChildren,
+  )
+
 interface AuthenticatedShippingRouteChildren {
   AuthenticatedShippingShipmentIdRoute: typeof AuthenticatedShippingShipmentIdRoute
 }
@@ -687,7 +720,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRouteWithChildren
   AuthenticatedQuotationsRoute: typeof AuthenticatedQuotationsRouteWithChildren
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
-  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRouteWithChildren
   AuthenticatedShippingRoute: typeof AuthenticatedShippingRouteWithChildren
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
   AuthenticatedCrmCustomersRoute: typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -706,7 +739,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProjectsRoute: AuthenticatedProjectsRouteWithChildren,
   AuthenticatedQuotationsRoute: AuthenticatedQuotationsRouteWithChildren,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
-  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRouteWithChildren,
   AuthenticatedShippingRoute: AuthenticatedShippingRouteWithChildren,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
   AuthenticatedCrmCustomersRoute: AuthenticatedCrmCustomersRouteWithChildren,
