@@ -11,9 +11,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 export const Route = createFileRoute("/login")({
   ssr: false,
-  validateSearch: (search: Record<string, unknown>) => ({
-    redirect: sanitizeRedirect(search["redirect"]),
-  }),
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => {
+    const value = sanitizeRedirect(search["redirect"]);
+    return value ? { redirect: value } : {};
+  },
   head: () => ({
     meta: [
       { title: "Sign in — Arquane OS" },
