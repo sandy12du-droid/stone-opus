@@ -56,9 +56,17 @@ function LoginPage() {
       setRemember(true);
     }
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: destination, replace: true });
+      if (data.user) goTo(destination);
     });
   }, [navigate, destination]);
+
+  function goTo(target: string) {
+    // Destinations carrying a query string (e.g. the OAuth consent URL) are
+    // navigated natively so the search params survive.
+    if (target.includes("?")) window.location.replace(target);
+    else navigate({ to: target, replace: true });
+  }
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
