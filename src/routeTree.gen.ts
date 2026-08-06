@@ -35,6 +35,7 @@ import { Route as AuthenticatedInventoryProductsRouteImport } from './routes/_au
 import { Route as AuthenticatedInventoryPricingRouteImport } from './routes/_authenticated/inventory.pricing'
 import { Route as AuthenticatedCrmLeadsRouteImport } from './routes/_authenticated/crm.leads'
 import { Route as AuthenticatedCrmCustomersRouteImport } from './routes/_authenticated/crm.customers'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedSalesOpportunitiesOpportunityIdRouteImport } from './routes/_authenticated/sales.opportunities.$opportunityId'
 import { Route as AuthenticatedInventoryProductsProductIdRouteImport } from './routes/_authenticated/inventory.products.$productId'
 import { Route as AuthenticatedCrmCustomersCustomerIdRouteImport } from './routes/_authenticated/crm.customers.$customerId'
@@ -178,6 +179,11 @@ const AuthenticatedCrmCustomersRoute =
     path: '/crm/customers',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedSalesOpportunitiesOpportunityIdRoute =
   AuthenticatedSalesOpportunitiesOpportunityIdRouteImport.update({
     id: '/$opportunityId',
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
   '/crm/leads': typeof AuthenticatedCrmLeadsRoute
   '/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
   '/crm/leads': typeof AuthenticatedCrmLeadsRoute
   '/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/_authenticated/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
   '/_authenticated/crm/leads': typeof AuthenticatedCrmLeadsRoute
   '/_authenticated/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/shipping'
     | '/workspace'
+    | '/.lovable/oauth/consent'
     | '/crm/customers'
     | '/crm/leads'
     | '/inventory/pricing'
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/shipping'
     | '/workspace'
+    | '/.lovable/oauth/consent'
     | '/crm/customers'
     | '/crm/leads'
     | '/inventory/pricing'
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/shipping'
     | '/_authenticated/workspace'
+    | '/.lovable/oauth/consent'
     | '/_authenticated/crm/customers'
     | '/_authenticated/crm/leads'
     | '/_authenticated/inventory/pricing'
@@ -389,6 +401,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -574,6 +587,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/crm/customers'
       preLoaderRoute: typeof AuthenticatedCrmCustomersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/sales/opportunities/$opportunityId': {
       id: '/_authenticated/sales/opportunities/$opportunityId'
@@ -761,6 +781,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
