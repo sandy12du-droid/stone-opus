@@ -91,7 +91,7 @@ function LoginPage() {
       () => undefined,
     );
     await router.invalidate();
-    navigate({ to: destination, replace: true });
+    goTo(destination);
   }
 
   return (
