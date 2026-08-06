@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://rnzvbenltdldmjjdatje.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "arquane-stone-os",
+      "version": "0.1.0",
+      "title": "Arquane Stone OS"
+    },
+    "tools": [
+      {
+        "name": "search_inventory",
+        "title": "Search stone inventory",
+        "description": "Search stone products (slabs and quartz) by name, SKU, color family or finish, returning pricing and specs.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search text matched against product name and SKU."
+            },
+            "limit": {
+              "default": 10,
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Maximum products to return (1-50)."
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_product_availability",
+        "title": "Get slab availability",
+        "description": "List physical slabs for a stone product, with warehouse, dimensions, bin location and reservation status.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "product_id": {
+              "type": "string",
+              "description": "The stone product id (uuid)."
+            },
+            "status": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string",
+                  "description": "Optional slab status filter, e.g. available, reserved, sold."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "product_id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_quotations",
+        "title": "List quotations",
+        "description": "List recent quotations with customer, status, incoterm and totals. Optionally filter by status or customer text.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string",
+                  "description": "Optional status filter, e.g. draft, sent, accepted, rejected."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "customer": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string",
+                  "description": "Optional text matched against customer name or company."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "limit": {
+              "default": 15,
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Maximum quotations to return (1-50)."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_quotation",
+        "title": "Get quotation detail",
+        "description": "Fetch one quotation by id or quote number, including its line items and commercial totals.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "quotation": {
+              "type": "string",
+              "description": "Quotation id (uuid) or quote number, e.g. Q-2026-0042."
+            }
+          },
+          "required": [
+            "quotation"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_projects",
+        "title": "List projects",
+        "description": "List fabrication/supply projects with status, priority, contract value and target delivery dates.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string",
+                  "description": "Optional status filter."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "limit": {
+              "default": 15,
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Maximum projects to return (1-50)."
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "track_shipments",
+        "title": "Track shipments",
+        "description": "List shipments with carrier, container, ports, incoterm, ETD/ETA and current transit status.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string",
+                  "description": "Optional status filter."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reference": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string",
+                  "description": "Optional text matched against shipment reference or container number."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "limit": {
+              "default": 15,
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "Maximum shipments to return (1-50)."
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
