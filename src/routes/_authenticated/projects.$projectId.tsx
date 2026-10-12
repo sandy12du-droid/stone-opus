@@ -42,7 +42,7 @@ export const Route = createFileRoute("/_authenticated/projects/$projectId")({
     return p;
   },
   errorComponent: ({ error }) => (
-    <AppShell title="Project"><div role="alert" className="text-sm text-destructive">{error.message}</div></AppShell>
+    <AppShell title="Project"><div role="alert" className="text-sm text-destructive">{(error as Error).message}</div></AppShell>
   ),
   notFoundComponent: () => (
     <AppShell title="Project"><div className="text-sm text-muted-foreground">Project not found. <Link to="/projects" className="text-primary underline">Back to projects</Link></div></AppShell>

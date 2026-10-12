@@ -44,7 +44,7 @@ export const Route = createFileRoute("/_authenticated/quotations/$quotationId")(
   loader: ({ context, params }) =>
     context.queryClient.ensureQueryData(quotationDetailOptions(params.quotationId)),
   errorComponent: ({ error }) => (
-    <AppShell title="Quotation"><div role="alert" className="text-sm text-destructive">{error.message}</div></AppShell>
+    <AppShell title="Quotation"><div role="alert" className="text-sm text-destructive">{(error as Error).message}</div></AppShell>
   ),
   notFoundComponent: () => (
     <AppShell title="Quotation"><div className="text-sm text-muted-foreground">Quotation not found.</div></AppShell>

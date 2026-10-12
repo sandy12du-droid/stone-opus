@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/production")({
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(productionBoardOptions()),
   errorComponent: ({ error }) => (
-    <AppShell title="Production"><div role="alert" className="text-sm text-destructive">{error.message}</div></AppShell>
+    <AppShell title="Production"><div role="alert" className="text-sm text-destructive">{(error as Error).message}</div></AppShell>
   ),
   notFoundComponent: () => <AppShell title="Production"><div>Not found.</div></AppShell>,
   component: ProductionBoard,
