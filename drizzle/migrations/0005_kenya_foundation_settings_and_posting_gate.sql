@@ -1,0 +1,16 @@
+CREATE FUNCTION public.erp_save_company(p_company uuid,p_name text,p_pin text,p_address text,p_phone text,p_email text,p_bank text,p_mpesa text) RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ BEGIN IF NOT EXISTS(SELECT 1 FROM public.erp_memberships WHERE company_id=p_company AND user_id=auth.uid() AND role='owner') THEN RAISE EXCEPTION 'Company owner access required'; END IF; IF length(trim(p_name))=0 OR length(p_name)>500 OR length(p_address)>2000 OR (p_pin<>'' AND p_pin !~ '^[A-Z][0-9]{9}[A-Z]$') THEN RAISE EXCEPTION 'Invalid company name, address or KRA PIN'; END IF; UPDATE public.erp_companies SET name=trim(p_name),kra_pin=nullif(p_pin,''),address=p_address,phone=p_phone,email=p_email,bank_details=p_bank,mpesa_details=p_mpesa WHERE id=p_company; INSERT INTO public.erp_audit_events(company_id,action,record_id) VALUES(p_company,'company_settings_updated',p_company); END $$;
+REVOKE ALL ON FUNCTION public.erp_save_company(uuid,text,text,text,text,text,text,text) FROM PUBLIC,anon; GRANT EXECUTE ON FUNCTION public.erp_save_company(uuid,text,text,text,text,text,text,text) TO authenticated;
+CREATE FUNCTION public.erp_party_validate() RETURNS trigger LANGUAGE plpgsql SET search_path=public AS $$ BEGIN IF length(trim(NEW.name))=0 OR length(NEW.name)>500 OR (coalesce(NEW.kra_pin,'')<>'' AND NEW.kra_pin !~ '^[A-Z][0-9]{9}[A-Z]$') OR NEW.currency !~ '^[A-Z]{3}$' OR length(coalesce(NEW.notes,''))>2000 THEN RAISE EXCEPTION 'Invalid name, KRA PIN, currency or notes'; END IF; RETURN NEW; END $$;
+CREATE TRIGGER erp_party_validation BEFORE INSERT OR UPDATE ON public.erp_parties FOR EACH ROW EXECUTE FUNCTION public.erp_party_validate();
+REVOKE EXECUTE ON FUNCTION public.erp_create_document(uuid,text,uuid,date,date,text,numeric,text,text,jsonb) FROM authenticated;
+REVOKE EXECUTE ON FUNCTION public.erp_post_document(uuid,uuid) FROM authenticated;
+REVOKE EXECUTE ON FUNCTION public.erp_record_payment(uuid,uuid,numeric,date,text) FROM authenticated;
+COMMENT ON FUNCTION public.erp_post_document(uuid,uuid) IS 'Foundation only: posting unavailable to application roles until audited stock fulfillment, period locks, approvals, credit notes and tax controls are implemented.';
+CREATE INDEX erp_parties_company_idx ON public.erp_parties(company_id);
+CREATE INDEX erp_accounts_company_idx ON public.erp_accounts(company_id);
+CREATE INDEX erp_documents_company_idx ON public.erp_documents(company_id);
+CREATE INDEX erp_journals_company_idx ON public.erp_journals(company_id);
+CREATE INDEX erp_lines_company_idx ON public.erp_journal_lines(company_id);
+CREATE INDEX erp_items_company_idx ON public.erp_document_items(company_id);
+CREATE INDEX erp_payments_company_idx ON public.erp_payments(company_id);
+CREATE INDEX erp_audit_company_idx ON public.erp_audit_events(company_id);

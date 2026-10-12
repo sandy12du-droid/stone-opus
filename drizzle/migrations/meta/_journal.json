@@ -36,6 +36,13 @@
       "when": 1791768418916,
       "tag": "0004_kenya_erp_atomic_document_posting",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791768574452,
+      "tag": "0005_kenya_foundation_settings_and_posting_gate",
+      "breakpoints": true
     }
   ]
 }

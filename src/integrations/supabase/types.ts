@@ -1519,6 +1519,19 @@ export type Database = {
         }
         Returns: string
       }
+      erp_save_company: {
+        Args: {
+          p_address: string
+          p_bank: string
+          p_company: string
+          p_email: string
+          p_mpesa: string
+          p_name: string
+          p_phone: string
+          p_pin: string
+        }
+        Returns: undefined
+      }
       generate_project_code: { Args: never; Returns: string }
       generate_quotation_number: { Args: never; Returns: string }
       generate_shipment_reference: { Args: never; Returns: string }
