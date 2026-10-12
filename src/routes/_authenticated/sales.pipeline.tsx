@@ -112,7 +112,7 @@ function PipelinePage() {
 {!location.warehouseCode && (      <div className="mb-6 flex items-start gap-3 rounded-lg border border-accent/30 bg-accent/5 p-4">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent/15 text-accent">
           <Sparkles className="h-4.5 w-4.5" />
-        </div>)}
+        </div>
         <div className="flex-1">
           <div className="text-[13px] font-semibold text-foreground">AI Pipeline Coach</div>
           <p className="mt-0.5 text-[12px] text-muted-foreground">
@@ -123,7 +123,7 @@ function PipelinePage() {
         <Button variant="ghost" size="sm" className="text-accent hover:text-accent">
           Review <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
         </Button>
-      </div>
+      </div>)}
 
       {/* Toolbar */}
       <div className="mb-4 flex items-center justify-between gap-3">
