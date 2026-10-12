@@ -75,6 +75,7 @@ export const createQuotation = createServerFn({ method: "POST" })
         incoterm: data.incoterm ?? "FOB",
         currency: data.currency ?? "USD",
         owner_name: data.owner_name ?? "Unassigned",
+        location_code: (data as { location_code?: string | null }).location_code ?? null,
       })
       .select("id")
       .single();

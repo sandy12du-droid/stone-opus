@@ -1,3 +1,4 @@
+import { getActiveLocation } from "@/lib/location";
 import { formatMoney } from "@/lib/location";
 // Projects & Production read layer.
 import { queryOptions } from "@tanstack/react-query";
@@ -103,10 +104,12 @@ export const projectsListOptions = () =>
     queryKey: ["projects", "list"],
     staleTime: 20_000,
     queryFn: async (): Promise<ProjectListItem[]> => {
-      const { data, error } = await supabase
+      const q = supabase
         .from("stone_projects")
         .select("*, work_orders:stone_work_orders(id, stage, status)")
         .order("created_at", { ascending: false });
+      const loc = getActiveLocation().warehouseCode;
+      const { data, error } = await (loc ? q.eq("location_code", loc) : q);
       if (error) throw error;
       return (data ?? []) as unknown as ProjectListItem[];
     },
