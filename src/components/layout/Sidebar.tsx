@@ -18,12 +18,15 @@ import {
   Building2,
   Target,
   Workflow,
+  BookOpen,
+  Receipt,
 } from "lucide-react";
 import { ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRoles } from "@/hooks/use-roles";
 import { canAccessPath } from "@/lib/permissions";
 import { LocationSwitcher } from "./LocationSwitcher";
+import { useLocation } from "@/context/LocationContext";
 
 
 type NavItem = { label: string; to: string; icon: React.ComponentType<{ className?: string }> };
@@ -83,13 +86,14 @@ const groups: NavGroup[] = [
 export function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { roles, isAdmin } = useRoles();
+  const { location } = useLocation();
   const visibleGroups = groups
     .map((g) => ({
       ...g,
       items: g.items.filter((i) => canAccessPath(roles, i.to)),
     }))
     .filter((g) => g.items.length > 0);
-  const navGroups = isAdmin
+  const baseNavGroups = isAdmin
     ? visibleGroups.map((g) =>
         g.label === "Insights"
           ? {
@@ -103,6 +107,16 @@ export function Sidebar() {
           : g,
       )
     : visibleGroups;
+  const navGroups = location.warehouseCode === "WH-NBO" ? [
+    { label: "Kenya ERP", items: [
+      { label: "Financial Overview", to: "/kenya/overview", icon: LayoutDashboard },
+      { label: "Customers", to: "/kenya/customers", icon: Users },
+      { label: "Suppliers", to: "/kenya/suppliers", icon: Building2 },
+      { label: "Chart of Accounts", to: "/kenya/accounts", icon: BookOpen },
+      { label: "Journal Entries", to: "/kenya/journals", icon: Receipt },
+      { label: "Company Settings", to: "/kenya/settings", icon: Settings },
+    ] }, ...baseNavGroups,
+  ] : baseNavGroups;
 
 
   return (
