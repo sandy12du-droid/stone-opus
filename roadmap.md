@@ -5,7 +5,7 @@
 - [x] Verify creation, empty-location views, record read-back and location switch-back.
 
 ## Kenya accounting and inventory ERP
-- [ ] Define Kenya-only architecture, schema, accounting rules and transaction flows from the uploaded brief.
+- [x] Define Kenya-only architecture, schema, accounting rules and transaction flows from the uploaded brief.
 - [ ] Build secured company setup, persisted customer/supplier masters and transaction-derived financial overview.
 - [ ] Build purchasing, sales orders, invoices and audited slab/stock workflows.
 - [ ] Implement immutable double-entry posting, payments, expenses, credit notes and financial statements.
