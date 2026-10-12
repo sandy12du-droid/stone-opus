@@ -13,3 +13,4 @@
 - Operating locations are persisted as company/warehouse records with explicit currency and a manual conversion rate; location codes scope business records and query cache keys, and non-HQ summaries use real scoped records rather than global demo widgets.
 - Kenya ERP uses an independent company-scoped ledger and protected server-function reads; explicit company memberships authorize access so selecting a warehouse never grants financial access.
 - Financial document posting and payment allocation execute atomically in PostgreSQL functions; only company-scoped reads are granted on ledger tables so application clients cannot bypass posting safeguards.
+- Kenya ERP tests live in tests/*.test.ts and run with `bun test ./tests/`; ledger integration checks run inside the erp_run_selftest database function, which always rolls back, so tests never leave records in immutable books.
