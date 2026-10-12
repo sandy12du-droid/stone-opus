@@ -130,7 +130,7 @@ function LeadsPage() {
   const kpis = [
     { label: "Open leads", value: LEADS.length, hint: "8 new this week" },
     { label: "Weighted pipeline", value: currency(LEADS.reduce((s, l) => s + l.value, 0)), hint: "+12.4% MoM" },
-    { label: "Avg. lead score", value: Math.round(LEADS.reduce((s, l) => s + l.score, 0) / LEADS.length), hint: "Healthy" },
+    { label: "Avg. lead score", value: Math.round(LEADS.reduce((s, l) => s + l.score, 0) / (LEADS.length || 1)), hint: "Healthy" },
     { label: "Countries", value: new Set(LEADS.map((l) => l.country)).size, hint: "4 continents" },
   ];
 
