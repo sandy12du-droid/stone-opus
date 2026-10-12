@@ -9,10 +9,12 @@
 - [x] Build secured company setup, persisted customer/supplier masters and transaction-derived financial overview; verify saved records, zero balances and HQ isolation.
 - [x] Kenya sales invoices (KSh), stock receiving/transfers/adjustments with audit trail, invoice + stock posting to ledger, customer payments.
 - [x] Purchase orders, warehouse receiving and supplier bills.
-- [ ] Sales orders.
+- [x] Sales orders.
 - [x] Credit notes with reversing entries; P&L, balance sheet and cash flow statements.
-- [ ] Expenses, customer refunds.
-- [ ] Implement invoice printing/sharing, configurable Kenya tax and clearly labelled eTIMS test integration.
-- [ ] Add approvals, scoped search, exports and end-to-end accounting/location-isolation tests.
+- [x] Expenses, customer refunds.
+- [x] Invoice PDFs, email/WhatsApp hand-off with recorded status, configurable tax codes, eTIMS test-mode validation.
+- [ ] Live email/WhatsApp delivery confirmation and live KRA eTIMS submission (blocked: provider accounts and KRA credentials).
+- [x] Approval threshold workflow; CSV exports for invoices, stock and ledger.
+- [ ] Scoped search and automated accounting/location-isolation tests.
 
 Invoices post through the stock-aware posting function; period locks and approvals are still pending. Live email, WhatsApp Business and KRA eTIMS require provider configuration.

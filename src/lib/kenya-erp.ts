@@ -7,7 +7,7 @@ export const kenyaSections = {
   bills: "Purchase Bills", payments: "Payments", expenses: "Expenses",
   accounts: "Chart of Accounts", journals: "Journal Entries", ledger: "General Ledger",
   receivables: "Accounts Receivable", payables: "Accounts Payable", reports: "Financial Reports",
-  tax: "Tax / eTIMS", audit: "Business Audit Trail", settings: "Company Settings",
+  tax: "Tax / eTIMS", approvals: "Approvals", audit: "Business Audit Trail", settings: "Company Settings",
 } as const;
 export type KenyaSection = keyof typeof kenyaSections;
 export function isKenyaSection(value: string): value is KenyaSection { return value in kenyaSections; }

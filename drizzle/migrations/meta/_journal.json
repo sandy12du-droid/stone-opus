@@ -78,6 +78,20 @@
       "when": 1791769810871,
       "tag": "0010_kenya_credit_notes_and_purchasing",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1791772264982,
+      "tag": "0011_kenya_orders_expenses_refunds_controls",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1791772806758,
+      "tag": "0012_fix_etims_test_errors_array",
+      "breakpoints": true
     }
   ]
 }

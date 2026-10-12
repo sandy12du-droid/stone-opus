@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { createKenyaInvoice, createKenyaPurchaseOrder, creditKenyaInvoice, postKenyaInvoice, receiveKenyaPurchaseOrder, recordKenyaPayment, recordKenyaStock } from "@/lib/kenya-erp.functions";
+import { createKenyaSalesOrder, createKenyaExpense, createKenyaInvoice, createKenyaPurchaseOrder, creditKenyaInvoice, postKenyaInvoice, receiveKenyaPurchaseOrder, recordKenyaPayment, recordKenyaStock } from "@/lib/kenya-erp.functions";
 import type { KenyaData } from "@/lib/kenya-erp";
 import { formatMoney } from "@/lib/location";
 import { downloadDocumentPdf } from "@/lib/kenya-pdf";
+import { InvoiceExtras, CsvButton, exportInvoicesCsv, exportStockCsv } from "./KenyaFinance";
 
 const ksh = (n: number) => formatMoney(n, "KES");
 const today = () => new Date().toISOString().slice(0, 10);
@@ -44,7 +45,7 @@ export function Invoices({ data }: { data: KenyaData }) {
   return <>
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
       <h2 className="text-sm font-semibold">Customer invoices · KSh</h2>
-      {canWrite(data.role) && <Button size="sm" onClick={() => setCreating(true)} disabled={data.accounts.length === 0}><Plus className="mr-1.5 h-4 w-4" />New invoice</Button>}
+      <div className="flex gap-2"><CsvButton onClick={() => exportInvoicesCsv(data)} />{canWrite(data.role) && <Button size="sm" onClick={() => setCreating(true)} disabled={data.accounts.length === 0}><Plus className="mr-1.5 h-4 w-4" />New invoice</Button>}</div>
     </div>
     {data.accounts.length === 0 && <p className="mb-4 text-sm text-muted-foreground">Initialize the chart of accounts before invoicing.</p>}
     <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Number</TableHead><TableHead>Customer</TableHead><TableHead>Date</TableHead><TableHead>Due</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Total</TableHead><TableHead className="text-right">Balance</TableHead></TableRow></TableHeader>
@@ -78,6 +79,7 @@ function InvoiceDetail({ data, invoice, paid, close, creditNote }: { data: Kenya
     <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Description</TableHead><TableHead>Stock item</TableHead><TableHead className="text-right">Qty</TableHead><TableHead className="text-right">Price</TableHead><TableHead className="text-right">Net</TableHead><TableHead className="text-right">VAT</TableHead></TableRow></TableHeader>
       <TableBody>{items.map(i => <TableRow key={i.id}><TableCell>{i.description}</TableCell><TableCell>{i.stock_item || "—"}</TableCell><TableCell className="text-right tabular-nums">{Number(i.quantity)} {i.unit}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.unit_price))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.net_amount))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.tax_amount))}</TableCell></TableRow>)}</TableBody></Table></div>
     <dl className="ml-auto mt-4 max-w-xs space-y-2 text-sm">{[["Subtotal", invoice.subtotal], ["VAT", invoice.tax_amount], ["Total", invoice.total], ["Paid", paid], ["Balance due", invoice.status === "posted" && !creditNote ? balance : 0]].map(([l, v]) => <div key={String(l)} className="flex justify-between"><dt className="text-muted-foreground">{l}</dt><dd className="font-medium tabular-nums">{ksh(Number(v))}</dd></div>)}</dl>
+    {invoice.kind === "invoice" && <InvoiceExtras data={data} invoice={invoice} creditNote={creditNote} paid={paid} />}
     {creditNote && <p className="mt-6 border-t border-border pt-4 text-sm">Cancelled by credit note <span className="font-mono">{creditNote.number}</span> on {creditNote.document_date} — {creditNote.notes}. Ledger and stock were reversed.</p>}
     {invoice.kind === "invoice" && invoice.status === "posted" && !creditNote && paid === 0 && writable && <form className="mt-6 flex flex-wrap items-end gap-3 border-t border-border pt-4" onSubmit={e => { e.preventDefault(); crediting.mutate(); }}>
       <div className="min-w-60 flex-1"><Label className="text-xs">Credit note reason</Label><Input required aria-label="Credit note reason" placeholder="Why is this invoice being cancelled?" value={reason} onChange={e => setReason(e.target.value)} /></div>
@@ -97,15 +99,19 @@ function InvoiceDetail({ data, invoice, paid, close, creditNote }: { data: Kenya
 
 type Line = { description: string; stock_item: string; quantity: string; unit: string; unit_price: string; discount: string; tax_code_id: string };
 
-export function InvoiceEditor({ data, close, purchase = false }: { data: KenyaData; close: () => void; purchase?: boolean }) {
+export function InvoiceEditor({ data, close, purchase = false, mode = purchase ? "purchase" : "invoice" }: { data: KenyaData; close: () => void; purchase?: boolean; mode?: "invoice" | "purchase" | "sales_order" | "expense" }) {
+  purchase = mode === "purchase" || mode === "expense";
+  const createSo = useServerFn(createKenyaSalesOrder);
+  const createExp = useServerFn(createKenyaExpense);
+  const [reference, setReference] = useState("");
   const refresh = useRefresh();
   const createInvoice = useServerFn(createKenyaInvoice);
   const createPo = useServerFn(createKenyaPurchaseOrder);
-  const create = purchase ? createPo : createInvoice;
+  const create = mode === "purchase" ? createPo : mode === "sales_order" ? createSo : createInvoice;
   const customers = data.parties.filter(p => p.kind === (purchase ? "supplier" : "customer") && !p.archived);
   const defaultTax = data.taxes.find(t => t.treatment === "standard")?.id ?? data.taxes[0]?.id ?? "";
   const blank = (): Line => ({ description: "", stock_item: "", quantity: "1", unit: "Sqm", unit_price: "0", discount: "0", tax_code_id: defaultTax });
-  const [partyId, setPartyId] = useState(customers[0]?.id ?? "");
+  const [partyId, setPartyId] = useState(mode === "expense" ? "" : customers[0]?.id ?? "");
   const [date, setDate] = useState(today());
   const terms = customers.find(c => c.id === partyId)?.payment_terms ?? 30;
   const [due, setDue] = useState(addDays(today(), terms));
@@ -114,17 +120,17 @@ export function InvoiceEditor({ data, close, purchase = false }: { data: KenyaDa
   const levels = useMemo(() => stockLevels(data), [data]);
   const totals = lines.reduce((acc, l) => { const net = Math.max(0, Number(l.quantity) * Number(l.unit_price) - Number(l.discount)); const rate = Number(data.taxes.find(t => t.id === l.tax_code_id)?.rate ?? 0); return { net: acc.net + net, tax: acc.tax + Math.round(net * rate) / 100 }; }, { net: 0, tax: 0 });
   const save = useMutation({
-    mutationFn: () => create({ data: { company_id: data.company.id, party_id: partyId, date, due, notes, items: lines.map(l => ({ description: l.description, stock_item: l.stock_item, quantity: Number(l.quantity), unit: l.unit, unit_price: Number(l.unit_price), discount: Number(l.discount), tax_code_id: l.tax_code_id })) } }),
+    mutationFn: () => { const items = lines.map(l => ({ description: l.description, stock_item: l.stock_item, quantity: Number(l.quantity), unit: l.unit, unit_price: Number(l.unit_price), discount: Number(l.discount), tax_code_id: l.tax_code_id })); return mode === "expense" ? createExp({ data: { company_id: data.company.id, party_id: partyId || null, date, reference, notes, items } }) : create({ data: { company_id: data.company.id, party_id: partyId, date, due, notes, items } }); },
     onSuccess: () => { refresh(); close(); },
   });
   const set = (i: number, patch: Partial<Line>) => setLines(ls => ls.map((l, j) => j === i ? { ...l, ...patch } : l));
   return <Dialog open onOpenChange={o => !o && close()}><DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
-    <DialogHeader><DialogTitle>{purchase ? "New purchase order (KSh)" : "New sales invoice (KSh)"}</DialogTitle></DialogHeader>
-    {customers.length === 0 ? <p className="text-sm text-muted-foreground">{purchase ? "Add a supplier first." : "Add a customer first."}</p> : <form id="invoice-form" className="space-y-4" onSubmit={e => { e.preventDefault(); save.mutate(); }}>
+    <DialogHeader><DialogTitle>{({ invoice: "New sales invoice", purchase: "New purchase order", sales_order: "New sales order", expense: "New expense" })[mode]} (KSh)</DialogTitle></DialogHeader>
+    {customers.length === 0 && mode !== "expense" ? <p className="text-sm text-muted-foreground">{purchase ? "Add a supplier first." : "Add a customer first."}</p> : <form id="invoice-form" className="space-y-4" onSubmit={e => { e.preventDefault(); save.mutate(); }}>
       <div className="grid gap-3 sm:grid-cols-3">
-        <div><Label className="text-xs">{purchase ? "Supplier" : "Customer"}</Label><select aria-label={purchase ? "Supplier" : "Customer"} className={selectCls} value={partyId} onChange={e => { setPartyId(e.target.value); setDue(addDays(date, customers.find(c => c.id === e.target.value)?.payment_terms ?? 30)); }}>{customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
+        <div><Label className="text-xs">{purchase ? "Supplier" : "Customer"}</Label><select aria-label={purchase ? "Supplier" : "Customer"} className={selectCls} value={partyId} onChange={e => { setPartyId(e.target.value); setDue(addDays(date, customers.find(c => c.id === e.target.value)?.payment_terms ?? 30)); }}>{mode === "expense" && <option value="">No supplier</option>}{customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
         <div><Label className="text-xs">{purchase ? "Order date" : "Invoice date"}</Label><Input type="date" value={date} onChange={e => setDate(e.target.value)} /></div>
-        <div><Label className="text-xs">{purchase ? "Expected delivery" : "Due date"}</Label><Input type="date" value={due} onChange={e => setDue(e.target.value)} /></div>
+        {mode === "expense" ? <div><Label className="text-xs">Receipt / reference</Label><Input aria-label="Expense reference" value={reference} onChange={e => setReference(e.target.value)} /></div> : <div><Label className="text-xs">{mode === "invoice" ? "Due date" : "Expected delivery"}</Label><Input type="date" value={due} onChange={e => setDue(e.target.value)} /></div>}
       </div>
       <datalist id="kenya-stock-items">{levels.map(l => <option key={l.item} value={l.item}>{`${l.qty} ${l.unit} available`}</option>)}</datalist>
       <div className="space-y-2">{lines.map((l, i) => <div key={i} className="grid gap-2 border-b border-border pb-2 sm:grid-cols-[2fr_1.5fr_0.7fr_0.6fr_1fr_0.8fr_1fr_auto]">
@@ -154,7 +160,7 @@ export function StockMovements({ data }: { data: KenyaData }) {
   const labels = { receipt: "Received", transfer: "Transfer", adjustment: "Adjustment", sale: "Sold" } as Record<string, string>;
   return <>
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h2 className="text-sm font-semibold">Kenya warehouse stock</h2>
-      {canWrite(data.role) && <div className="flex flex-wrap gap-2">{(["receipt", "transfer", "adjustment"] as const).map(k => <Button key={k} size="sm" variant={k === "receipt" ? "default" : "outline"} disabled={data.accounts.length === 0} onClick={() => setKind(k)}>{k === "receipt" ? "Receive stock" : k === "transfer" ? "Transfer bins" : "Adjust stock"}</Button>)}</div>}</div>
+      <div className="flex flex-wrap gap-2"><CsvButton onClick={() => exportStockCsv(data)} />{canWrite(data.role) && (["receipt", "transfer", "adjustment"] as const).map(k => <Button key={k} size="sm" variant={k === "receipt" ? "default" : "outline"} disabled={data.accounts.length === 0} onClick={() => setKind(k)}>{k === "receipt" ? "Receive stock" : k === "transfer" ? "Transfer bins" : "Adjust stock"}</Button>)}</div></div>
     {data.accounts.length === 0 && <p className="mb-4 text-sm text-muted-foreground">Initialize the chart of accounts before recording stock.</p>}
     <div className="mb-8 overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Item</TableHead><TableHead className="text-right">On hand</TableHead><TableHead className="text-right">Avg cost</TableHead><TableHead className="text-right">Value</TableHead></TableRow></TableHeader>
       <TableBody>{levels.map(l => <TableRow key={l.item}><TableCell>{l.item}</TableCell><TableCell className="text-right tabular-nums">{l.qty} {l.unit}</TableCell><TableCell className="text-right tabular-nums">{ksh(l.qty > 0 ? l.value / l.qty : 0)}</TableCell><TableCell className="text-right tabular-nums">{ksh(l.value)}</TableCell></TableRow>)}</TableBody></Table>
