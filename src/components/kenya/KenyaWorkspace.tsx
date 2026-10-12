@@ -12,7 +12,8 @@ import { kenyaOptions, kenyaSections, type KenyaData, type KenyaSection } from "
 import { formatMoney } from "@/lib/location";
 import { PartyEditor } from "./PartyEditor";
 import { CompanySettings } from "./CompanySettings";
-import { Invoices, StockMovements } from "./KenyaOperations";
+import { Invoices, StockMovements, PurchaseOrders, SupplierBills } from "./KenyaOperations";
+import { FinancialStatements } from "./KenyaStatements";
 
 export function KenyaWorkspace({ section }: { section: KenyaSection }) {
   const { location } = useLocation();
@@ -27,15 +28,18 @@ function KenyaContent({ section, warehouseId }: { section: KenyaSection; warehou
   if (!data) return <AppShell title="Kenya Accounting"><p role="alert" className="text-muted-foreground">You do not have membership in this Kenya company. Contact its owner.</p></AppShell>;
   const editable = ["owner", "accountant", "manager"].includes(data.role);
   return <AppShell title={kenyaSections[section]} subtitle={data.company.name}>
-    <div className="mb-7 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4"><div className="flex items-center gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 text-primary" />Kenya company · KES<span className="border-l border-border pl-2 capitalize">{data.role}</span></div><div className="flex flex-wrap gap-1">{(["overview", "customers", "invoices", "stock", "suppliers", "accounts", "journals", "settings"] as const).map(key => <Button asChild key={key} size="sm" variant={section === key ? "secondary" : "ghost"}><Link to="/kenya/$section" params={{ section: key }}>{key === "overview" ? "Overview" : key === "accounts" ? "Accounts" : key === "settings" ? "Settings" : kenyaSections[key]}</Link></Button>)}</div></div>
+    <div className="mb-7 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4"><div className="flex items-center gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-4 w-4 text-primary" />Kenya company · KES<span className="border-l border-border pl-2 capitalize">{data.role}</span></div><div className="flex flex-wrap gap-1">{(["overview", "customers", "invoices", "suppliers", "purchase_orders", "bills", "stock", "reports", "accounts", "journals", "settings"] as const).map(key => <Button asChild key={key} size="sm" variant={section === key ? "secondary" : "ghost"}><Link to="/kenya/$section" params={{ section: key }}>{key === "overview" ? "Overview" : key === "accounts" ? "Accounts" : key === "settings" ? "Settings" : key === "reports" ? "Statements" : key === "purchase_orders" ? "Purchase Orders" : key === "bills" ? "Bills" : kenyaSections[key]}</Link></Button>)}</div></div>
     {section === "overview" && <Overview data={data} />}
     {(section === "customers" || section === "suppliers") && <Parties data={data} kind={section === "customers" ? "customer" : "supplier"} />}
     {section === "accounts" && <><div className="mb-5 flex flex-wrap items-center justify-between gap-4"><h2 className="text-sm font-semibold">Company chart of accounts</h2>{data.accounts.length === 0 && editable && <Button size="sm" onClick={() => setup.mutate()} disabled={setup.isPending}><BookOpen className="mr-2 h-4 w-4" />{setup.isPending ? "Setting up…" : "Initialize accounts & tax codes"}</Button>}</div>{setup.error && <p role="alert" className="mb-3 text-sm text-destructive">{setup.error.message}</p>}<Accounts data={data} /></>}
     {section === "journals" && <Journals data={data} />}
     {section === "invoices" && <Invoices data={data} />}
     {section === "stock" && <StockMovements data={data} />}
+    {section === "purchase_orders" && <PurchaseOrders data={data} />}
+    {section === "bills" && <SupplierBills data={data} />}
+    {section === "reports" && <FinancialStatements data={data} />}
     {section === "settings" && <CompanySettings data={data} />}
-    {!(["overview", "customers", "invoices", "stock", "suppliers", "accounts", "journals", "settings"] as string[]).includes(section) && <p className="py-12 text-center text-sm text-muted-foreground">This workflow is not available yet.</p>}
+    {!(["overview", "customers", "invoices", "suppliers", "purchase_orders", "bills", "stock", "reports", "accounts", "journals", "settings"] as string[]).includes(section) && <p className="py-12 text-center text-sm text-muted-foreground">This workflow is not available yet.</p>}
   </AppShell>;
 }
 
