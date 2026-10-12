@@ -31,6 +31,7 @@ import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedWorkspaceExecutiveRouteImport } from './routes/_authenticated/workspace.executive'
 import { Route as AuthenticatedShippingShipmentIdRouteImport } from './routes/_authenticated/shipping.$shipmentId'
 import { Route as AuthenticatedSettingsMcpLogsRouteImport } from './routes/_authenticated/settings.mcp-logs'
+import { Route as AuthenticatedSettingsLocationsRouteImport } from './routes/_authenticated/settings.locations'
 import { Route as AuthenticatedSettingsAuditLogsRouteImport } from './routes/_authenticated/settings.audit-logs'
 import { Route as AuthenticatedSettingsAgentIntegrationsRouteImport } from './routes/_authenticated/settings.agent-integrations'
 import { Route as AuthenticatedSalesPipelineRouteImport } from './routes/_authenticated/sales.pipeline'
@@ -162,6 +163,12 @@ const AuthenticatedSettingsMcpLogsRoute =
     path: '/settings/mcp-logs',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSettingsLocationsRoute =
+  AuthenticatedSettingsLocationsRouteImport.update({
+    id: '/settings/locations',
+    path: '/settings/locations',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsAuditLogsRoute =
   AuthenticatedSettingsAuditLogsRouteImport.update({
     id: '/settings/audit-logs',
@@ -281,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
   '/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/settings/locations': typeof AuthenticatedSettingsLocationsRoute
   '/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
@@ -319,6 +327,7 @@ export interface FileRoutesByTo {
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
   '/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/settings/locations': typeof AuthenticatedSettingsLocationsRoute
   '/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
@@ -359,6 +368,7 @@ export interface FileRoutesById {
   '/_authenticated/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
   '/_authenticated/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/_authenticated/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/_authenticated/settings/locations': typeof AuthenticatedSettingsLocationsRoute
   '/_authenticated/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/_authenticated/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/_authenticated/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/sales/pipeline'
     | '/settings/agent-integrations'
     | '/settings/audit-logs'
+    | '/settings/locations'
     | '/settings/mcp-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/sales/pipeline'
     | '/settings/agent-integrations'
     | '/settings/audit-logs'
+    | '/settings/locations'
     | '/settings/mcp-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
@@ -476,6 +488,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales/pipeline'
     | '/_authenticated/settings/agent-integrations'
     | '/_authenticated/settings/audit-logs'
+    | '/_authenticated/settings/locations'
     | '/_authenticated/settings/mcp-logs'
     | '/_authenticated/shipping/$shipmentId'
     | '/_authenticated/workspace/executive'
@@ -653,6 +666,13 @@ declare module '@tanstack/react-router' {
       path: '/settings/mcp-logs'
       fullPath: '/settings/mcp-logs'
       preLoaderRoute: typeof AuthenticatedSettingsMcpLogsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/locations': {
+      id: '/_authenticated/settings/locations'
+      path: '/settings/locations'
+      fullPath: '/settings/locations'
+      preLoaderRoute: typeof AuthenticatedSettingsLocationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/audit-logs': {
@@ -881,6 +901,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSalesPipelineRoute: typeof AuthenticatedSalesPipelineRoute
   AuthenticatedSettingsAgentIntegrationsRoute: typeof AuthenticatedSettingsAgentIntegrationsRoute
   AuthenticatedSettingsAuditLogsRoute: typeof AuthenticatedSettingsAuditLogsRoute
+  AuthenticatedSettingsLocationsRoute: typeof AuthenticatedSettingsLocationsRoute
   AuthenticatedSettingsMcpLogsRoute: typeof AuthenticatedSettingsMcpLogsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
@@ -906,6 +927,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsAgentIntegrationsRoute:
     AuthenticatedSettingsAgentIntegrationsRoute,
   AuthenticatedSettingsAuditLogsRoute: AuthenticatedSettingsAuditLogsRoute,
+  AuthenticatedSettingsLocationsRoute: AuthenticatedSettingsLocationsRoute,
   AuthenticatedSettingsMcpLogsRoute: AuthenticatedSettingsMcpLogsRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
 }
