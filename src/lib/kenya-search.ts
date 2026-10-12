@@ -8,7 +8,7 @@ export interface KenyaSearchResult { id: string; kind: KenyaSearchKind; label: s
 type SearchInput = Pick<KenyaData, "company" | "documents" | "parties" | "payments" | "stock" | "journals" | "lines" | "accounts">;
 const docKinds: Record<string, [KenyaSearchKind, KenyaSection]> = {
   invoice: ["invoice", "invoices"], sales_order: ["sales_order", "sales_orders"], expense: ["expense", "expenses"],
-  credit_note: ["credit_note", "invoices"], bill: ["bill", "bills"], purchase_order: ["purchase_order", "purchase_orders"],
+  credit_note: ["credit_note", "invoices"], refund: ["refund", "invoices"], bill: ["bill", "bills"], purchase_order: ["purchase_order", "purchase_orders"],
 };
 
 export function searchKenya(data: SearchInput, query: string, limit = 50): KenyaSearchResult[] {

@@ -15,6 +15,6 @@
 - [x] Invoice PDFs, email/WhatsApp hand-off with recorded status, configurable tax codes, eTIMS test-mode validation.
 - [ ] Live email/WhatsApp delivery confirmation and live KRA eTIMS submission (blocked: provider accounts and KRA credentials).
 - [x] Approval threshold workflow; CSV exports for invoices, stock and ledger.
-- [ ] Scoped search and automated accounting/location-isolation tests.
+- [x] Scoped search and automated accounting/location-isolation tests.
 
 Invoices post through the stock-aware posting function; period locks and approvals are still pending. Live email, WhatsApp Business and KRA eTIMS require provider configuration.

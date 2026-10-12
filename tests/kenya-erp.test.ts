@@ -17,6 +17,7 @@ const fixture: any = {
     { id: "d1", company_id: KE, kind: "invoice", number: "INV-1", party_id: "p1", status: "posted", total: 1160, document_date: "2026-10-01" },
     { id: "d2", company_id: KE, kind: "sales_order", number: "SAL-2", party_id: "p1", status: "draft", total: 580, document_date: "2026-10-02" },
     { id: "d3", company_id: KE, kind: "expense", number: "EXP-3", status: "posted", total: 100, notes: "Nairobi fuel", document_date: "2026-10-03" },
+    { id: "d5", company_id: KE, kind: "refund", number: "REF-5", party_id: "p1", status: "posted", total: 200, document_date: "2026-10-06" },
     { id: "d4", company_id: KE, kind: "credit_note", number: "CRN-4", party_id: "p1", status: "posted", total: 1160, document_date: "2026-10-04" },
     { id: "x1", company_id: HQ, kind: "invoice", number: "INV-HQ", party_id: "p2", status: "posted", total: 9, notes: "Nairobi", document_date: "2026-10-05" },
   ],
