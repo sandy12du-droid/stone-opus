@@ -1,3 +1,4 @@
+import { useLocation } from "@/context/LocationContext";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -55,12 +56,13 @@ const DEFAULT_FILTERS: Filters = {
 };
 
 function InventoryPage() {
+  const { location } = useLocation();
   const products = useQuery(productsWithStockOptions());
   const warehouses = useQuery(warehousesOptions());
 
   const [view, setView] = useState<ViewMode>("card");
   const [query, setQuery] = useState("");
-  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<Filters>({ ...DEFAULT_FILTERS, warehouse: location.warehouseCode ?? "all" });
 
   const all = products.data ?? [];
   const whs = warehouses.data ?? [];

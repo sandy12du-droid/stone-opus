@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Building2, Check, ChevronDown } from "lucide-react";
+import { useLocation } from "@/context/LocationContext";
+import { HQ_LOCATION, COUNTRY_CURRENCY, type AppLocation } from "@/lib/location";
 import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
@@ -11,16 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type Loc = { id: string; name: string; sub: string };
-const HQ: Loc = { id: "hq-us", name: "Arquane Surfaces", sub: "HQ · United States" };
-const KEY = "arquane.location";
-
 export function LocationSwitcher() {
-  const [activeId, setActiveId] = useState<string>(HQ.id);
-  useEffect(() => {
-    const v = localStorage.getItem(KEY);
-    if (v) setActiveId(v);
-  }, []);
+  const { location: active, setLocation } = useLocation();
 
   const { data: warehouses = [] } = useQuery({
     queryKey: ["locations", "warehouses"],
@@ -34,17 +27,21 @@ export function LocationSwitcher() {
     },
   });
 
-  const locations: Loc[] = [
-    HQ,
-    ...warehouses.map((w) => ({ id: w.id, name: w.name, sub: `${w.city} · ${w.country}` })),
+  const locations: AppLocation[] = [
+    HQ_LOCATION,
+    ...warehouses.map((w) => {
+      const currency = COUNTRY_CURRENCY[w.country] ?? "USD";
+      return {
+        id: w.id,
+        name: w.name,
+        sub: `${w.city} · ${w.country} · ${currency}`,
+        currency,
+        locale: "en-US",
+        warehouseCode: w.code,
+      };
+    }),
   ];
-  const active = locations.find((l) => l.id === activeId) ?? HQ;
-
-  const select = (id: string) => {
-    setActiveId(id);
-    localStorage.setItem(KEY, id);
-    window.dispatchEvent(new CustomEvent("arquane:location", { detail: id }));
-  };
+  const select = (l: AppLocation) => setLocation(l);
 
   return (
     <DropdownMenu>
@@ -69,7 +66,7 @@ export function LocationSwitcher() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {locations.map((l) => (
-          <DropdownMenuItem key={l.id} onClick={() => select(l.id)} className="flex items-center gap-2">
+          <DropdownMenuItem key={l.id} onClick={() => select(l)} className="flex items-center gap-2">
             <div className="min-w-0 flex-1">
               <div className="truncate text-[13px] font-medium">{l.name}</div>
               <div className="truncate text-[11px] text-muted-foreground">{l.sub}</div>
