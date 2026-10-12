@@ -9,7 +9,7 @@ export { ExecutionsTable } from "./executions/ExecutionsTable";
 export { ExecutionDetail } from "./executions/ExecutionDetail";
 export { ProgressBar } from "./executions/ProgressBar";
 export { ApprovalQueue } from "./approvals/ApprovalQueue";
-export { LogStream } from "./logs/LogStream";
+export { LogStream } from "./log-stream/LogStream";
 export { TriggersPanel } from "./triggers/TriggersPanel";
 export { TRIGGER_LABEL, getTriggerConfigs, setTriggerConfigs } from "./triggers/triggers";
 export { TemplateGallery } from "./templates/TemplateGallery";

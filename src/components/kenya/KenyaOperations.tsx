@@ -10,6 +10,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@
 import { createKenyaInvoice, createKenyaPurchaseOrder, creditKenyaInvoice, postKenyaInvoice, receiveKenyaPurchaseOrder, recordKenyaPayment, recordKenyaStock } from "@/lib/kenya-erp.functions";
 import type { KenyaData } from "@/lib/kenya-erp";
 import { formatMoney } from "@/lib/location";
+import { downloadDocumentPdf } from "@/lib/kenya-pdf";
 
 const ksh = (n: number) => formatMoney(n, "KES");
 const today = () => new Date().toISOString().slice(0, 10);
@@ -72,7 +73,7 @@ function InvoiceDetail({ data, invoice, paid, close, creditNote }: { data: Kenya
   const writable = canWrite(data.role);
   return <section className="mt-7 border-t border-border pt-5">
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-semibold">{invoice.number}</h2><p className="text-xs text-muted-foreground">{customer?.name} {customer?.kra_pin ? `· KRA PIN ${customer.kra_pin}` : ""}</p></div>
-      <div className="flex gap-2">{invoice.status === "draft" && writable && <Button size="sm" onClick={() => posting.mutate()} disabled={posting.isPending}>{posting.isPending ? "Posting…" : "Post to ledger"}</Button>}<Button size="sm" variant="ghost" onClick={close}>Close</Button></div></div>
+      <div className="flex gap-2">{invoice.status === "draft" && writable && <Button size="sm" onClick={() => posting.mutate()} disabled={posting.isPending}>{posting.isPending ? "Posting…" : "Post to ledger"}</Button>}<Button size="sm" variant="outline" onClick={() => downloadDocumentPdf(data, invoice, paid)}>Download PDF</Button>{creditNote && <Button size="sm" variant="outline" onClick={() => downloadDocumentPdf(data, creditNote, 0)}>Credit note PDF</Button>}<Button size="sm" variant="ghost" onClick={close}>Close</Button></div></div>
     {posting.error && <p role="alert" className="mb-3 text-sm text-destructive">{posting.error.message}</p>}
     <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Description</TableHead><TableHead>Stock item</TableHead><TableHead className="text-right">Qty</TableHead><TableHead className="text-right">Price</TableHead><TableHead className="text-right">Net</TableHead><TableHead className="text-right">VAT</TableHead></TableRow></TableHeader>
       <TableBody>{items.map(i => <TableRow key={i.id}><TableCell>{i.description}</TableCell><TableCell>{i.stock_item || "—"}</TableCell><TableCell className="text-right tabular-nums">{Number(i.quantity)} {i.unit}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.unit_price))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.net_amount))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.tax_amount))}</TableCell></TableRow>)}</TableBody></Table></div>
@@ -220,7 +221,7 @@ function PoDetail({ data, po, close }: { data: KenyaData; po: KenyaData["documen
   const receiving = useMutation({ mutationFn: () => receive({ data: { document_id: po.id, supplier_ref: f.ref, bin: f.bin, date: f.date } }), onSuccess: refresh });
   const items = data.items.filter(i => i.document_id === po.id);
   return <section className="mt-7 border-t border-border pt-5">
-    <div className="mb-4 flex items-center justify-between"><h2 className="font-semibold">{po.number}</h2><Button size="sm" variant="ghost" onClick={close}>Close</Button></div>
+    <div className="mb-4 flex items-center justify-between"><h2 className="font-semibold">{po.number}</h2><div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => downloadDocumentPdf(data, po, 0)}>Download PDF</Button><Button size="sm" variant="ghost" onClick={close}>Close</Button></div></div>
     <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Description</TableHead><TableHead>Stock item</TableHead><TableHead className="text-right">Qty</TableHead><TableHead className="text-right">Cost</TableHead><TableHead className="text-right">Net</TableHead><TableHead className="text-right">VAT</TableHead></TableRow></TableHeader>
       <TableBody>{items.map(i => <TableRow key={i.id}><TableCell>{i.description}</TableCell><TableCell>{i.stock_item || "—"}</TableCell><TableCell className="text-right tabular-nums">{Number(i.quantity)} {i.unit}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.unit_price))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.net_amount))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.tax_amount))}</TableCell></TableRow>)}</TableBody></Table></div>
     <p className="mt-3 text-right text-sm font-medium tabular-nums">Total {ksh(Number(po.total))}</p>

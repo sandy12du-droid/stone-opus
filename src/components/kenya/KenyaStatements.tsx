@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import type { KenyaData } from "@/lib/kenya-erp";
 import { formatMoney } from "@/lib/location";
+import { downloadStatementPdf } from "@/lib/kenya-pdf";
 
 const ksh = (n: number) => formatMoney(n, "KES");
 const CASH = ["1000", "1010", "1020"];
@@ -47,29 +48,35 @@ export function FinancialStatements({ data }: { data: KenyaData }) {
   const totAssets = s.assets.reduce((t, r) => t + r.amount, 0), totLiab = s.liabilities.reduce((t, r) => t + r.amount, 0), totEq = s.equity.reduce((t, r) => t + r.amount, 0) + s.retained;
   const netFlow = Object.values(s.flows).reduce((t, v) => t + v, 0);
 
+  const pl = { sections: [
+    { title: "Revenue", rows: s.revenue, total: ["Total revenue", s.totRev] as [string, number] },
+    { title: "Cost of sales", rows: s.cost, total: ["Gross profit", s.totRev - s.totCost] as [string, number] },
+    { title: "Operating expenses", rows: s.expense, total: ["Total expenses", s.totExp] as [string, number] },
+  ], grand: ["Net profit", s.totRev - s.totCost - s.totExp] as [string, number], note: undefined as string | undefined };
+  const bs = { sections: [
+    { title: "Assets", rows: s.assets, total: ["Total assets", totAssets] as [string, number] },
+    { title: "Liabilities", rows: s.liabilities, total: ["Total liabilities", totLiab] as [string, number] },
+    { title: "Equity", rows: [...s.equity, { code: "", name: "Current earnings", amount: s.retained }], total: ["Total equity", totEq] as [string, number] },
+  ], grand: ["Liabilities + equity", totLiab + totEq] as [string, number], note: Math.abs(totAssets - totLiab - totEq) < 0.01 ? "Balanced: assets equal liabilities plus equity." : "Out of balance — review ledger." };
+  const cf = { sections: [
+    { title: "Opening cash (Cash, Bank, M-Pesa)", rows: [], total: ["Opening balance", s.opening] as [string, number] },
+    { title: "Cash flows in period", rows: Object.entries(s.flows).filter(([, v]) => Math.abs(v) > 0.004).map(([name, amount]) => ({ code: "", name, amount })), total: ["Net cash flow", netFlow] as [string, number] },
+  ], grand: ["Closing cash", s.closing] as [string, number], note: undefined as string | undefined };
+  const current = tab === "pl" ? pl : tab === "bs" ? bs : cf;
+  const title = tab === "pl" ? "Profit and Loss" : tab === "bs" ? "Balance Sheet" : "Cash Flow";
+  const period = tab === "bs" ? `as of ${to}` : `${from} to ${to}`;
+
   return <>
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4">
       <div className="flex flex-wrap gap-1">{([["pl", "Profit & Loss"], ["bs", "Balance Sheet"], ["cf", "Cash Flow"]] as const).map(([k, l]) => <Button key={k} size="sm" variant={tab === k ? "secondary" : "ghost"} onClick={() => setTab(k)}>{l}</Button>)}</div>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap items-end gap-3">
         {tab !== "bs" && <div><Label className="text-xs">From</Label><Input aria-label="From date" type="date" value={from} max={to} onChange={e => setFrom(e.target.value)} /></div>}
         <div><Label className="text-xs">{tab === "bs" ? "As of" : "To"}</Label><Input aria-label="To date" type="date" value={to} min={tab === "bs" ? undefined : from} onChange={e => setTo(e.target.value)} /></div>
+        <Button size="sm" variant="outline" onClick={() => downloadStatementPdf(data, title, period, current.sections, current.grand, current.note)}>Download PDF</Button>
       </div>
     </div>
-    <p className="mb-5 text-xs text-muted-foreground">{data.company.name} · {tab === "bs" ? `as of ${to}` : `${from} to ${to}`} · KSh · from posted ledger entries</p>
-    {tab === "pl" && <Statement sections={[
-      { title: "Revenue", rows: s.revenue, total: ["Total revenue", s.totRev] },
-      { title: "Cost of sales", rows: s.cost, total: ["Gross profit", s.totRev - s.totCost] },
-      { title: "Operating expenses", rows: s.expense, total: ["Total expenses", s.totExp] },
-    ]} grand={["Net profit", s.totRev - s.totCost - s.totExp]} />}
-    {tab === "bs" && <Statement sections={[
-      { title: "Assets", rows: s.assets, total: ["Total assets", totAssets] },
-      { title: "Liabilities", rows: s.liabilities, total: ["Total liabilities", totLiab] },
-      { title: "Equity", rows: [...s.equity, { code: "", name: "Current earnings", amount: s.retained }], total: ["Total equity", totEq] },
-    ]} grand={["Liabilities + equity", totLiab + totEq]} note={Math.abs(totAssets - totLiab - totEq) < 0.01 ? "Balanced: assets equal liabilities plus equity." : "Out of balance — review ledger."} />}
-    {tab === "cf" && <Statement sections={[
-      { title: "Opening cash (Cash, Bank, M-Pesa)", rows: [], total: ["Opening balance", s.opening] },
-      { title: "Cash flows in period", rows: Object.entries(s.flows).filter(([, v]) => Math.abs(v) > 0.004).map(([name, amount]) => ({ code: "", name, amount })), total: ["Net cash flow", netFlow] },
-    ]} grand={["Closing cash", s.closing]} />}
+    <p className="mb-5 text-xs text-muted-foreground">{data.company.name} · {period} · KSh · from posted ledger entries</p>
+    <Statement sections={current.sections} grand={current.grand} note={current.note} />
   </>;
 }
 
