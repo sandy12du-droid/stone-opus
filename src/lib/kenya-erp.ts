@@ -12,9 +12,7 @@ export const kenyaSections = {
 export type KenyaSection = keyof typeof kenyaSections;
 export function isKenyaSection(value: string): value is KenyaSection { return value in kenyaSections; }
 
-export const kenyaOptions = (warehouseId: string) => queryOptions({
-  queryKey: ["kenya-erp", warehouseId],
-  queryFn: async () => {
+async function fetchKenya(warehouseId: string) {
     const result = await supabase.from("erp_companies").select("*").eq("warehouse_id", warehouseId).maybeSingle();
     if (result.error) throw result.error;
     const company = result.data;
@@ -35,6 +33,6 @@ export const kenyaOptions = (warehouseId: string) => queryOptions({
       if (response.error) throw response.error;
     }
     return { company, parties: parties.data ?? [], accounts: accounts.data ?? [], taxes: taxes.data ?? [], documents: documents.data ?? [], items: items.data ?? [], payments: payments.data ?? [], journals: journals.data ?? [], lines: lines.data ?? [], audit: audit.data ?? [], role: membership.data?.[0]?.role ?? "viewer" };
-  },
-});
-export type KenyaData = NonNullable<Awaited<ReturnType<ReturnType<typeof kenyaOptions>["queryFn"]>>>;
+}
+export const kenyaOptions = (warehouseId: string) => queryOptions({ queryKey: ["kenya-erp", warehouseId], queryFn: () => fetchKenya(warehouseId) });
+export type KenyaData = NonNullable<Awaited<ReturnType<typeof fetchKenya>>>;
