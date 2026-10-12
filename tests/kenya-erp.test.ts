@@ -69,3 +69,15 @@ describe.if(Boolean(live))("Kenya ledger (live database, rolled back)", () => {
     expect(leaked).toHaveLength(0);
   });
 });
+
+describe("Kenya search filters", () => {
+  test("type filter keeps only that kind", () => {
+    const r = searchKenya(fixture, "", { kind: "stock" });
+    expect(r.map(x => x.id)).toEqual(["s1"]);
+  });
+  test("date range filters by record date and stays Kenya-only", () => {
+    const r = searchKenya(fixture, "nairobi", { from: "2026-10-02", to: "2026-10-04" });
+    expect(r.every(x => x.date >= "2026-10-02" && x.date <= "2026-10-04")).toBe(true);
+    expect(r.map(x => x.id)).not.toContain("x1");
+  });
+});

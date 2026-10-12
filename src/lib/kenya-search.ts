@@ -11,9 +11,11 @@ const docKinds: Record<string, [KenyaSearchKind, KenyaSection]> = {
   credit_note: ["credit_note", "invoices"], refund: ["refund", "invoices"], bill: ["bill", "bills"], purchase_order: ["purchase_order", "purchase_orders"],
 };
 
-export function searchKenya(data: SearchInput, query: string, limit = 50): KenyaSearchResult[] {
+export interface KenyaSearchFilters { kind?: KenyaSearchKind; from?: string; to?: string; limit?: number }
+export function searchKenya(data: SearchInput, query: string, filters: KenyaSearchFilters = {}): KenyaSearchResult[] {
   const q = query.trim().toLowerCase();
-  if (!q) return [];
+  const { kind, from, to, limit = 50 } = filters;
+  if (!q && !kind && !from && !to) return [];
   const co = data.company.id;
   const hit = (...parts: unknown[]) => parts.join(" ").toLowerCase().includes(q);
   const party = new Map(data.parties.filter(p => p.company_id === co).map(p => [p.id, p.name]));
@@ -44,5 +46,5 @@ export function searchKenya(data: SearchInput, query: string, limit = 50): Kenya
     const src = j.source_document_id ? docById.get(j.source_document_id)?.number : "";
     if (hit(j.description, src, ...(e?.accounts ?? []))) out.push({ id: j.id, kind: "ledger", label: j.description, sub: ["Ledger entry", src].filter(Boolean).join(" · "), amount: e?.total ?? 0, date: j.journal_date, section: "journals" });
   }
-  return out.sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
+  return out.filter(r => (!kind || r.kind === kind) && (!from || r.date >= from) && (!to || r.date <= to)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
 }
