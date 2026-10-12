@@ -3,7 +3,6 @@
 -- rolls everything back so no records persist.
 BEGIN;
 SELECT set_config('request.jwt.claims', json_build_object('sub', (SELECT user_id FROM erp_memberships WHERE role = 'owner' LIMIT 1), 'role', 'authenticated')::text, true);
-SET LOCAL ROLE authenticated;
 
 DO $$
 DECLARE
