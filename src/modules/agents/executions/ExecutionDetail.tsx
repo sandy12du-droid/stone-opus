@@ -11,7 +11,7 @@ import {
   isActive,
 } from "../runtime/status";
 import { ProgressBar } from "./ProgressBar";
-import { LogStream } from "../logs/LogStream";
+import { LogStream } from "../log-stream/LogStream";
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
