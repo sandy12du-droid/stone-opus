@@ -33,6 +33,7 @@ import { Route as AuthenticatedCrmCustomersRouteImport } from './routes/_authent
 import { Route as AuthenticatedCrmLeadsRouteImport } from './routes/_authenticated/crm.leads'
 import { Route as AuthenticatedInventoryPricingRouteImport } from './routes/_authenticated/inventory.pricing'
 import { Route as AuthenticatedInventoryProductsRouteImport } from './routes/_authenticated/inventory.products'
+import { Route as AuthenticatedKenyaSectionRouteImport } from './routes/_authenticated/kenya.$section'
 import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects.$projectId'
 import { Route as AuthenticatedQuotationsQuotationIdRouteImport } from './routes/_authenticated/quotations.$quotationId'
 import { Route as AuthenticatedSalesOpportunitiesRouteImport } from './routes/_authenticated/sales.opportunities'
@@ -173,6 +174,12 @@ const AuthenticatedInventoryProductsRoute =
     path: '/inventory/products',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedKenyaSectionRoute =
+  AuthenticatedKenyaSectionRouteImport.update({
+    id: '/kenya/$section',
+    path: '/kenya/$section',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProjectsProjectIdRoute =
   AuthenticatedProjectsProjectIdRouteImport.update({
     id: '/$projectId',
@@ -282,6 +289,7 @@ export interface FileRoutesByFullPath {
   '/crm/leads': typeof AuthenticatedCrmLeadsRoute
   '/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
   '/inventory/products': typeof AuthenticatedInventoryProductsRouteWithChildren
+  '/kenya/$section': typeof AuthenticatedKenyaSectionRoute
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
   '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
@@ -321,6 +329,7 @@ export interface FileRoutesByTo {
   '/crm/leads': typeof AuthenticatedCrmLeadsRoute
   '/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
   '/inventory/products': typeof AuthenticatedInventoryProductsRouteWithChildren
+  '/kenya/$section': typeof AuthenticatedKenyaSectionRoute
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
   '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
@@ -362,6 +371,7 @@ export interface FileRoutesById {
   '/_authenticated/crm/leads': typeof AuthenticatedCrmLeadsRoute
   '/_authenticated/inventory/pricing': typeof AuthenticatedInventoryPricingRoute
   '/_authenticated/inventory/products': typeof AuthenticatedInventoryProductsRouteWithChildren
+  '/_authenticated/kenya/$section': typeof AuthenticatedKenyaSectionRoute
   '/_authenticated/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
   '/_authenticated/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/_authenticated/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
@@ -403,6 +413,7 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/kenya/$section'
     | '/projects/$projectId'
     | '/quotations/$quotationId'
     | '/sales/opportunities'
@@ -442,6 +453,7 @@ export interface FileRouteTypes {
     | '/crm/leads'
     | '/inventory/pricing'
     | '/inventory/products'
+    | '/kenya/$section'
     | '/projects/$projectId'
     | '/quotations/$quotationId'
     | '/sales/opportunities'
@@ -482,6 +494,7 @@ export interface FileRouteTypes {
     | '/_authenticated/crm/leads'
     | '/_authenticated/inventory/pricing'
     | '/_authenticated/inventory/products'
+    | '/_authenticated/kenya/$section'
     | '/_authenticated/projects/$projectId'
     | '/_authenticated/quotations/$quotationId'
     | '/_authenticated/sales/opportunities'
@@ -680,6 +693,13 @@ declare module '@tanstack/react-router' {
       path: '/inventory/products'
       fullPath: '/inventory/products'
       preLoaderRoute: typeof AuthenticatedInventoryProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kenya/$section': {
+      id: '/_authenticated/kenya/$section'
+      path: '/kenya/$section'
+      fullPath: '/kenya/$section'
+      preLoaderRoute: typeof AuthenticatedKenyaSectionRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/projects/$projectId': {
@@ -897,6 +917,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCrmLeadsRoute: typeof AuthenticatedCrmLeadsRoute
   AuthenticatedInventoryPricingRoute: typeof AuthenticatedInventoryPricingRoute
   AuthenticatedInventoryProductsRoute: typeof AuthenticatedInventoryProductsRouteWithChildren
+  AuthenticatedKenyaSectionRoute: typeof AuthenticatedKenyaSectionRoute
   AuthenticatedSalesOpportunitiesRoute: typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   AuthenticatedSalesPipelineRoute: typeof AuthenticatedSalesPipelineRoute
   AuthenticatedSettingsAgentIntegrationsRoute: typeof AuthenticatedSettingsAgentIntegrationsRoute
@@ -921,6 +942,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedInventoryPricingRoute: AuthenticatedInventoryPricingRoute,
   AuthenticatedInventoryProductsRoute:
     AuthenticatedInventoryProductsRouteWithChildren,
+  AuthenticatedKenyaSectionRoute: AuthenticatedKenyaSectionRoute,
   AuthenticatedSalesOpportunitiesRoute:
     AuthenticatedSalesOpportunitiesRouteWithChildren,
   AuthenticatedSalesPipelineRoute: AuthenticatedSalesPipelineRoute,

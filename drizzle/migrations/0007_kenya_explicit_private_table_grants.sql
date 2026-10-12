@@ -1,0 +1,3 @@
+REVOKE ALL ON public.erp_companies,public.erp_memberships,public.erp_parties,public.erp_accounts,public.erp_tax_codes,public.erp_documents,public.erp_document_items,public.erp_journals,public.erp_journal_lines,public.erp_payments,public.erp_audit_events FROM anon;
+REVOKE INSERT,UPDATE,DELETE,TRUNCATE ON public.erp_companies,public.erp_memberships,public.erp_accounts,public.erp_tax_codes,public.erp_documents,public.erp_document_items,public.erp_journals,public.erp_journal_lines,public.erp_payments,public.erp_audit_events FROM authenticated;
+REVOKE DELETE,TRUNCATE ON public.erp_parties FROM authenticated;

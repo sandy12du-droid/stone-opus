@@ -25,6 +25,14 @@ type OAuthApi = {
 const oauthApi = () => (supabase.auth as unknown as { oauth: OAuthApi }).oauth;
 
 export const Route = createFileRoute("/.lovable/oauth/consent")({
+  head: () => ({ meta: [
+    { title: "Authorize an Agent — Arquane OS" },
+    { name: "description", content: "Review and authorize an agent connection to your Arquane OS account." },
+    { property: "og:title", content: "Authorize an Agent — Arquane OS" },
+    { property: "og:description", content: "Review an agent connection and its access to your Arquane OS account." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+  ] }),
   ssr: false,
   validateSearch: (s: Record<string, unknown>) => ({
     authorization_id: typeof s["authorization_id"] === "string" ? s["authorization_id"] : "",
@@ -36,7 +44,8 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
     if (!data.session) throw redirect({ to: "/login", search: { redirect: next } });
   },
   loader: async ({ location }) => {
-    const authorizationId = new URLSearchParams(location.search).get("authorization_id")!;
+    const authorizationId = new URLSearchParams(location.search).get("authorization_id");
+    if (!authorizationId) throw new Error("Missing authorization request");
     const { data, error } = await oauthApi().getAuthorizationDetails(authorizationId);
     if (error) throw error;
     const immediate = data?.redirect_url ?? data?.redirect_to;

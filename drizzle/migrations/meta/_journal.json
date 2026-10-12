@@ -22,6 +22,41 @@
       "when": 1791766282804,
       "tag": "0002_operating_location_setup",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791768384920,
+      "tag": "0003_kenya_erp_company_and_ledger",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791768418916,
+      "tag": "0004_kenya_erp_atomic_document_posting",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791768574452,
+      "tag": "0005_kenya_foundation_settings_and_posting_gate",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791768753464,
+      "tag": "0006_kenya_ledger_defense_in_depth",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791768846311,
+      "tag": "0007_kenya_explicit_private_table_grants",
+      "breakpoints": true
     }
   ]
 }

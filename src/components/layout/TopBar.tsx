@@ -48,21 +48,22 @@ export function TopBar() {
 
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-1.5 border-b border-border bg-background/80 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/70 sm:gap-3 sm:px-6">
       {/* Global search — opens ⌘K palette */}
-      <button
+      <Button
+        variant="outline"
         onClick={openCommandPalette}
-        className="group relative flex h-9 w-full max-w-xl items-center rounded-md border border-border bg-surface-muted pl-9 pr-16 text-left text-[13px] text-muted-foreground/80 outline-none transition-colors hover:border-border-strong hover:bg-surface"
+        className="group relative flex h-9 min-w-0 flex-1 max-w-xl items-center justify-start rounded-md border border-border bg-surface-muted pl-9 pr-3 text-left text-[13px] text-muted-foreground/80 outline-none transition-colors hover:border-border-strong hover:bg-surface sm:pr-16"
         aria-label="Open command palette"
       >
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <span>Search leads, quotations, slabs, documents…</span>
-        <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+        <span className="truncate">Search<span className="hidden sm:inline"> leads, quotations, slabs, documents…</span></span>
+        <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:block">
           ⌘K
         </kbd>
-      </button>
+      </Button>
 
-      <div className="flex-1" />
+      <div className="hidden flex-1 sm:block" />
 
       {/* Quick actions */}
       <DropdownMenu>
