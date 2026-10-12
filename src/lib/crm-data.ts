@@ -25,6 +25,8 @@ export interface Customer {
   phone?: string;
   city?: string;
   since?: string;
+  /** Warehouse code of the owning location; unset = HQ. */
+  locationCode?: string;
 }
 
 export const CUSTOMERS: Customer[] = [
@@ -54,3 +56,7 @@ export const HEALTH_STYLES: Record<Health, string> = {
 export const currency = (n: number) => formatMoney(n, "USD");
 
 export const getCustomer = (id: string) => CUSTOMERS.find((c) => c.id === id);
+
+/** HQ (code null) sees everything; other locations see only their own records. */
+export const forLocation = <T extends { locationCode?: string }>(rows: T[], code: string | null) =>
+  code ? rows.filter((r) => r.locationCode === code) : rows;

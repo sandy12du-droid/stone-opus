@@ -30,6 +30,8 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useLocation } from "@/context/LocationContext";
+import { forLocation } from "@/lib/crm-data";
 
 export const Route = createFileRoute("/_authenticated/crm/leads")({
   head: () => ({
@@ -63,9 +65,10 @@ interface Lead {
   owner: string;
   ownerInitials: string;
   aiHint: string;
+  locationCode?: string;
 }
 
-const LEADS: Lead[] = [
+const ALL_LEADS: Lead[] = [
   { id: "L-2041", company: "Mediterraneo Marmi S.p.A.", contact: "Alessandro Ricci", role: "Procurement Director", country: "Italy", flag: "🇮🇹", industry: "Distributor", source: "Import records", score: 94, value: 480000, stage: "Negotiation", lastTouch: "2h ago", owner: "Sofia Marin", ownerInitials: "SM", aiHint: "Send Calacatta Gold quote — matches 3 prior orders." },
   { id: "L-2039", company: "Granito Andes Ltda.", contact: "Camila Rojas", role: "CEO", country: "Chile", flag: "🇨🇱", industry: "Fabricator", source: "Website", score: 88, value: 265000, stage: "Proposal", lastTouch: "Yesterday", owner: "David Ono", ownerInitials: "DO", aiHint: "Propose FOB Callao — 18% cheaper vs. current supplier." },
   { id: "L-2036", company: "Emirates Stone Trading LLC", contact: "Yusuf Al-Farsi", role: "Head of Sourcing", country: "UAE", flag: "🇦🇪", industry: "Distributor", source: "Trade show", score: 91, value: 620000, stage: "Qualified", lastTouch: "3d ago", owner: "Sofia Marin", ownerInitials: "SM", aiHint: "High buying power — schedule discovery call this week." },
@@ -108,6 +111,8 @@ function StageBadge({ stage }: { stage: LeadStage }) {
 }
 
 function LeadsPage() {
+  const { location } = useLocation();
+  const LEADS = useMemo(() => forLocation(ALL_LEADS, location.warehouseCode), [location.warehouseCode]);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"table" | "kanban">("table");
 
@@ -120,12 +125,12 @@ function LeadsPage() {
         l.contact.toLowerCase().includes(q) ||
         l.country.toLowerCase().includes(q),
     );
-  }, [query]);
+  }, [LEADS, query]);
 
   const kpis = [
     { label: "Open leads", value: LEADS.length, hint: "8 new this week" },
     { label: "Weighted pipeline", value: currency(LEADS.reduce((s, l) => s + l.value, 0)), hint: "+12.4% MoM" },
-    { label: "Avg. lead score", value: Math.round(LEADS.reduce((s, l) => s + l.score, 0) / LEADS.length), hint: "Healthy" },
+    { label: "Avg. lead score", value: Math.round(LEADS.reduce((s, l) => s + l.score, 0) / (LEADS.length || 1)), hint: "Healthy" },
     { label: "Countries", value: new Set(LEADS.map((l) => l.country)).size, hint: "4 continents" },
   ];
 
