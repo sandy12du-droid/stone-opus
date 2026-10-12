@@ -23,6 +23,7 @@ import { ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRoles } from "@/hooks/use-roles";
 import { canAccessPath } from "@/lib/permissions";
+import { LocationSwitcher } from "./LocationSwitcher";
 
 
 type NavItem = { label: string; to: string; icon: React.ComponentType<{ className?: string }> };
@@ -119,20 +120,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Workspace switcher */}
-      <button
-        type="button"
-        className="mx-3 mt-1 flex items-center gap-2 rounded-md border border-sidebar-border/70 bg-sidebar-accent/40 px-2.5 py-2 text-left transition-colors hover:bg-sidebar-accent"
-      >
-        <div className="flex h-6 w-6 items-center justify-center rounded bg-sidebar-primary/20 text-sidebar-primary">
-          <Building2 className="h-3.5 w-3.5" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-[12px] font-medium text-white">Arquane Surfaces</div>
-          <div className="truncate text-[10px] text-sidebar-foreground/60">HQ · United States</div>
-        </div>
-        <ChevronDown className="h-3.5 w-3.5 text-sidebar-foreground/60" />
-      </button>
+      <LocationSwitcher />
 
       {/* Nav */}
       <nav className="mt-4 flex-1 overflow-y-auto px-3 pb-6">
