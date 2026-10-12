@@ -1855,6 +1855,7 @@ export type Database = {
         Returns: string
       }
       erp_request_approval: { Args: { p_document: string }; Returns: undefined }
+      erp_run_selftest: { Args: { p_company: string }; Returns: Json }
       erp_save_company: {
         Args: {
           p_address: string
