@@ -89,8 +89,8 @@ function SendInvoice({ data, invoice, paid }: { data: KenyaData; invoice: Doc; p
   return <section className="border-t border-border pt-4">
     <h3 className="mb-3 text-sm font-semibold">Send to customer</h3>
     <div className="grid gap-3 sm:grid-cols-2">
-      <div className="flex gap-2"><Input aria-label="Customer email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} /><Button size="sm" variant="outline" onClick={() => open("email")}><Mail className="mr-1.5 h-4 w-4" />Email</Button></div>
-      <div className="flex gap-2"><Input aria-label="WhatsApp number" placeholder="WhatsApp e.g. 0712 345678" value={phone} onChange={e => setPhone(e.target.value)} /><Button size="sm" variant="outline" onClick={() => open("whatsapp")}><MessageCircle className="mr-1.5 h-4 w-4" />WhatsApp</Button></div>
+      <div className="flex gap-2"><Input aria-label="Customer email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} /><Button size="sm" variant="outline" disabled={!email.trim()} onClick={() => open("email")}><Mail className="mr-1.5 h-4 w-4" />Email</Button></div>
+      <div className="flex gap-2"><Input aria-label="WhatsApp number" placeholder="WhatsApp e.g. 0712 345678" value={phone} onChange={e => setPhone(e.target.value)} /><Button size="sm" variant="outline" disabled={phone.replace(/\D/g, "").length < 9} onClick={() => open("whatsapp")}><MessageCircle className="mr-1.5 h-4 w-4" />WhatsApp</Button></div>
     </div>
     <p className="mt-2 text-xs text-muted-foreground">Opens your email app or WhatsApp with the message ready; attach the downloaded PDF. Mark it sent once you've sent it — no delivery provider is connected yet.</p>
     <Err e={record.error} />
