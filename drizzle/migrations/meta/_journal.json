@@ -92,6 +92,13 @@
       "when": 1791772806758,
       "tag": "0012_fix_etims_test_errors_array",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1791782559313,
+      "tag": "0013_kenya_ledger_selftest",
+      "breakpoints": true
     }
   ]
 }
