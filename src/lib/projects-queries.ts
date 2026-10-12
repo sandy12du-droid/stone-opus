@@ -1,3 +1,4 @@
+import { formatMoney } from "@/lib/location";
 // Projects & Production read layer.
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -91,8 +92,7 @@ export function projectProgress(stages: string[]): number {
   return Math.round((avg / (PRODUCTION_STAGES.length - 1)) * 100);
 }
 
-export const currency = (n: number, code = "USD") =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: code, maximumFractionDigits: 0 }).format(n);
+export const currency = (n: number, code = "USD") => formatMoney(n, code);
 
 export const fmtDate = (d: string | null | undefined) =>
   d ? new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";

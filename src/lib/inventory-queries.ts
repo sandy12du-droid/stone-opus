@@ -1,3 +1,4 @@
+import { formatMoney } from "@/lib/location";
 // Inventory Intelligence data layer.
 // All queries hit Supabase via the browser client; public SELECT policies allow
 // unauthenticated reads. TanStack Query owns caching and background refetch.
@@ -102,8 +103,7 @@ export const productDetailOptions = (id: string) =>
   });
 
 // ---------- Formatting helpers ----------
-export const currency = (n: number, ccy = "USD") =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: ccy, maximumFractionDigits: 0 }).format(n);
+export const currency = (n: number, ccy = "USD") => formatMoney(n, ccy);
 
 export const areaFmt = (n: number) =>
   `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(n)} m²`;

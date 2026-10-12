@@ -1,3 +1,4 @@
+import { formatMoney } from "@/lib/location";
 // Quotations read layer — public catalogue-style reads via the browser client.
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -77,12 +78,7 @@ export const WORKFLOW_STEPS: { key: QuotationStatus; label: string }[] = [
   { key: "accepted",  label: "Accepted" },
 ];
 
-export const currency = (n: number, ccy = "USD") =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: ccy,
-    maximumFractionDigits: 0,
-  }).format(n);
+export const currency = (n: number, ccy = "USD") => formatMoney(n, ccy);
 
 export const fmtDate = (d: string | null | undefined) =>
   d ? new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
