@@ -1,3 +1,5 @@
+import { formatMoney } from "@/lib/location";
+import { useLocation } from "@/context/LocationContext";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
@@ -50,8 +52,8 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 /* Placeholder data                                                    */
 /* ------------------------------------------------------------------ */
 
-const kpis = [
-  { label: "Revenue pipeline", value: "$4.82M", delta: "+12.4%", trend: "up", hint: "vs. last 30 days", icon: DollarSign },
+const kpis = () => [
+  { label: "Revenue pipeline", value: `${formatMoney(4820000, "USD", true)}`, delta: "+12.4%", trend: "up", hint: "vs. last 30 days", icon: DollarSign },
   { label: "Open quotations", value: "38", delta: "+6", trend: "up", hint: "awaiting approval", icon: FileText },
   { label: "Today's leads", value: "17", delta: "+3", trend: "up", hint: "4 unassigned", icon: UserPlus },
   { label: "Inventory alerts", value: "9", delta: "+2", trend: "down", hint: "SKUs below threshold", icon: Package },
@@ -93,11 +95,11 @@ const activities = [
   { who: "Priya Nair", what: "uploaded shop drawing", target: "PRJ-118 · Ashford Residence", time: "5h ago", tone: "info" as const },
 ];
 
-const followUps = [
-  { name: "Riverside Kitchens", country: "United States", value: "$184k", due: "Today", stage: "Negotiation" },
-  { name: "Alba Marmi", country: "Italy", value: "$92k", due: "Tomorrow", stage: "Quote sent" },
-  { name: "Doha Interiors", country: "Qatar", value: "$310k", due: "Fri", stage: "Sample review" },
-  { name: "Concord Stoneworks", country: "United States", value: "$47k", due: "Mon", stage: "Discovery" },
+const followUps = () => [
+  { name: "Riverside Kitchens", country: "United States", value: `${formatMoney(184000, "USD", true)}`, due: "Today", stage: "Negotiation" },
+  { name: "Alba Marmi", country: "Italy", value: `${formatMoney(92000, "USD", true)}`, due: "Tomorrow", stage: "Quote sent" },
+  { name: "Doha Interiors", country: "Qatar", value: `${formatMoney(310000, "USD", true)}`, due: "Fri", stage: "Sample review" },
+  { name: "Concord Stoneworks", country: "United States", value: `${formatMoney(47000, "USD", true)}`, due: "Mon", stage: "Discovery" },
 ];
 
 const recommendations = [
@@ -109,6 +111,7 @@ const recommendations = [
 /* ------------------------------------------------------------------ */
 
 function DashboardPage() {
+  useLocation();
   return (
     <AppShell
       title="Dashboard"
@@ -127,7 +130,7 @@ function DashboardPage() {
 
       {/* KPI grid */}
       <section className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {kpis.map((k) => (
+        {kpis().map((k) => (
           <KpiCard key={k.label} {...k} />
         ))}
       </section>
@@ -160,7 +163,7 @@ function DashboardPage() {
                 </defs>
                 <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="month" stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}M`} />
+                <YAxis stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => formatMoney(Number(v) * 1_000_000, "USD", true)} />
                 <Tooltip
                   cursor={{ stroke: "var(--color-border-strong)" }}
                   contentStyle={{
@@ -170,7 +173,7 @@ function DashboardPage() {
                     fontSize: 12,
                     boxShadow: "var(--shadow-elev-2)",
                   }}
-                  formatter={(v: number) => [`$${v.toFixed(2)}M`, ""]}
+                  formatter={(v: number) => [formatMoney(Number(v) * 1_000_000, "USD", true), ""]}
                 />
                 <Area type="monotone" dataKey="pipeline" stroke="var(--color-primary)" strokeWidth={2} fill="url(#gPipe)" />
                 <Area type="monotone" dataKey="closed" stroke="var(--color-accent)" strokeWidth={2} fill="url(#gClose)" />
@@ -274,7 +277,7 @@ function DashboardPage() {
             </Link>
           </div>
           <ul className="space-y-2">
-            {followUps.map((f) => (
+            {followUps().map((f) => (
               <li
                 key={f.name}
                 className="flex items-center justify-between gap-3 rounded-md border border-border bg-surface-muted/40 px-3 py-2.5 transition-colors hover:border-border-strong hover:bg-surface-muted"

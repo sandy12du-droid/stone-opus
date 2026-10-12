@@ -28,7 +28,7 @@ export const setActiveLocation = (l: AppLocation) => { active = l; };
 export const getActiveLocation = () => active;
 
 /** Format an amount stored in `from` currency into the active location's currency. */
-export function formatMoney(n: number, from = "USD"): string {
+export function formatMoney(n: number, from = "USD", compact = false): string {
   const to = active.currency;
   let value = n;
   let ccy = from;
@@ -36,9 +36,11 @@ export function formatMoney(n: number, from = "USD"): string {
     value = (n / USD_RATES[from]) * USD_RATES[to];
     ccy = to;
   }
-  return new Intl.NumberFormat(LOCALES[ccy] ?? "en-US", {
+  const formatted = new Intl.NumberFormat(LOCALES[ccy] ?? "en-US", {
     style: "currency",
     currency: ccy,
     maximumFractionDigits: 0,
+    ...(compact ? { notation: "compact" as const, maximumFractionDigits: 2 } : {}),
   }).format(value);
+  return ccy === "KES" ? formatted.replace(/Ksh/gi, "KSh") : formatted;
 }

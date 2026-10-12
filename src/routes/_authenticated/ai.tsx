@@ -1,3 +1,5 @@
+import { formatMoney } from "@/lib/location";
+import { useLocation } from "@/context/LocationContext";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
@@ -113,21 +115,21 @@ const agents = AGENT_REGISTRY.map((a) => ({
   status: a.status,
 }));
 
-const insights = [
+const insights = () => [
   { title: "Quartz demand in Texas up 18% MoM", body: "Enrich importer list and prioritize 4 warm accounts.", tone: "opportunity" as const },
-  { title: "9 overdue invoices totaling $612k", body: "Alba Marmi and 2 others avg. 21 days late.", tone: "risk" as const },
+  { title: `9 overdue invoices totaling ${formatMoney(612000, "USD", true)}`, body: "Alba Marmi and 2 others avg. 21 days late.", tone: "risk" as const },
   { title: "Container CNT-0092 can consolidate 4 pending POs", body: "Preview a loading plan to cut freight by ~11%.", tone: "opportunity" as const },
-  { title: "Calacatta Oro margin is 4pts below floor", body: "Reprice list by $18/sqft or extend hedge.", tone: "risk" as const },
+  { title: "Calacatta Oro margin is 4pts below floor", body: `Reprice list by ${formatMoney(18, "USD", true)}/sqft or extend hedge.`, tone: "risk" as const },
 ];
 
-const savedPrompts = [
+const savedPrompts = () => [
   { title: "Draft cold outreach to US kitchen fabricators", tag: "Sales" },
   { title: "Explain HS codes for a stone shipment to EU", tag: "Logistics" },
   { title: "Compare landed cost across Livorno/Newark/Chennai", tag: "Pricing" },
   { title: "Write onboarding email for a new customer", tag: "CRM" },
   { title: "Turn shop drawing PDF into a cut list", tag: "Production" },
   { title: "Summarize this account's last 12 months", tag: "CRM" },
-  { title: "Suggest bundles for a $150k quotation", tag: "Sales" },
+  { title: `Suggest bundles for a ${formatMoney(150000, "USD", true)} quotation`, tag: "Sales" },
   { title: "Weekly digest: pipeline, inventory, shipping", tag: "Reports" },
   { title: "Draft a payment reminder — polite, firm", tag: "Finance" },
 ];
@@ -167,6 +169,7 @@ const chatSample = [
 /* ------------------------------------------------------------------ */
 
 function AiCommandCenter() {
+  useLocation();
   const [section, setSection] = useState<SectionKey>("chat");
   const [input, setInput] = useState("");
 
@@ -653,11 +656,12 @@ function AgentsPane() {
 }
 
 function InsightsPane() {
+  useLocation();
   return (
     <div className="card-surface p-5">
       <PaneHeader title="Insights" desc="AI-generated opportunities and risks across the business." />
       <ul className="mt-5 grid gap-3 md:grid-cols-2">
-        {insights.map((i) => (
+        {insights().map((i) => (
           <li
             key={i.title}
             className={cn(
@@ -689,6 +693,7 @@ function InsightsPane() {
 }
 
 function SavedPromptsPane() {
+  useLocation();
   return (
     <div className="card-surface p-5">
       <PaneHeader
@@ -709,7 +714,7 @@ function SavedPromptsPane() {
         />
       </div>
       <ul className="mt-4 divide-y divide-border">
-        {savedPrompts.map((p) => (
+        {savedPrompts().map((p) => (
           <li key={p.title} className="group flex items-center justify-between gap-3 py-2.5">
             <div className="flex min-w-0 items-center gap-3">
               <Bookmark className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />

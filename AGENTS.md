@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Monetary displays, including sample copy and chart labels, use the shared location formatter during rendering and subscribe to LocationContext so switching locations updates them immediately; never preformat amounts at module initialization.

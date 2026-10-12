@@ -31,7 +31,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useLocation } from "@/context/LocationContext";
-import { forLocation } from "@/lib/crm-data";
+import { currency, forLocation } from "@/lib/crm-data";
 
 export const Route = createFileRoute("/_authenticated/crm/leads")({
   head: () => ({
@@ -91,9 +91,6 @@ const STAGE_STYLES: Record<LeadStage, string> = {
   Proposal: "bg-primary/10 text-primary border-primary/20",
   Negotiation: "bg-success/10 text-success border-success/20",
 };
-
-const currency = (n: number) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 
 function ScoreDot({ score }: { score: number }) {
   const tone = score >= 85 ? "text-success" : score >= 75 ? "text-accent" : "text-muted-foreground";

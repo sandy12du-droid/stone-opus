@@ -1,3 +1,5 @@
+import { formatMoney } from "@/lib/location";
+import { useLocation } from "@/context/LocationContext";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   TrendingUp,
@@ -49,8 +51,8 @@ export const Route = createFileRoute("/_authenticated/workspace/executive")({
 /* Placeholder data                                                    */
 /* ------------------------------------------------------------------ */
 
-const northStars = [
-  { label: "Net Revenue (QTD)", value: "$12.4M", target: "$14.0M", progress: 88, delta: "+9.2%", trend: "up" as const, icon: DollarSign },
+const northStars = () => [
+  { label: "Net Revenue (QTD)", value: `${formatMoney(12400000, "USD", true)}`, target: `${formatMoney(14000000, "USD", true)}`, progress: 88, delta: "+9.2%", trend: "up" as const, icon: DollarSign },
   { label: "Gross Margin", value: "37.8%", target: "38%", progress: 99, delta: "+120bps", trend: "up" as const, icon: GaugeIcon },
   { label: "Win Rate", value: "42%", target: "45%", progress: 93, delta: "-1.4pt", trend: "down" as const, icon: Target },
   { label: "On-Time Ship", value: "94%", target: "96%", progress: 98, delta: "+2pt", trend: "up" as const, icon: Ship },
@@ -71,20 +73,20 @@ const trend = [
   { m: "Jan", rev: 5.7, plan: 5.2 },
 ];
 
-const regions = [
-  { region: "United States", revenue: "$5.2M", share: 42, delta: "+11%", trend: "up" as const },
-  { region: "Italy", revenue: "$2.4M", share: 19, delta: "+3%", trend: "up" as const },
-  { region: "UAE / Qatar", revenue: "$1.8M", share: 15, delta: "+22%", trend: "up" as const },
-  { region: "India", revenue: "$1.3M", share: 11, delta: "-4%", trend: "down" as const },
-  { region: "Malaysia", revenue: "$0.9M", share: 7, delta: "flat", trend: "flat" as const },
-  { region: "Rest of World", revenue: "$0.8M", share: 6, delta: "+6%", trend: "up" as const },
+const regions = () => [
+  { region: "United States", revenue: `${formatMoney(5200000, "USD", true)}`, share: 42, delta: "+11%", trend: "up" as const },
+  { region: "Italy", revenue: `${formatMoney(2400000, "USD", true)}`, share: 19, delta: "+3%", trend: "up" as const },
+  { region: "UAE / Qatar", revenue: `${formatMoney(1800000, "USD", true)}`, share: 15, delta: "+22%", trend: "up" as const },
+  { region: "India", revenue: `${formatMoney(1300000, "USD", true)}`, share: 11, delta: "-4%", trend: "down" as const },
+  { region: "Malaysia", revenue: `${formatMoney(900000, "USD", true)}`, share: 7, delta: "flat", trend: "flat" as const },
+  { region: "Rest of World", revenue: `${formatMoney(800000, "USD", true)}`, share: 6, delta: "+6%", trend: "up" as const },
 ];
 
-const risks = [
+const risks = () => [
   {
     tone: "danger" as const,
     title: "FX exposure widening in EUR",
-    detail: "€1.2M in open Italian POs unhedged. Every 1% move ≈ $14k hit to margin.",
+    detail: `€1.2M in open Italian POs unhedged. Every 1% move ≈ ${formatMoney(14000, "USD", true)} hit to margin.`,
     cta: "Open hedge plan",
   },
   {
@@ -131,12 +133,12 @@ const decisions = [
   },
 ];
 
-const topAccounts = [
-  { id: "cust-riverside", name: "Riverside Kitchens", country: "United States", ytd: "$1.72M", trend: "up" as const },
-  { id: "cust-alba", name: "Alba Marmi", country: "Italy", ytd: "$1.24M", trend: "up" as const },
-  { id: "cust-doha", name: "Doha Interiors", country: "Qatar", ytd: "$0.98M", trend: "up" as const },
-  { id: "cust-concord", name: "Concord Stoneworks", country: "United States", ytd: "$0.61M", trend: "flat" as const },
-  { id: "cust-nordic", name: "Nordic Slab Co.", country: "Sweden", ytd: "$0.42M", trend: "down" as const },
+const topAccounts = () => [
+  { id: "cust-riverside", name: "Riverside Kitchens", country: "United States", ytd: `${formatMoney(1720000, "USD", true)}`, trend: "up" as const },
+  { id: "cust-alba", name: "Alba Marmi", country: "Italy", ytd: `${formatMoney(1240000, "USD", true)}`, trend: "up" as const },
+  { id: "cust-doha", name: "Doha Interiors", country: "Qatar", ytd: `${formatMoney(980000, "USD", true)}`, trend: "up" as const },
+  { id: "cust-concord", name: "Concord Stoneworks", country: "United States", ytd: `${formatMoney(610000, "USD", true)}`, trend: "flat" as const },
+  { id: "cust-nordic", name: "Nordic Slab Co.", country: "Sweden", ytd: `${formatMoney(420000, "USD", true)}`, trend: "down" as const },
 ];
 
 const briefings = [
@@ -148,6 +150,7 @@ const briefings = [
 /* ------------------------------------------------------------------ */
 
 function ExecutiveWorkspacePage() {
+  useLocation();
   return (
     <AppShell>
       {/* Header */}
@@ -181,7 +184,7 @@ function ExecutiveWorkspacePage() {
 
       {/* North stars */}
       <section className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {northStars.map((k) => (
+        {northStars().map((k) => (
           <NorthStar key={k.label} {...k} />
         ))}
       </section>
@@ -193,7 +196,7 @@ function ExecutiveWorkspacePage() {
             <div>
               <h3 className="text-[13px] font-semibold">Revenue vs. Plan</h3>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Trailing 12 months · $M · plan = board-approved target
+                Trailing 12 months · {formatMoney(1_000_000, "USD", true)} units · plan = board-approved target
               </p>
             </div>
             <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
@@ -212,7 +215,7 @@ function ExecutiveWorkspacePage() {
                 </defs>
                 <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="m" stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}M`} />
+                <YAxis stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => formatMoney(Number(v) * 1_000_000, "USD", true)} />
                 <Tooltip
                   cursor={{ stroke: "var(--color-border-strong)" }}
                   contentStyle={{
@@ -222,7 +225,7 @@ function ExecutiveWorkspacePage() {
                     fontSize: 12,
                     boxShadow: "var(--shadow-elev-2)",
                   }}
-                  formatter={(v: number) => [`$${v.toFixed(2)}M`, ""]}
+                  formatter={(v: number) => [formatMoney(Number(v) * 1_000_000, "USD", true), ""]}
                 />
                 <Area type="monotone" dataKey="rev" stroke="var(--color-primary)" strokeWidth={2} fill="url(#gRev)" />
                 <Area type="monotone" dataKey="plan" stroke="var(--color-muted-foreground)" strokeWidth={1.5} strokeDasharray="4 4" fill="transparent" />
@@ -237,7 +240,7 @@ function ExecutiveWorkspacePage() {
             <h3 className="text-[13px] font-semibold">Revenue by Region</h3>
           </div>
           <ul className="space-y-3">
-            {regions.map((r) => (
+            {regions().map((r) => (
               <li key={r.region}>
                 <div className="flex items-center justify-between text-[12.5px]">
                   <span className="font-medium text-foreground">{r.region}</span>
@@ -278,7 +281,7 @@ function ExecutiveWorkspacePage() {
             <span className="chip">4 open</span>
           </div>
           <ul className="space-y-2">
-            {risks.map((r) => (
+            {risks().map((r) => (
               <li
                 key={r.title}
                 className="flex items-start gap-3 rounded-md border border-border bg-surface-muted/40 p-3 transition-colors hover:border-border-strong hover:bg-surface-muted"
@@ -372,7 +375,7 @@ function ExecutiveWorkspacePage() {
             </Link>
           </div>
           <ul className="divide-y divide-border">
-            {topAccounts.map((a) => {
+            {topAccounts().map((a) => {
               const TrendIcon = a.trend === "up" ? TrendingUp : a.trend === "down" ? TrendingDown : ArrowUpRight;
               const trendColor = a.trend === "up" ? "text-success" : a.trend === "down" ? "text-destructive" : "text-muted-foreground";
               return (
