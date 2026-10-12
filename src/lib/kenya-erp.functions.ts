@@ -10,7 +10,7 @@ export const readKenya = createServerFn({ method: "POST" }).middleware([requireS
     if (result.error) throw new Error(result.error.message);
     const company = result.data;
     if (!company) return null;
-    const [parties, accounts, taxes, documents, items, payments, journals, lines, audit, membership, stock] = await Promise.all([
+    const [parties, accounts, taxes, documents, items, payments, journals, lines, audit, membership, stock, etims, comms] = await Promise.all([
       db.from("erp_parties").select("*").eq("company_id", company.id).order("name").limit(10000),
       db.from("erp_accounts").select("*").eq("company_id", company.id).order("code").limit(10000),
       db.from("erp_tax_codes").select("*").eq("company_id", company.id).order("rate", { ascending: false }),
@@ -22,10 +22,12 @@ export const readKenya = createServerFn({ method: "POST" }).middleware([requireS
       db.from("erp_audit_events").select("*").eq("company_id", company.id).order("created_at", { ascending: false }).limit(200),
       db.from("erp_memberships").select("role").eq("company_id", company.id).eq("user_id", context.userId),
       db.from("erp_stock_movements").select("*").eq("company_id", company.id).eq("warehouse_id", data.warehouseId).order("created_at", { ascending: false }).limit(10000),
+      db.from("erp_etims_submissions").select("*").eq("company_id", company.id).order("created_at", { ascending: false }).limit(1000),
+      db.from("erp_communications").select("*").eq("company_id", company.id).order("created_at", { ascending: false }).limit(1000),
     ]);
-    for (const response of [parties, accounts, taxes, documents, items, payments, journals, lines, audit, membership, stock]) if (response.error) throw new Error(response.error.message);
+    for (const response of [parties, accounts, taxes, documents, items, payments, journals, lines, audit, membership, stock, etims, comms]) if (response.error) throw new Error(response.error.message);
     for (const response of [parties, documents, items, payments, journals, lines]) if ((response.data?.length ?? 0) >= 1000) throw new Error("This company needs paginated reporting before additional records can be summarized safely.");
-    return { company, parties: parties.data ?? [], accounts: accounts.data ?? [], taxes: taxes.data ?? [], documents: documents.data ?? [], items: items.data ?? [], payments: payments.data ?? [], journals: journals.data ?? [], lines: lines.data ?? [], audit: audit.data ?? [], role: membership.data?.[0]?.role ?? "viewer", stock: stock.data ?? [] };
+    return { company, parties: parties.data ?? [], accounts: accounts.data ?? [], taxes: taxes.data ?? [], documents: documents.data ?? [], items: items.data ?? [], payments: payments.data ?? [], journals: journals.data ?? [], lines: lines.data ?? [], audit: audit.data ?? [], role: membership.data?.[0]?.role ?? "viewer", stock: stock.data ?? [], etims: etims.data ?? [], comms: comms.data ?? [] };
   });
 
 const text = z.string().trim().max(500);
@@ -71,3 +73,28 @@ export const receiveKenyaPurchaseOrder = createServerFn({ method: "POST" }).midd
 export const creditKenyaInvoice = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
   .inputValidator(z.object({ document_id: z.string().uuid(), reason: text.min(1), date: isoDate }))
   .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_credit_invoice", { p_invoice: data.document_id, p_reason: data.reason, p_date: data.date }); rpcError(r.error); return { id: r.data as string }; });
+
+const auth = () => createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]);
+const docItems = z.array(invoiceItem).min(1).max(100);
+export const createKenyaSalesOrder = auth().inputValidator(z.object({ company_id: z.string().uuid(), party_id: z.string().uuid(), date: isoDate, due: isoDate, notes: z.string().max(2000), items: docItems }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_create_sales_order", { p_company: data.company_id, p_party: data.party_id, p_date: data.date, p_due: data.due, p_notes: data.notes, p_items: data.items }); rpcError(r.error); return { id: r.data as string }; });
+export const convertKenyaSalesOrder = auth().inputValidator(z.object({ document_id: z.string().uuid(), date: isoDate }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_convert_sales_order", { p_order: data.document_id, p_date: data.date }); rpcError(r.error); return { id: r.data as string }; });
+export const createKenyaExpense = auth().inputValidator(z.object({ company_id: z.string().uuid(), party_id: z.string().uuid().nullable(), date: isoDate, reference: text, notes: z.string().max(2000), items: docItems }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_create_expense", { p_company: data.company_id, p_party: data.party_id as string, p_date: data.date, p_reference: data.reference, p_notes: data.notes, p_items: data.items }); rpcError(r.error); return { id: r.data as string }; });
+export const postKenyaExpense = auth().inputValidator(z.object({ document_id: z.string().uuid(), account_id: z.string().uuid() }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_post_expense", { p_document: data.document_id, p_account: data.account_id }); rpcError(r.error); return { id: r.data as string }; });
+export const refundKenyaCustomer = auth().inputValidator(z.object({ document_id: z.string().uuid(), account_id: z.string().uuid(), amount: z.number().positive(), date: isoDate, reference: text.min(1) }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_refund_customer", { p_credit_note: data.document_id, p_account: data.account_id, p_amount: Math.round(data.amount * 100) / 100, p_date: data.date, p_reference: data.reference }); rpcError(r.error); return { id: r.data as string }; });
+export const requestKenyaApproval = auth().inputValidator(z.object({ document_id: z.string().uuid() }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_request_approval", { p_document: data.document_id }); rpcError(r.error); return { ok: true }; });
+export const decideKenyaApproval = auth().inputValidator(z.object({ document_id: z.string().uuid(), approve: z.boolean(), note: z.string().max(500) }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_decide_approval", { p_document: data.document_id, p_approve: data.approve, p_note: data.note }); rpcError(r.error); return { ok: true }; });
+export const saveKenyaTaxCode = auth().inputValidator(z.object({ company_id: z.string().uuid(), id: z.string().uuid().nullable(), name: z.string().trim().min(1).max(80), rate: z.number().min(0).max(100), treatment: z.enum(["standard", "zero", "exempt", "non_vat", "custom"]) }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_save_tax_code", { p_company: data.company_id, p_id: data.id as string, p_name: data.name, p_rate: data.rate, p_treatment: data.treatment }); rpcError(r.error); return { id: r.data as string }; });
+export const saveKenyaControls = auth().inputValidator(z.object({ company_id: z.string().uuid(), etims_mode: z.enum(["disabled", "test"]), threshold: z.number().min(0) }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_save_controls", { p_company: data.company_id, p_etims_mode: data.etims_mode, p_threshold: data.threshold }); rpcError(r.error); return { ok: true }; });
+export const validateKenyaEtims = auth().inputValidator(z.object({ document_id: z.string().uuid() }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_etims_test_validate", { p_document: data.document_id }); rpcError(r.error); return { id: r.data as string }; });
+export const logKenyaCommunication = auth().inputValidator(z.object({ document_id: z.string().uuid(), channel: z.enum(["email", "whatsapp"]), recipient: z.string().trim().min(3).max(200), status: z.enum(["opened_in_app", "confirmed_sent", "failed"]), note: z.string().max(500) }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_log_communication", { p_document: data.document_id, p_channel: data.channel, p_recipient: data.recipient, p_status: data.status, p_note: data.note }); rpcError(r.error); return { id: r.data as string }; });
