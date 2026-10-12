@@ -20,7 +20,7 @@ export function LocationSwitcher() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stone_warehouses")
-        .select("id,name,city,country,code")
+        .select("id,name,company_name,city,country,code,currency_code,units_per_usd")
         .order("name");
       if (error) throw error;
       return data;
@@ -30,14 +30,15 @@ export function LocationSwitcher() {
   const locations: AppLocation[] = [
     HQ_LOCATION,
     ...warehouses.map((w) => {
-      const currency = COUNTRY_CURRENCY[w.country] ?? "USD";
+      const currency = w.currency_code ?? COUNTRY_CURRENCY[w.country] ?? "USD";
       return {
         id: w.id,
-        name: w.name,
+        name: w.company_name ?? w.name,
         sub: `${w.city} · ${w.country} · ${currency}`,
         currency,
         locale: "en-US",
         warehouseCode: w.code,
+        unitsPerUsd: Number(w.units_per_usd ?? 1),
       };
     }),
   ];

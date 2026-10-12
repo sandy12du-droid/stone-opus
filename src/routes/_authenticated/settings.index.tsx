@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bot, BookOpen, Activity, ShieldCheck, ChevronRight } from "lucide-react";
+import { Bot, BookOpen, Activity, ShieldCheck, ChevronRight, Building2 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { SectionCard } from "@/components/shared/SectionCard";
 import { useRoles } from "@/hooks/use-roles";
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/_authenticated/settings/")({
 function SettingsPage() {
   const { isAdmin } = useRoles();
   const items = [
+    { to: "/settings/locations", icon: Building2, title: "Company Locations", desc: "Companies, warehouses and local currencies." },
     { to: "/settings/agent-integrations", icon: Bot, title: "Agent Integrations", desc: "Connected AI assistants, consents and sessions." },
     { to: "/docs/mcp", icon: BookOpen, title: "MCP Developer Docs", desc: "OAuth flow, tools and example calls." },
     ...(isAdmin
