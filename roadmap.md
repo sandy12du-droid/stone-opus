@@ -8,8 +8,10 @@
 - [x] Define Kenya-only architecture, schema, accounting rules and transaction flows from the uploaded brief.
 - [x] Build secured company setup, persisted customer/supplier masters and transaction-derived financial overview; verify saved records, zero balances and HQ isolation.
 - [x] Kenya sales invoices (KSh), stock receiving/transfers/adjustments with audit trail, invoice + stock posting to ledger, customer payments.
-- [ ] Build purchasing, sales orders and purchase bills.
-- [ ] Implement expenses, credit notes and financial statements.
+- [x] Purchase orders, warehouse receiving and supplier bills.
+- [ ] Sales orders.
+- [x] Credit notes with reversing entries; P&L, balance sheet and cash flow statements.
+- [ ] Expenses, customer refunds.
 - [ ] Implement invoice printing/sharing, configurable Kenya tax and clearly labelled eTIMS test integration.
 - [ ] Add approvals, scoped search, exports and end-to-end accounting/location-isolation tests.
 

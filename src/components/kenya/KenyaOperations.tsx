@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { createKenyaInvoice, postKenyaInvoice, recordKenyaPayment, recordKenyaStock } from "@/lib/kenya-erp.functions";
+import { createKenyaInvoice, createKenyaPurchaseOrder, creditKenyaInvoice, postKenyaInvoice, receiveKenyaPurchaseOrder, recordKenyaPayment, recordKenyaStock } from "@/lib/kenya-erp.functions";
 import type { KenyaData } from "@/lib/kenya-erp";
 import { formatMoney } from "@/lib/location";
 
@@ -36,6 +36,7 @@ export function Invoices({ data }: { data: KenyaData }) {
   const [creating, setCreating] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
   const invoices = data.documents.filter(d => d.kind === "invoice");
+  const credited = (id: string) => data.documents.find(d => d.kind === "credit_note" && d.original_document_id === id);
   const party = (id: string | null) => data.parties.find(p => p.id === id)?.name ?? "—";
   const paid = (id: string) => data.payments.filter(p => p.document_id === id).reduce((s, p) => s + Number(p.amount), 0);
   const selected = invoices.find(i => i.id === open);
@@ -46,15 +47,17 @@ export function Invoices({ data }: { data: KenyaData }) {
     </div>
     {data.accounts.length === 0 && <p className="mb-4 text-sm text-muted-foreground">Initialize the chart of accounts before invoicing.</p>}
     <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Number</TableHead><TableHead>Customer</TableHead><TableHead>Date</TableHead><TableHead>Due</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Total</TableHead><TableHead className="text-right">Balance</TableHead></TableRow></TableHeader>
-      <TableBody>{invoices.map(i => <TableRow key={i.id} className="cursor-pointer" onClick={() => setOpen(i.id)}><TableCell className="font-mono text-xs">{i.number}</TableCell><TableCell>{party(i.party_id)}</TableCell><TableCell>{i.document_date}</TableCell><TableCell>{i.due_date}</TableCell><TableCell className="capitalize">{i.status === "posted" && paid(i.id) >= Number(i.total) ? "Paid" : i.status}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.total))}</TableCell><TableCell className="text-right tabular-nums">{ksh(i.status === "posted" ? Number(i.total) - paid(i.id) : 0)}</TableCell></TableRow>)}</TableBody></Table>
+      <TableBody>{invoices.map(i => <TableRow key={i.id} className="cursor-pointer" onClick={() => setOpen(i.id)}><TableCell className="font-mono text-xs">{i.number}</TableCell><TableCell>{party(i.party_id)}</TableCell><TableCell>{i.document_date}</TableCell><TableCell>{i.due_date}</TableCell><TableCell className="capitalize">{credited(i.id) ? `Cancelled · ${credited(i.id)!.number}` : i.status === "posted" && paid(i.id) >= Number(i.total) ? "Paid" : i.status}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.total))}</TableCell><TableCell className="text-right tabular-nums">{ksh(i.status === "posted" && !credited(i.id) ? Number(i.total) - paid(i.id) : 0)}</TableCell></TableRow>)}</TableBody></Table>
       {invoices.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">No invoices yet.</p>}
     </div>
-    {selected && <InvoiceDetail data={data} invoice={selected} paid={paid(selected.id)} close={() => setOpen(null)} />}
+    {selected && <InvoiceDetail data={data} invoice={selected} paid={paid(selected.id)} creditNote={credited(selected.id)} close={() => setOpen(null)} />}
     {creating && <InvoiceEditor data={data} close={() => setCreating(false)} />}
   </>;
 }
 
-function InvoiceDetail({ data, invoice, paid, close }: { data: KenyaData; invoice: KenyaData["documents"][number]; paid: number; close: () => void }) {
+function InvoiceDetail({ data, invoice, paid, close, creditNote }: { data: KenyaData; invoice: KenyaData["documents"][number]; paid: number; close: () => void; creditNote?: KenyaData["documents"][number] }) {
+  const credit = useServerFn(creditKenyaInvoice);
+  const [reason, setReason] = useState("");
   const refresh = useRefresh();
   const post = useServerFn(postKenyaInvoice);
   const pay = useServerFn(recordKenyaPayment);
@@ -62,6 +65,7 @@ function InvoiceDetail({ data, invoice, paid, close }: { data: KenyaData; invoic
   const balance = Math.round((Number(invoice.total) - paid) * 100) / 100;
   const [form, setForm] = useState({ account: payAccounts[0]?.id ?? "", amount: String(balance), reference: "", date: today() });
   const posting = useMutation({ mutationFn: () => post({ data: { document_id: invoice.id } }), onSuccess: refresh });
+  const crediting = useMutation({ mutationFn: () => credit({ data: { document_id: invoice.id, reason, date: today() } }), onSuccess: refresh });
   const paying = useMutation({ mutationFn: () => pay({ data: { document_id: invoice.id, account_id: form.account, amount: Number(form.amount), date: form.date, reference: form.reference } }), onSuccess: () => { setForm(f => ({ ...f, reference: "" })); refresh(); } });
   const items = data.items.filter(i => i.document_id === invoice.id);
   const customer = data.parties.find(p => p.id === invoice.party_id);
@@ -72,9 +76,15 @@ function InvoiceDetail({ data, invoice, paid, close }: { data: KenyaData; invoic
     {posting.error && <p role="alert" className="mb-3 text-sm text-destructive">{posting.error.message}</p>}
     <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Description</TableHead><TableHead>Stock item</TableHead><TableHead className="text-right">Qty</TableHead><TableHead className="text-right">Price</TableHead><TableHead className="text-right">Net</TableHead><TableHead className="text-right">VAT</TableHead></TableRow></TableHeader>
       <TableBody>{items.map(i => <TableRow key={i.id}><TableCell>{i.description}</TableCell><TableCell>{i.stock_item || "—"}</TableCell><TableCell className="text-right tabular-nums">{Number(i.quantity)} {i.unit}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.unit_price))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.net_amount))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.tax_amount))}</TableCell></TableRow>)}</TableBody></Table></div>
-    <dl className="ml-auto mt-4 max-w-xs space-y-2 text-sm">{[["Subtotal", invoice.subtotal], ["VAT", invoice.tax_amount], ["Total", invoice.total], ["Paid", paid], ["Balance due", invoice.status === "posted" ? balance : 0]].map(([l, v]) => <div key={String(l)} className="flex justify-between"><dt className="text-muted-foreground">{l}</dt><dd className="font-medium tabular-nums">{ksh(Number(v))}</dd></div>)}</dl>
-    {invoice.status === "posted" && balance > 0 && writable && <form className="mt-6 grid gap-3 border-t border-border pt-4 sm:grid-cols-5" onSubmit={e => { e.preventDefault(); paying.mutate(); }}>
-      <div><Label className="text-xs">Received into</Label><select aria-label="Payment account" className={selectCls} value={form.account} onChange={e => setForm({ ...form, account: e.target.value })}>{payAccounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></div>
+    <dl className="ml-auto mt-4 max-w-xs space-y-2 text-sm">{[["Subtotal", invoice.subtotal], ["VAT", invoice.tax_amount], ["Total", invoice.total], ["Paid", paid], ["Balance due", invoice.status === "posted" && !creditNote ? balance : 0]].map(([l, v]) => <div key={String(l)} className="flex justify-between"><dt className="text-muted-foreground">{l}</dt><dd className="font-medium tabular-nums">{ksh(Number(v))}</dd></div>)}</dl>
+    {creditNote && <p className="mt-6 border-t border-border pt-4 text-sm">Cancelled by credit note <span className="font-mono">{creditNote.number}</span> on {creditNote.document_date} — {creditNote.notes}. Ledger and stock were reversed.</p>}
+    {invoice.kind === "invoice" && invoice.status === "posted" && !creditNote && paid === 0 && writable && <form className="mt-6 flex flex-wrap items-end gap-3 border-t border-border pt-4" onSubmit={e => { e.preventDefault(); crediting.mutate(); }}>
+      <div className="min-w-60 flex-1"><Label className="text-xs">Credit note reason</Label><Input required aria-label="Credit note reason" placeholder="Why is this invoice being cancelled?" value={reason} onChange={e => setReason(e.target.value)} /></div>
+      <Button type="submit" size="sm" variant="outline" disabled={crediting.isPending}>{crediting.isPending ? "Issuing…" : "Issue credit note"}</Button>
+      {crediting.error && <p role="alert" className="w-full text-sm text-destructive">{crediting.error.message}</p>}
+    </form>}
+    {invoice.status === "posted" && !creditNote && balance > 0 && writable && <form className="mt-6 grid gap-3 border-t border-border pt-4 sm:grid-cols-5" onSubmit={e => { e.preventDefault(); paying.mutate(); }}>
+      <div><Label className="text-xs">{invoice.kind === "bill" ? "Paid from" : "Received into"}</Label><select aria-label="Payment account" className={selectCls} value={form.account} onChange={e => setForm({ ...form, account: e.target.value })}>{payAccounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></div>
       <div><Label className="text-xs">Amount (KSh)</Label><Input type="number" step="0.01" min="0.01" max={balance} value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} /></div>
       <div><Label className="text-xs">Reference</Label><Input required placeholder="M-Pesa code / cheque" value={form.reference} onChange={e => setForm({ ...form, reference: e.target.value })} /></div>
       <div><Label className="text-xs">Date</Label><Input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} /></div>
@@ -86,10 +96,12 @@ function InvoiceDetail({ data, invoice, paid, close }: { data: KenyaData; invoic
 
 type Line = { description: string; stock_item: string; quantity: string; unit: string; unit_price: string; discount: string; tax_code_id: string };
 
-function InvoiceEditor({ data, close }: { data: KenyaData; close: () => void }) {
+export function InvoiceEditor({ data, close, purchase = false }: { data: KenyaData; close: () => void; purchase?: boolean }) {
   const refresh = useRefresh();
-  const create = useServerFn(createKenyaInvoice);
-  const customers = data.parties.filter(p => p.kind === "customer" && !p.archived);
+  const createInvoice = useServerFn(createKenyaInvoice);
+  const createPo = useServerFn(createKenyaPurchaseOrder);
+  const create = purchase ? createPo : createInvoice;
+  const customers = data.parties.filter(p => p.kind === (purchase ? "supplier" : "customer") && !p.archived);
   const defaultTax = data.taxes.find(t => t.treatment === "standard")?.id ?? data.taxes[0]?.id ?? "";
   const blank = (): Line => ({ description: "", stock_item: "", quantity: "1", unit: "Sqm", unit_price: "0", discount: "0", tax_code_id: defaultTax });
   const [partyId, setPartyId] = useState(customers[0]?.id ?? "");
@@ -106,12 +118,12 @@ function InvoiceEditor({ data, close }: { data: KenyaData; close: () => void }) 
   });
   const set = (i: number, patch: Partial<Line>) => setLines(ls => ls.map((l, j) => j === i ? { ...l, ...patch } : l));
   return <Dialog open onOpenChange={o => !o && close()}><DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
-    <DialogHeader><DialogTitle>New sales invoice (KSh)</DialogTitle></DialogHeader>
-    {customers.length === 0 ? <p className="text-sm text-muted-foreground">Add a customer first.</p> : <form id="invoice-form" className="space-y-4" onSubmit={e => { e.preventDefault(); save.mutate(); }}>
+    <DialogHeader><DialogTitle>{purchase ? "New purchase order (KSh)" : "New sales invoice (KSh)"}</DialogTitle></DialogHeader>
+    {customers.length === 0 ? <p className="text-sm text-muted-foreground">{purchase ? "Add a supplier first." : "Add a customer first."}</p> : <form id="invoice-form" className="space-y-4" onSubmit={e => { e.preventDefault(); save.mutate(); }}>
       <div className="grid gap-3 sm:grid-cols-3">
-        <div><Label className="text-xs">Customer</Label><select aria-label="Customer" className={selectCls} value={partyId} onChange={e => { setPartyId(e.target.value); setDue(addDays(date, customers.find(c => c.id === e.target.value)?.payment_terms ?? 30)); }}>{customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
-        <div><Label className="text-xs">Invoice date</Label><Input type="date" value={date} onChange={e => setDate(e.target.value)} /></div>
-        <div><Label className="text-xs">Due date</Label><Input type="date" value={due} onChange={e => setDue(e.target.value)} /></div>
+        <div><Label className="text-xs">{purchase ? "Supplier" : "Customer"}</Label><select aria-label={purchase ? "Supplier" : "Customer"} className={selectCls} value={partyId} onChange={e => { setPartyId(e.target.value); setDue(addDays(date, customers.find(c => c.id === e.target.value)?.payment_terms ?? 30)); }}>{customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
+        <div><Label className="text-xs">{purchase ? "Order date" : "Invoice date"}</Label><Input type="date" value={date} onChange={e => setDate(e.target.value)} /></div>
+        <div><Label className="text-xs">{purchase ? "Expected delivery" : "Due date"}</Label><Input type="date" value={due} onChange={e => setDue(e.target.value)} /></div>
       </div>
       <datalist id="kenya-stock-items">{levels.map(l => <option key={l.item} value={l.item}>{`${l.qty} ${l.unit} available`}</option>)}</datalist>
       <div className="space-y-2">{lines.map((l, i) => <div key={i} className="grid gap-2 border-b border-border pb-2 sm:grid-cols-[2fr_1.5fr_0.7fr_0.6fr_1fr_0.8fr_1fr_auto]">
@@ -179,4 +191,61 @@ function StockDialog({ data, kind, levels, close }: { data: KenyaData; kind: "re
     </form>
     <DialogFooter><Button variant="ghost" onClick={close}>Cancel</Button><Button type="submit" form="stock-form" disabled={save.isPending}>{save.isPending ? "Recording…" : "Record"}</Button></DialogFooter>
   </DialogContent></Dialog>;
+}
+
+/* ---------------- Purchasing ---------------- */
+
+export function PurchaseOrders({ data }: { data: KenyaData }) {
+  const [creating, setCreating] = useState(false);
+  const [open, setOpen] = useState<string | null>(null);
+  const pos = data.documents.filter(d => d.kind === "purchase_order");
+  const party = (id: string | null) => data.parties.find(p => p.id === id)?.name ?? "—";
+  const billFor = (id: string) => data.documents.find(d => d.kind === "bill" && d.original_document_id === id);
+  const selected = pos.find(p => p.id === open);
+  return <>
+    <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h2 className="text-sm font-semibold">Purchase orders · KSh</h2>
+      {canWrite(data.role) && <Button size="sm" onClick={() => setCreating(true)} disabled={data.accounts.length === 0}><Plus className="mr-1.5 h-4 w-4" />New purchase order</Button>}</div>
+    <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Number</TableHead><TableHead>Supplier</TableHead><TableHead>Date</TableHead><TableHead>Expected</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Total</TableHead></TableRow></TableHeader>
+      <TableBody>{pos.map(p => <TableRow key={p.id} className="cursor-pointer" onClick={() => setOpen(p.id)}><TableCell className="font-mono text-xs">{p.number}</TableCell><TableCell>{party(p.party_id)}</TableCell><TableCell>{p.document_date}</TableCell><TableCell>{p.due_date}</TableCell><TableCell>{billFor(p.id) ? `Received · ${billFor(p.id)!.number}` : "Open"}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(p.total))}</TableCell></TableRow>)}</TableBody></Table>
+      {pos.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">No purchase orders yet.</p>}</div>
+    {selected && <PoDetail data={data} po={selected} close={() => setOpen(null)} />}
+    {creating && <InvoiceEditor purchase data={data} close={() => setCreating(false)} />}
+  </>;
+}
+
+function PoDetail({ data, po, close }: { data: KenyaData; po: KenyaData["documents"][number]; close: () => void }) {
+  const refresh = useRefresh();
+  const receive = useServerFn(receiveKenyaPurchaseOrder);
+  const [f, setF] = useState({ ref: "", bin: "", date: today() });
+  const receiving = useMutation({ mutationFn: () => receive({ data: { document_id: po.id, supplier_ref: f.ref, bin: f.bin, date: f.date } }), onSuccess: refresh });
+  const items = data.items.filter(i => i.document_id === po.id);
+  return <section className="mt-7 border-t border-border pt-5">
+    <div className="mb-4 flex items-center justify-between"><h2 className="font-semibold">{po.number}</h2><Button size="sm" variant="ghost" onClick={close}>Close</Button></div>
+    <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Description</TableHead><TableHead>Stock item</TableHead><TableHead className="text-right">Qty</TableHead><TableHead className="text-right">Cost</TableHead><TableHead className="text-right">Net</TableHead><TableHead className="text-right">VAT</TableHead></TableRow></TableHeader>
+      <TableBody>{items.map(i => <TableRow key={i.id}><TableCell>{i.description}</TableCell><TableCell>{i.stock_item || "—"}</TableCell><TableCell className="text-right tabular-nums">{Number(i.quantity)} {i.unit}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.unit_price))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.net_amount))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.tax_amount))}</TableCell></TableRow>)}</TableBody></Table></div>
+    <p className="mt-3 text-right text-sm font-medium tabular-nums">Total {ksh(Number(po.total))}</p>
+    {po.status === "draft" && canWrite(data.role) && <form className="mt-6 grid gap-3 border-t border-border pt-4 sm:grid-cols-4" onSubmit={e => { e.preventDefault(); receiving.mutate(); }}>
+      <div><Label className="text-xs">Supplier invoice no.</Label><Input required aria-label="Supplier invoice number" value={f.ref} onChange={e => setF({ ...f, ref: e.target.value })} /></div>
+      <div><Label className="text-xs">Receive into bin</Label><Input aria-label="Receiving bin" value={f.bin} onChange={e => setF({ ...f, bin: e.target.value })} /></div>
+      <div><Label className="text-xs">Received on</Label><Input type="date" value={f.date} onChange={e => setF({ ...f, date: e.target.value })} /></div>
+      <div className="flex items-end"><Button type="submit" size="sm" className="w-full" disabled={receiving.isPending}>{receiving.isPending ? "Receiving…" : "Receive & create bill"}</Button></div>
+      <p className="text-xs text-muted-foreground sm:col-span-4">Adds stock lines to the Kenya warehouse and posts a supplier bill: Inventory + Input VAT (debit), Accounts Payable (credit).</p>
+      {receiving.error && <p role="alert" className="text-sm text-destructive sm:col-span-4">{receiving.error.message}</p>}
+    </form>}
+  </section>;
+}
+
+export function SupplierBills({ data }: { data: KenyaData }) {
+  const [open, setOpen] = useState<string | null>(null);
+  const bills = data.documents.filter(d => d.kind === "bill");
+  const party = (id: string | null) => data.parties.find(p => p.id === id)?.name ?? "—";
+  const paid = (id: string) => data.payments.filter(p => p.document_id === id).reduce((s, p) => s + Number(p.amount), 0);
+  const selected = bills.find(b => b.id === open);
+  return <>
+    <h2 className="mb-5 text-sm font-semibold">Supplier bills · KSh</h2>
+    <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Number</TableHead><TableHead>Supplier</TableHead><TableHead>Supplier ref</TableHead><TableHead>Due</TableHead><TableHead className="text-right">Total</TableHead><TableHead className="text-right">Balance</TableHead></TableRow></TableHeader>
+      <TableBody>{bills.map(b => <TableRow key={b.id} className="cursor-pointer" onClick={() => setOpen(b.id)}><TableCell className="font-mono text-xs">{b.number}</TableCell><TableCell>{party(b.party_id)}</TableCell><TableCell>{b.supplier_reference ?? "—"}</TableCell><TableCell>{b.due_date}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(b.total))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(b.total) - paid(b.id))}</TableCell></TableRow>)}</TableBody></Table>
+      {bills.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">No supplier bills yet. Receive a purchase order to create one.</p>}</div>
+    {selected && <InvoiceDetail data={data} invoice={selected} paid={paid(selected.id)} close={() => setOpen(null)} />}
+  </>;
 }

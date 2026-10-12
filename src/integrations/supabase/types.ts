@@ -250,6 +250,7 @@ export type Database = {
           kind: string
           notes: string | null
           number: string
+          original_document_id: string | null
           party_id: string | null
           posted_at: string | null
           status: string
@@ -270,6 +271,7 @@ export type Database = {
           kind: string
           notes?: string | null
           number: string
+          original_document_id?: string | null
           party_id?: string | null
           posted_at?: string | null
           status?: string
@@ -290,6 +292,7 @@ export type Database = {
           kind?: string
           notes?: string | null
           number?: string
+          original_document_id?: string | null
           party_id?: string | null
           posted_at?: string | null
           status?: string
@@ -304,6 +307,13 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "erp_companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_documents_original_document_id_fkey"
+            columns: ["original_document_id"]
+            isOneToOne: false
+            referencedRelation: "erp_documents"
             referencedColumns: ["id"]
           },
           {
@@ -1610,12 +1620,36 @@ export type Database = {
         }
         Returns: string
       }
+      erp_create_purchase_order: {
+        Args: {
+          p_company: string
+          p_date: string
+          p_due: string
+          p_items: Json
+          p_notes: string
+          p_party: string
+        }
+        Returns: string
+      }
+      erp_credit_invoice: {
+        Args: { p_date: string; p_invoice: string; p_reason: string }
+        Returns: string
+      }
       erp_initialize: { Args: { p_company: string }; Returns: undefined }
       erp_post_document: {
         Args: { p_document: string; p_payment_account?: string }
         Returns: string
       }
       erp_post_invoice: { Args: { p_document: string }; Returns: string }
+      erp_receive_purchase_order: {
+        Args: {
+          p_bin: string
+          p_date: string
+          p_po: string
+          p_supplier_ref: string
+        }
+        Returns: string
+      }
       erp_record_payment: {
         Args: {
           p_account: string
