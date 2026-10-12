@@ -21,7 +21,8 @@ import {
   Sparkles,
   Tag,
 } from "lucide-react";
-import { CUSTOMERS } from "@/lib/crm-data";
+import { CUSTOMERS, forLocation } from "@/lib/crm-data";
+import { getActiveLocation } from "@/lib/location";
 
 export type SearchIcon = ComponentType<{ className?: string }>;
 
@@ -66,7 +67,7 @@ const customersProvider: SearchProvider = {
   id: "customers",
   label: "Customers",
   search: (q) =>
-    CUSTOMERS.filter(
+    forLocation(CUSTOMERS, getActiveLocation().warehouseCode).filter(
       (c) =>
         !q ||
         matches(q, `${c.name} ${c.country} ${c.city ?? ""} ${c.segment} ${c.tier}`),
@@ -261,7 +262,8 @@ export function registerSearchProvider(provider: SearchProvider) {
 
 export function runSearch(query: string): SearchResult[] {
   const q = norm(query.trim());
-  return SEARCH_PROVIDERS.flatMap((p) => p.search(q));
+  const code = getActiveLocation().warehouseCode;
+  return SEARCH_PROVIDERS.filter(p => !code || ["commands", "customers", "countries"].includes(p.id)).flatMap((p) => p.search(q));
 }
 
 // Icon export so the palette can render pinned/recent groups.

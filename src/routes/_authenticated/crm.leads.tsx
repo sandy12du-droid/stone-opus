@@ -161,7 +161,7 @@ function LeadsPage() {
         ))}
       </div>
 
-      <Card className="mt-6 border-accent/30 bg-gradient-to-r from-accent/5 via-transparent to-primary/5 shadow-sm">
+{!location.warehouseCode && (      <Card className="mt-6 border-accent/30 bg-gradient-to-r from-accent/5 via-transparent to-primary/5 shadow-sm">
         <CardContent className="flex items-start gap-3 p-4">
           <div className="grid h-9 w-9 place-items-center rounded-lg bg-accent/15 text-accent">
             <Sparkles className="h-4 w-4" />
@@ -176,7 +176,7 @@ function LeadsPage() {
             Review batch <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
           </Button>
         </CardContent>
-      </Card>
+      </Card>)}
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:max-w-sm">

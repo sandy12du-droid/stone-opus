@@ -1,6 +1,7 @@
 // Projects & Production mutation layer.
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 async function admin() {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -9,6 +10,7 @@ async function admin() {
 
 // -------- Create project --------
 export const createProject = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: {
     name: string;
     customer_name?: string;
@@ -34,8 +36,8 @@ export const createProject = createServerFn({ method: "POST" })
       notes: z.string().optional(),
     }).parse(d),
   )
-  .handler(async ({ data }) => {
-    const supabaseAdmin = await admin();
+  .handler(async ({ data, context }) => {
+    const supabaseAdmin = context.supabase;
     const { data: codeRow } = await supabaseAdmin.rpc("generate_project_code");
     const code = (codeRow as unknown as string) ?? `PRJ-${Date.now()}`;
     const { data: row, error } = await supabaseAdmin
@@ -56,7 +58,8 @@ export const createProject = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw error;
-    return row!;
+    if (!row) throw new Error("Project was not created");
+    return row;
   });
 
 // -------- Update project status --------

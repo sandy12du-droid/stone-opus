@@ -64,7 +64,7 @@ export function transitProgress(s: ShipmentRow): number {
 
 export const shipmentsListOptions = () =>
   queryOptions({
-    queryKey: ["shipments", "list"],
+    queryKey: ["shipments", "list", getActiveLocation().warehouseCode],
     staleTime: 20_000,
     queryFn: async () => {
       const q = supabase
@@ -80,7 +80,7 @@ export const shipmentsListOptions = () =>
 
 export const shipmentDetailOptions = (id: string) =>
   queryOptions({
-    queryKey: ["shipments", "detail", id],
+    queryKey: ["shipments", "detail", id, getActiveLocation().warehouseCode],
     enabled: Boolean(id),
     queryFn: async (): Promise<ShipmentWithRefs | null> => {
       const { data, error } = await supabase
@@ -90,6 +90,8 @@ export const shipmentDetailOptions = (id: string) =>
         .maybeSingle();
       if (error) throw error;
       if (!data) return null;
+      const code = getActiveLocation().warehouseCode;
+      if (code && data.location_code !== code) return null;
       const d = data as unknown as ShipmentWithRefs;
       d.events = [...(d.events ?? [])].sort(
         (a, b) => new Date(b.occurred_at).getTime() - new Date(a.occurred_at).getTime(),

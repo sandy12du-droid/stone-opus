@@ -7,6 +7,7 @@ export type AppLocation = {
   currency: string; // ISO code
   locale: string;
   warehouseCode: string | null; // null = all warehouses
+  unitsPerUsd?: number;
 };
 
 export const HQ_LOCATION: AppLocation = {
@@ -27,13 +28,20 @@ let active: AppLocation = HQ_LOCATION;
 export const setActiveLocation = (l: AppLocation) => { active = l; };
 export const getActiveLocation = () => active;
 
+export function toUsd(n: number, currency = "USD") {
+  const rate = currency === active.currency ? active.unitsPerUsd ?? USD_RATES[currency] : USD_RATES[currency];
+  return rate ? n / rate : n;
+}
+
 /** Format an amount stored in `from` currency into the active location's currency. */
 export function formatMoney(n: number, from = "USD", compact = false): string {
   const to = active.currency;
   let value = n;
   let ccy = from;
-  if (from !== to && USD_RATES[from] && USD_RATES[to]) {
-    value = (n / USD_RATES[from]) * USD_RATES[to];
+  const sourceRate = from === to ? active.unitsPerUsd ?? USD_RATES[from] : USD_RATES[from];
+  const targetRate = active.unitsPerUsd ?? USD_RATES[to];
+  if (from !== to && sourceRate && targetRate) {
+    value = (n / sourceRate) * targetRate;
     ccy = to;
   }
   const formatted = new Intl.NumberFormat(LOCALES[ccy] ?? "en-US", {

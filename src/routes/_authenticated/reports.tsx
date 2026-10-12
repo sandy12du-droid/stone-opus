@@ -1,3 +1,5 @@
+import { useLocation } from "@/context/LocationContext";
+import { toUsd } from "@/lib/location";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -43,6 +45,7 @@ export const Route = createFileRoute("/_authenticated/reports")({
 const CHART_COLORS = ["hsl(var(--primary))", "hsl(var(--accent))", "hsl(var(--info))", "hsl(var(--success))", "hsl(var(--warning))", "hsl(var(--destructive))"];
 
 function ReportsPage() {
+  useLocation();
   const { data: quotations } = useSuspenseQuery(quotationsListOptions());
   const { data: projects } = useSuspenseQuery(projectsListOptions());
   const { data: shipments } = useSuspenseQuery(shipmentsListOptions());
@@ -52,15 +55,15 @@ function ReportsPage() {
   const kpis = useMemo(() => {
     const openValue = quotations
       .filter((q) => ["draft", "in_review", "sent"].includes(q.status))
-      .reduce((s, q) => s + Number(q.total ?? 0), 0);
+      .reduce((s, q) => s + toUsd(Number(q.total ?? 0), q.currency), 0);
     const wonValue = quotations
       .filter((q) => q.status === "accepted")
-      .reduce((s, q) => s + Number(q.total ?? 0), 0);
+      .reduce((s, q) => s + toUsd(Number(q.total ?? 0), q.currency), 0);
     const decided = quotations.filter((q) => q.status === "accepted" || q.status === "rejected").length;
     const winRate = decided ? (quotations.filter((q) => q.status === "accepted").length / decided) * 100 : 0;
     const activeProjects = projects.filter((p) => !["completed", "shipped"].includes(p.status)).length;
     const inTransit = shipments.filter((s) => s.status === "in_transit").length;
-    const freight = shipments.reduce((s, r) => s + Number(r.freight_cost ?? 0), 0);
+    const freight = shipments.reduce((s, r) => s + toUsd(Number(r.freight_cost ?? 0), r.currency), 0);
     const inventoryUnits = products.reduce((s, p) => s + aggregateProduct(p).available, 0);
     return { openValue, wonValue, winRate, activeProjects, inTransit, freight, inventoryUnits };
   }, [quotations, projects, shipments, products]);
@@ -80,7 +83,7 @@ function ReportsPage() {
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
       const bucket = months.find((m) => m.key === key);
       if (!bucket) continue;
-      const total = Number(q.total ?? 0);
+      const total = toUsd(Number(q.total ?? 0), q.currency);
       if (q.status === "accepted") bucket.won += total;
       if (["draft", "in_review", "sent"].includes(q.status)) bucket.pipeline += total;
     }
@@ -115,7 +118,7 @@ function ReportsPage() {
     for (const q of quotations) {
       const key = q.customer_name ?? "—";
       const cur = map.get(key) ?? { pipeline: 0, won: 0 };
-      const total = Number(q.total ?? 0);
+      const total = toUsd(Number(q.total ?? 0), q.currency);
       if (q.status === "accepted") cur.won += total;
       else if (["draft", "in_review", "sent"].includes(q.status)) cur.pipeline += total;
       map.set(key, cur);

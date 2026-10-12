@@ -18,6 +18,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useLocation } from "@/context/LocationContext";
 
 export type BusinessEntityKind =
   | "customer"
@@ -60,10 +61,12 @@ const BusinessContext = createContext<BusinessContextValue | null>(null);
 const RECENT_LIMIT = 20;
 
 export function BusinessContextProvider({ children }: { children: ReactNode }) {
+  const { location } = useLocation();
   const [active, setActive] = useState<
     Partial<Record<BusinessEntityKind, BusinessEntity>>
   >({});
   const [recent, setRecent] = useState<BusinessEntity[]>([]);
+  useEffect(() => { setActive({}); setRecent([]); }, [location.id]);
 
   const setEntity = useCallback((entity: BusinessEntity) => {
     setActive((prev) => {

@@ -1,3 +1,5 @@
+import { useLocation } from "@/context/LocationContext";
+import { forLocation } from "@/lib/crm-data";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { EntityLink } from "@/components/EntityLink";
 import { useMemo, useState } from "react";
@@ -25,7 +27,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import {
-  OPPORTUNITIES,
+  OPPORTUNITIES as ALL_OPPORTUNITIES,
   SALES_STAGES,
   currencyFmt,
   type SalesStage,
@@ -48,6 +50,8 @@ export const Route = createFileRoute("/_authenticated/sales/pipeline")({
 });
 
 function PipelinePage() {
+  const { location } = useLocation();
+  const OPPORTUNITIES = useMemo(() => forLocation(ALL_OPPORTUNITIES, location.warehouseCode), [location.warehouseCode]);
   const [view, setView] = useState<"kanban" | "table">("kanban");
   const [q, setQ] = useState("");
 
@@ -60,7 +64,7 @@ function PipelinePage() {
         o.customer.toLowerCase().includes(needle) ||
         o.country.toLowerCase().includes(needle),
     );
-  }, [q]);
+  }, [q, OPPORTUNITIES]);
 
   const totals = useMemo(() => {
     const open = filtered.filter((o) => o.stage !== "Completed");
@@ -105,7 +109,7 @@ function PipelinePage() {
       </div>
 
       {/* AI insight strip */}
-      <div className="mb-6 flex items-start gap-3 rounded-lg border border-accent/30 bg-accent/5 p-4">
+{!location.warehouseCode && (      <div className="mb-6 flex items-start gap-3 rounded-lg border border-accent/30 bg-accent/5 p-4">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent/15 text-accent">
           <Sparkles className="h-4.5 w-4.5" />
         </div>
@@ -119,7 +123,7 @@ function PipelinePage() {
         <Button variant="ghost" size="sm" className="text-accent hover:text-accent">
           Review <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
         </Button>
-      </div>
+      </div>)}
 
       {/* Toolbar */}
       <div className="mb-4 flex items-center justify-between gap-3">

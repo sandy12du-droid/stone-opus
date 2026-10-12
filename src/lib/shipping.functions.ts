@@ -1,6 +1,7 @@
 // Shipping & Logistics mutation layer.
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 async function admin() {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -8,6 +9,7 @@ async function admin() {
 }
 
 export const createShipment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: {
     carrier?: string;
     mode?: string;
@@ -21,6 +23,7 @@ export const createShipment = createServerFn({ method: "POST" })
     etd?: string;
     eta?: string;
     notes?: string;
+    currency?: string;
     location_code?: string | null;
   }) =>
     z.object({
@@ -37,10 +40,11 @@ export const createShipment = createServerFn({ method: "POST" })
       etd: z.string().optional(),
       eta: z.string().optional(),
       notes: z.string().optional(),
+      currency: z.string().length(3).optional(),
     }).parse(d),
   )
-  .handler(async ({ data }) => {
-    const supabaseAdmin = await admin();
+  .handler(async ({ data, context }) => {
+    const supabaseAdmin = context.supabase;
     const { data: refRow } = await supabaseAdmin.rpc("generate_shipment_reference");
     const reference = (refRow as unknown as string) ?? `SHP-${Date.now()}`;
     const { data: row, error } = await supabaseAdmin
@@ -60,18 +64,20 @@ export const createShipment = createServerFn({ method: "POST" })
         etd: data.etd || null,
         eta: data.eta || null,
         notes: data.notes,
+        currency: data.currency ?? "USD",
       })
       .select("id")
       .single();
     if (error) throw error;
+    if (!row) throw new Error("Shipment was not created");
     await supabaseAdmin.from("stone_shipment_events").insert({
-      shipment_id: row!.id,
+      shipment_id: row.id,
       event_type: "created",
       location: data.origin_port,
       message: `Shipment ${reference} created`,
       actor: "System",
     });
-    return row!;
+    return row;
   });
 
 export const updateShipmentStatus = createServerFn({ method: "POST" })

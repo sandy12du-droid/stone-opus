@@ -21,7 +21,7 @@ export type QuotationListItem = QuotationRow & {
 
 export const quotationsListOptions = () =>
   queryOptions({
-    queryKey: ["quotations", "list"],
+    queryKey: ["quotations", "list", getActiveLocation().warehouseCode],
     staleTime: 15_000,
     queryFn: async (): Promise<QuotationListItem[]> => {
       const q = supabase
@@ -37,7 +37,7 @@ export const quotationsListOptions = () =>
 
 export const quotationDetailOptions = (id: string) =>
   queryOptions({
-    queryKey: ["quotations", "detail", id],
+    queryKey: ["quotations", "detail", id, getActiveLocation().warehouseCode],
     enabled: Boolean(id),
     queryFn: async (): Promise<QuotationWithItems | null> => {
       const { data, error } = await supabase
@@ -51,6 +51,8 @@ export const quotationDetailOptions = (id: string) =>
         .maybeSingle();
       if (error) throw error;
       if (!data) return null;
+      const code = getActiveLocation().warehouseCode;
+      if (code && data.location_code !== code) return null;
       const withOrder = data as unknown as QuotationWithItems;
       withOrder.items = [...(withOrder.items ?? [])].sort((a, b) => a.position - b.position);
       withOrder.events = [...(withOrder.events ?? [])].sort(

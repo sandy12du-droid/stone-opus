@@ -101,7 +101,7 @@ export const fmtDate = (d: string | null | undefined) =>
 // ---------- Queries ----------
 export const projectsListOptions = () =>
   queryOptions({
-    queryKey: ["projects", "list"],
+    queryKey: ["projects", "list", getActiveLocation().warehouseCode],
     staleTime: 20_000,
     queryFn: async (): Promise<ProjectListItem[]> => {
       const q = supabase
@@ -117,7 +117,7 @@ export const projectsListOptions = () =>
 
 export const projectDetailOptions = (id: string) =>
   queryOptions({
-    queryKey: ["projects", "detail", id],
+    queryKey: ["projects", "detail", id, getActiveLocation().warehouseCode],
     enabled: Boolean(id),
     queryFn: async (): Promise<ProjectWithWorkOrders | null> => {
       const { data, error } = await supabase
@@ -126,21 +126,24 @@ export const projectDetailOptions = (id: string) =>
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
+      const code = getActiveLocation().warehouseCode;
+      if (code && data?.location_code !== code) return null;
       return (data ?? null) as unknown as ProjectWithWorkOrders | null;
     },
   });
 
 export const productionBoardOptions = () =>
   queryOptions({
-    queryKey: ["production", "board"],
+    queryKey: ["production", "board", getActiveLocation().warehouseCode],
     staleTime: 15_000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stone_work_orders")
-        .select("*, project:stone_projects(id, code, name, customer_name, priority)")
+        .select("*, project:stone_projects(id, code, name, customer_name, priority, location_code)")
         .order("due_date", { ascending: true, nullsFirst: false });
       if (error) throw error;
-      return data ?? [];
+      const code = getActiveLocation().warehouseCode;
+      return (data ?? []).filter(w => !code || w.project?.location_code === code);
     },
   });
 

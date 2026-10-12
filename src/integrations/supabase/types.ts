@@ -172,6 +172,7 @@ export type Database = {
           image_url: string | null
           is_new_arrival: boolean
           list_price_per_m2: number
+          location_code: string | null
           name: string
           price_group: string
           sku: string
@@ -194,6 +195,7 @@ export type Database = {
           image_url?: string | null
           is_new_arrival?: boolean
           list_price_per_m2: number
+          location_code?: string | null
           name: string
           price_group: string
           sku: string
@@ -216,6 +218,7 @@ export type Database = {
           image_url?: string | null
           is_new_arrival?: boolean
           list_price_per_m2?: number
+          location_code?: string | null
           name?: string
           price_group?: string
           sku?: string
@@ -738,31 +741,43 @@ export type Database = {
       }
       stone_warehouses: {
         Row: {
+          address: string | null
           city: string
           code: string
+          company_name: string | null
           country: string
           country_flag: string
           created_at: string
+          currency_code: string | null
           id: string
           name: string
+          units_per_usd: number | null
         }
         Insert: {
+          address?: string | null
           city: string
           code: string
+          company_name?: string | null
           country: string
           country_flag?: string
           created_at?: string
+          currency_code?: string | null
           id?: string
           name: string
+          units_per_usd?: number | null
         }
         Update: {
+          address?: string | null
           city?: string
           code?: string
+          company_name?: string | null
           country?: string
           country_flag?: string
           created_at?: string
+          currency_code?: string | null
           id?: string
           name?: string
+          units_per_usd?: number | null
         }
         Relationships: []
       }
@@ -874,6 +889,37 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_operating_location: {
+        Args: {
+          p_address: string
+          p_city: string
+          p_code: string
+          p_company: string
+          p_country: string
+          p_currency: string
+          p_rate: number
+          p_warehouse: string
+        }
+        Returns: {
+          address: string | null
+          city: string
+          code: string
+          company_name: string | null
+          country: string
+          country_flag: string
+          created_at: string
+          currency_code: string | null
+          id: string
+          name: string
+          units_per_usd: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "stone_warehouses"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       generate_project_code: { Args: never; Returns: string }
       generate_quotation_number: { Args: never; Returns: string }
       generate_shipment_reference: { Args: never; Returns: string }

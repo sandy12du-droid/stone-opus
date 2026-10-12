@@ -1,3 +1,5 @@
+import { useLocation } from "@/context/LocationContext";
+import { formatMoney } from "@/lib/location";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
@@ -59,7 +61,7 @@ interface PriceRow {
   updated: string;
 }
 
-const ROWS: PriceRow[] = [
+const DEMO_ROWS: PriceRow[] = [
   { id: "P-8821", sku: "SL-8821", name: "Calacatta Viola", material: "Marble", cost: 260, landed: 305, list: 480, floor: 395, market: 495, margin: 36.5, trend: "up", currency: "USD", updated: "2h ago" },
   { id: "P-8817", sku: "SL-8817", name: "Statuario Extra", material: "Marble", cost: 340, landed: 395, list: 620, floor: 510, market: 640, margin: 36.3, trend: "up", currency: "USD", updated: "5h ago" },
   { id: "P-8815", sku: "SL-8815", name: "Taj Mahal Quartzite", material: "Quartzite", cost: 210, landed: 248, list: 385, floor: 320, market: 380, margin: 35.6, trend: "flat", currency: "USD", updated: "Yesterday" },
@@ -73,7 +75,7 @@ const ROWS: PriceRow[] = [
 ];
 
 const currency = (n: number, code = "USD") =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: code, maximumFractionDigits: 0 }).format(n);
+  formatMoney(n, code);
 
 function TrendPill({ trend }: { trend: Trend }) {
   if (trend === "flat") return <span className="text-xs text-muted-foreground">—</span>;
@@ -100,22 +102,24 @@ function MarginBar({ margin }: { margin: number }) {
 }
 
 function PricingPage() {
+  const { location } = useLocation();
+  const ROWS = useMemo(() => location.warehouseCode ? [] : DEMO_ROWS, [location.warehouseCode]);
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     if (!q) return ROWS;
     return ROWS.filter((r) => r.name.toLowerCase().includes(q) || r.sku.toLowerCase().includes(q) || r.material.toLowerCase().includes(q));
-  }, [query]);
+  }, [query, ROWS]);
 
-  const avgMargin = ROWS.reduce((s, r) => s + r.margin, 0) / ROWS.length;
+  const avgMargin = ROWS.reduce((s, r) => s + r.margin, 0) / (ROWS.length || 1);
   const belowMarket = ROWS.filter((r) => r.list < r.market).length;
 
   const kpis = [
     { label: "Avg. gross margin", value: `${avgMargin.toFixed(1)}%`, hint: "Target 36%", icon: Percent },
     { label: "Below market price", value: belowMarket, hint: "Reprice suggested", icon: TrendingUp },
-    { label: "Priced SKUs", value: ROWS.length, hint: "USD base currency", icon: DollarSign },
-    { label: "Rules active", value: 12, hint: "Auto-apply on quote", icon: Calculator },
+    { label: "Priced SKUs", value: ROWS.length, hint: location.currency + " currency", icon: DollarSign },
+    { label: "Rules active", value: location.warehouseCode ? 0 : 12, hint: "Auto-apply on quote", icon: Calculator },
   ];
 
   return (
@@ -146,7 +150,7 @@ function PricingPage() {
         ))}
       </div>
 
-      <Card className="mt-6 border-accent/30 bg-gradient-to-r from-accent/5 via-transparent to-primary/5 shadow-sm">
+{!location.warehouseCode && (      <Card className="mt-6 border-accent/30 bg-gradient-to-r from-accent/5 via-transparent to-primary/5 shadow-sm">
         <CardContent className="flex items-start gap-3 p-4">
           <div className="grid h-9 w-9 place-items-center rounded-lg bg-accent/15 text-accent">
             <Sparkles className="h-4 w-4" />
@@ -161,7 +165,7 @@ function PricingPage() {
             Apply repricing
           </Button>
         </CardContent>
-      </Card>
+      </Card>)}
 
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="border-border/60 shadow-sm lg:col-span-2">

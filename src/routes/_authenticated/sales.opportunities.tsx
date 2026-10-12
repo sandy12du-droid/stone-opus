@@ -1,3 +1,5 @@
+import { useLocation } from "@/context/LocationContext";
+import { forLocation } from "@/lib/crm-data";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { EntityLink } from "@/components/EntityLink";
 
@@ -25,7 +27,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import {
-  OPPORTUNITIES,
+  OPPORTUNITIES as ALL_OPPORTUNITIES,
   SALES_STAGES,
   currencyFmt,
   type SalesStage,
@@ -50,6 +52,8 @@ const OWNERS = ["All owners", "Priya Ravi", "Marcus Ford", "Arjun Mehta", "Isabe
 const STAGE_FILTERS: ("All stages" | SalesStage)[] = ["All stages", ...SALES_STAGES];
 
 function OpportunitiesPage() {
+  const { location } = useLocation();
+  const OPPORTUNITIES = useMemo(() => forLocation(ALL_OPPORTUNITIES, location.warehouseCode), [location.warehouseCode]);
   const [q, setQ] = useState("");
   const [owner, setOwner] = useState<(typeof OWNERS)[number]>("All owners");
   const [stage, setStage] = useState<(typeof STAGE_FILTERS)[number]>("All stages");
@@ -67,7 +71,7 @@ function OpportunitiesPage() {
         o.id.toLowerCase().includes(needle)
       );
     });
-  }, [q, owner, stage]);
+  }, [q, owner, stage, OPPORTUNITIES]);
 
   const forecast = useMemo(() => {
     const open = OPPORTUNITIES.filter((o) => o.stage !== "Completed");
@@ -76,7 +80,7 @@ function OpportunitiesPage() {
     const weighted = open.reduce((s, o) => s + (o.value * o.probability) / 100, 0);
     const committed = commit.reduce((s, o) => s + o.value, 0);
     return { bestCase, weighted, committed };
-  }, []);
+  }, [OPPORTUNITIES]);
 
   const stageBreakdown = useMemo(() => {
     return SALES_STAGES.map((s) => {
@@ -87,7 +91,7 @@ function OpportunitiesPage() {
         value: items.reduce((sum, o) => sum + o.value, 0),
       };
     });
-  }, []);
+  }, [OPPORTUNITIES]);
   const maxStageValue = Math.max(...stageBreakdown.map((s) => s.value), 1);
 
   return (

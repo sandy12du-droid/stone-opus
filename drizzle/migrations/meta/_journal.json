@@ -15,6 +15,13 @@
       "when": 1791765206091,
       "tag": "0001_location_code_on_records",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791766282804,
+      "tag": "0002_operating_location_setup",
+      "breakpoints": true
     }
   ]
 }

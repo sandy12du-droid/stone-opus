@@ -1,4 +1,4 @@
-import { formatMoney } from "@/lib/location";
+import { formatMoney, getActiveLocation } from "@/lib/location";
 // Inventory Intelligence data layer.
 // All queries hit Supabase via the browser client; public SELECT policies allow
 // unauthenticated reads. TanStack Query owns caching and background refetch.
@@ -53,7 +53,7 @@ export function aggregateProduct(p: ProductWithStock): ProductAggregate {
 // ---------- Queries ----------
 export const productsWithStockOptions = () =>
   queryOptions({
-    queryKey: ["inventory", "products-with-stock"],
+    queryKey: ["inventory", "products-with-stock", getActiveLocation().warehouseCode],
     staleTime: 30_000,
     queryFn: async (): Promise<ProductWithStock[]> => {
       const { data, error } = await supabase
@@ -65,7 +65,10 @@ export const productsWithStockOptions = () =>
         `)
         .order("name", { ascending: true });
       if (error) throw error;
-      return (data ?? []) as unknown as ProductWithStock[];
+      const rows = (data ?? []) as unknown as ProductWithStock[];
+      const code = getActiveLocation().warehouseCode;
+      if (!code) return rows;
+      return rows.filter(p => p.location_code === code || p.slabs.some(s => s.warehouse?.code === code)).map(p => ({ ...p, slabs: p.slabs.filter(s => s.warehouse?.code === code) }));
     },
   });
 
@@ -85,7 +88,7 @@ export const warehousesOptions = () =>
 
 export const productDetailOptions = (id: string) =>
   queryOptions({
-    queryKey: ["inventory", "product", id],
+    queryKey: ["inventory", "product", id, getActiveLocation().warehouseCode],
     enabled: Boolean(id),
     queryFn: async (): Promise<ProductWithStock | null> => {
       const { data, error } = await supabase
@@ -98,7 +101,11 @@ export const productDetailOptions = (id: string) =>
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
-      return (data as unknown as ProductWithStock | null) ?? null;
+      const p = data as unknown as ProductWithStock | null;
+      const code = getActiveLocation().warehouseCode;
+      if (!p || !code) return p;
+      if (p.location_code !== code && !p.slabs.some(s => s.warehouse?.code === code)) return null;
+      return { ...p, slabs: p.slabs.filter(s => s.warehouse?.code === code) };
     },
   });
 

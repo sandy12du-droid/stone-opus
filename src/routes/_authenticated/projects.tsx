@@ -1,4 +1,5 @@
-import { getActiveLocation } from "@/lib/location";
+import { useLocation } from "@/context/LocationContext";
+import { getActiveLocation, toUsd } from "@/lib/location";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -54,6 +55,7 @@ const STATUS_FILTERS: { key: "all" | ProjectStatus; label: string }[] = [
 ];
 
 function ProjectsPage() {
+  useLocation();
   const { data: rows } = useSuspenseQuery(projectsListOptions());
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"all" | ProjectStatus>("all");
@@ -71,8 +73,8 @@ function ProjectsPage() {
 
   const kpis = useMemo(() => {
     const active = rows.filter((r) => !["completed", "shipped"].includes(r.status));
-    const totalValue = rows.reduce((s, r) => s + Number(r.contract_value ?? 0), 0);
-    const activeValue = active.reduce((s, r) => s + Number(r.contract_value ?? 0), 0);
+    const totalValue = rows.reduce((s, r) => s + toUsd(Number(r.contract_value ?? 0), r.currency), 0);
+    const activeValue = active.reduce((s, r) => s + toUsd(Number(r.contract_value ?? 0), r.currency), 0);
     const critical = rows.filter((r) => r.priority === "critical").length;
     const dueSoon = rows.filter((r) => {
       if (!r.target_delivery_date) return false;
@@ -224,7 +226,7 @@ function NewProjectDialog() {
   const qc = useQueryClient();
   const create = useServerFn(createProject);
   const mutation = useMutation({
-    mutationFn: (v: Parameters<typeof create>[0]) => create({ ...v, data: { ...v.data, location_code: getActiveLocation().warehouseCode } }),
+    mutationFn: (v: Parameters<typeof create>[0]) => create({ ...v, data: { ...v.data, location_code: getActiveLocation().warehouseCode, currency: getActiveLocation().currency } }),
     onSuccess: (row) => {
       qc.invalidateQueries({ queryKey: ["projects"] });
       setOpen(false);
@@ -270,7 +272,7 @@ function NewProjectDialog() {
             </select>
           </div>
           <div className="grid gap-1.5">
-            <Label>Contract value (USD)</Label>
+            <Label>Contract value ({getActiveLocation().currency})</Label>
             <Input type="number" value={form.contract_value} onChange={(e) => setForm({ ...form, contract_value: e.target.value })} />
           </div>
           <div className="grid gap-1.5">

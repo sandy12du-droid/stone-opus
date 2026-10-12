@@ -9,57 +9,52 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DocsMcpRouteImport } from './routes/docs.mcp'
-import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
-import { Route as AuthenticatedShippingRouteImport } from './routes/_authenticated/shipping'
-import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
-import { Route as AuthenticatedQuotationsRouteImport } from './routes/_authenticated/quotations'
-import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
-import { Route as AuthenticatedProductionRouteImport } from './routes/_authenticated/production'
-import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedAiRouteImport } from './routes/_authenticated/ai'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings.index'
-import { Route as AuthenticatedWorkspaceExecutiveRouteImport } from './routes/_authenticated/workspace.executive'
-import { Route as AuthenticatedShippingShipmentIdRouteImport } from './routes/_authenticated/shipping.$shipmentId'
-import { Route as AuthenticatedSettingsMcpLogsRouteImport } from './routes/_authenticated/settings.mcp-logs'
-import { Route as AuthenticatedSettingsAuditLogsRouteImport } from './routes/_authenticated/settings.audit-logs'
-import { Route as AuthenticatedSettingsAgentIntegrationsRouteImport } from './routes/_authenticated/settings.agent-integrations'
-import { Route as AuthenticatedSalesPipelineRouteImport } from './routes/_authenticated/sales.pipeline'
-import { Route as AuthenticatedSalesOpportunitiesRouteImport } from './routes/_authenticated/sales.opportunities'
-import { Route as AuthenticatedQuotationsQuotationIdRouteImport } from './routes/_authenticated/quotations.$quotationId'
-import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects.$projectId'
-import { Route as AuthenticatedInventoryProductsRouteImport } from './routes/_authenticated/inventory.products'
-import { Route as AuthenticatedInventoryPricingRouteImport } from './routes/_authenticated/inventory.pricing'
-import { Route as AuthenticatedCrmLeadsRouteImport } from './routes/_authenticated/crm.leads'
-import { Route as AuthenticatedCrmCustomersRouteImport } from './routes/_authenticated/crm.customers'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedAiRouteImport } from './routes/_authenticated/ai'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
+import { Route as AuthenticatedProductionRouteImport } from './routes/_authenticated/production'
+import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
+import { Route as AuthenticatedQuotationsRouteImport } from './routes/_authenticated/quotations'
+import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
+import { Route as AuthenticatedShippingRouteImport } from './routes/_authenticated/shipping'
+import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
+import { Route as DocsMcpRouteImport } from './routes/docs.mcp'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
-import { Route as AuthenticatedSalesOpportunitiesOpportunityIdRouteImport } from './routes/_authenticated/sales.opportunities.$opportunityId'
-import { Route as AuthenticatedInventoryProductsProductIdRouteImport } from './routes/_authenticated/inventory.products.$productId'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as AuthenticatedCrmCustomersRouteImport } from './routes/_authenticated/crm.customers'
+import { Route as AuthenticatedCrmLeadsRouteImport } from './routes/_authenticated/crm.leads'
+import { Route as AuthenticatedInventoryPricingRouteImport } from './routes/_authenticated/inventory.pricing'
+import { Route as AuthenticatedInventoryProductsRouteImport } from './routes/_authenticated/inventory.products'
+import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects.$projectId'
+import { Route as AuthenticatedQuotationsQuotationIdRouteImport } from './routes/_authenticated/quotations.$quotationId'
+import { Route as AuthenticatedSalesOpportunitiesRouteImport } from './routes/_authenticated/sales.opportunities'
+import { Route as AuthenticatedSalesPipelineRouteImport } from './routes/_authenticated/sales.pipeline'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings.index'
+import { Route as AuthenticatedSettingsAgentIntegrationsRouteImport } from './routes/_authenticated/settings.agent-integrations'
+import { Route as AuthenticatedSettingsAuditLogsRouteImport } from './routes/_authenticated/settings.audit-logs'
+import { Route as AuthenticatedSettingsLocationsRouteImport } from './routes/_authenticated/settings.locations'
+import { Route as AuthenticatedSettingsMcpLogsRouteImport } from './routes/_authenticated/settings.mcp-logs'
+import { Route as AuthenticatedShippingShipmentIdRouteImport } from './routes/_authenticated/shipping.$shipmentId'
+import { Route as AuthenticatedWorkspaceExecutiveRouteImport } from './routes/_authenticated/workspace.executive'
 import { Route as AuthenticatedCrmCustomersCustomerIdRouteImport } from './routes/_authenticated/crm.customers.$customerId'
+import { Route as AuthenticatedInventoryProductsProductIdRouteImport } from './routes/_authenticated/inventory.products.$productId'
+import { Route as AuthenticatedSalesOpportunitiesOpportunityIdRouteImport } from './routes/_authenticated/sales.opportunities.$opportunityId'
 
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -67,53 +62,36 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DocsMcpRoute = DocsMcpRouteImport.update({
-  id: '/docs/mcp',
-  path: '/docs/mcp',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedWorkspaceRoute = AuthenticatedWorkspaceRouteImport.update({
-  id: '/workspace',
-  path: '/workspace',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedShippingRoute = AuthenticatedShippingRouteImport.update({
-  id: '/shipping',
-  path: '/shipping',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedQuotationsRoute = AuthenticatedQuotationsRouteImport.update({
-  id: '/quotations',
-  path: '/quotations',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedProjectsRoute = AuthenticatedProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedProductionRoute = AuthenticatedProductionRouteImport.update({
-  id: '/production',
-  path: '/production',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDocumentsRoute = AuthenticatedDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedAiRoute = AuthenticatedAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -121,57 +99,96 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedAiRoute = AuthenticatedAiRouteImport.update({
-  id: '/ai',
-  path: '/ai',
+const AuthenticatedDocumentsRoute = AuthenticatedDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
+const AuthenticatedProductionRoute = AuthenticatedProductionRouteImport.update({
+  id: '/production',
+  path: '/production',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProjectsRoute = AuthenticatedProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedQuotationsRoute = AuthenticatedQuotationsRouteImport.update({
+  id: '/quotations',
+  path: '/quotations',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedShippingRoute = AuthenticatedShippingRouteImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedWorkspaceRoute = AuthenticatedWorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const DocsMcpRoute = DocsMcpRouteImport.update({
+  id: '/docs/mcp',
+  path: '/docs/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const AuthenticatedSettingsIndexRoute =
-  AuthenticatedSettingsIndexRouteImport.update({
-    id: '/settings/',
-    path: '/settings/',
+const AuthenticatedCrmCustomersRoute =
+  AuthenticatedCrmCustomersRouteImport.update({
+    id: '/crm/customers',
+    path: '/crm/customers',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedWorkspaceExecutiveRoute =
-  AuthenticatedWorkspaceExecutiveRouteImport.update({
-    id: '/executive',
-    path: '/executive',
-    getParentRoute: () => AuthenticatedWorkspaceRoute,
-  } as any)
-const AuthenticatedShippingShipmentIdRoute =
-  AuthenticatedShippingShipmentIdRouteImport.update({
-    id: '/$shipmentId',
-    path: '/$shipmentId',
-    getParentRoute: () => AuthenticatedShippingRoute,
-  } as any)
-const AuthenticatedSettingsMcpLogsRoute =
-  AuthenticatedSettingsMcpLogsRouteImport.update({
-    id: '/settings/mcp-logs',
-    path: '/settings/mcp-logs',
+const AuthenticatedCrmLeadsRoute = AuthenticatedCrmLeadsRouteImport.update({
+  id: '/crm/leads',
+  path: '/crm/leads',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInventoryPricingRoute =
+  AuthenticatedInventoryPricingRouteImport.update({
+    id: '/inventory/pricing',
+    path: '/inventory/pricing',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSettingsAuditLogsRoute =
-  AuthenticatedSettingsAuditLogsRouteImport.update({
-    id: '/settings/audit-logs',
-    path: '/settings/audit-logs',
+const AuthenticatedInventoryProductsRoute =
+  AuthenticatedInventoryProductsRouteImport.update({
+    id: '/inventory/products',
+    path: '/inventory/products',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSettingsAgentIntegrationsRoute =
-  AuthenticatedSettingsAgentIntegrationsRouteImport.update({
-    id: '/settings/agent-integrations',
-    path: '/settings/agent-integrations',
+const AuthenticatedProjectsProjectIdRoute =
+  AuthenticatedProjectsProjectIdRouteImport.update({
+    id: '/$projectId',
+    path: '/$projectId',
+    getParentRoute: () => AuthenticatedProjectsRoute,
+  } as any)
+const AuthenticatedQuotationsQuotationIdRoute =
+  AuthenticatedQuotationsQuotationIdRouteImport.update({
+    id: '/$quotationId',
+    path: '/$quotationId',
+    getParentRoute: () => AuthenticatedQuotationsRoute,
+  } as any)
+const AuthenticatedSalesOpportunitiesRoute =
+  AuthenticatedSalesOpportunitiesRouteImport.update({
+    id: '/sales/opportunities',
+    path: '/sales/opportunities',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSalesPipelineRoute =
@@ -180,63 +197,53 @@ const AuthenticatedSalesPipelineRoute =
     path: '/sales/pipeline',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSalesOpportunitiesRoute =
-  AuthenticatedSalesOpportunitiesRouteImport.update({
-    id: '/sales/opportunities',
-    path: '/sales/opportunities',
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedQuotationsQuotationIdRoute =
-  AuthenticatedQuotationsQuotationIdRouteImport.update({
-    id: '/$quotationId',
-    path: '/$quotationId',
-    getParentRoute: () => AuthenticatedQuotationsRoute,
-  } as any)
-const AuthenticatedProjectsProjectIdRoute =
-  AuthenticatedProjectsProjectIdRouteImport.update({
-    id: '/$projectId',
-    path: '/$projectId',
-    getParentRoute: () => AuthenticatedProjectsRoute,
-  } as any)
-const AuthenticatedInventoryProductsRoute =
-  AuthenticatedInventoryProductsRouteImport.update({
-    id: '/inventory/products',
-    path: '/inventory/products',
+const AuthenticatedSettingsAgentIntegrationsRoute =
+  AuthenticatedSettingsAgentIntegrationsRouteImport.update({
+    id: '/settings/agent-integrations',
+    path: '/settings/agent-integrations',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedInventoryPricingRoute =
-  AuthenticatedInventoryPricingRouteImport.update({
-    id: '/inventory/pricing',
-    path: '/inventory/pricing',
+const AuthenticatedSettingsAuditLogsRoute =
+  AuthenticatedSettingsAuditLogsRouteImport.update({
+    id: '/settings/audit-logs',
+    path: '/settings/audit-logs',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedCrmLeadsRoute = AuthenticatedCrmLeadsRouteImport.update({
-  id: '/crm/leads',
-  path: '/crm/leads',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCrmCustomersRoute =
-  AuthenticatedCrmCustomersRouteImport.update({
-    id: '/crm/customers',
-    path: '/crm/customers',
+const AuthenticatedSettingsLocationsRoute =
+  AuthenticatedSettingsLocationsRouteImport.update({
+    id: '/settings/locations',
+    path: '/settings/locations',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const Char91DotmcpChar93InvokeToolToolRoute =
-  Char91DotmcpChar93InvokeToolToolRouteImport.update({
-    id: '/.mcp/invoke-tool/$tool',
-    path: '/.mcp/invoke-tool/$tool',
-    getParentRoute: () => rootRouteImport,
+const AuthenticatedSettingsMcpLogsRoute =
+  AuthenticatedSettingsMcpLogsRouteImport.update({
+    id: '/settings/mcp-logs',
+    path: '/settings/mcp-logs',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedSalesOpportunitiesOpportunityIdRoute =
-  AuthenticatedSalesOpportunitiesOpportunityIdRouteImport.update({
-    id: '/$opportunityId',
-    path: '/$opportunityId',
-    getParentRoute: () => AuthenticatedSalesOpportunitiesRoute,
+const AuthenticatedShippingShipmentIdRoute =
+  AuthenticatedShippingShipmentIdRouteImport.update({
+    id: '/$shipmentId',
+    path: '/$shipmentId',
+    getParentRoute: () => AuthenticatedShippingRoute,
+  } as any)
+const AuthenticatedWorkspaceExecutiveRoute =
+  AuthenticatedWorkspaceExecutiveRouteImport.update({
+    id: '/executive',
+    path: '/executive',
+    getParentRoute: () => AuthenticatedWorkspaceRoute,
+  } as any)
+const AuthenticatedCrmCustomersCustomerIdRoute =
+  AuthenticatedCrmCustomersCustomerIdRouteImport.update({
+    id: '/$customerId',
+    path: '/$customerId',
+    getParentRoute: () => AuthenticatedCrmCustomersRoute,
   } as any)
 const AuthenticatedInventoryProductsProductIdRoute =
   AuthenticatedInventoryProductsProductIdRouteImport.update({
@@ -244,11 +251,11 @@ const AuthenticatedInventoryProductsProductIdRoute =
     path: '/$productId',
     getParentRoute: () => AuthenticatedInventoryProductsRoute,
   } as any)
-const AuthenticatedCrmCustomersCustomerIdRoute =
-  AuthenticatedCrmCustomersCustomerIdRouteImport.update({
-    id: '/$customerId',
-    path: '/$customerId',
-    getParentRoute: () => AuthenticatedCrmCustomersRoute,
+const AuthenticatedSalesOpportunitiesOpportunityIdRoute =
+  AuthenticatedSalesOpportunitiesOpportunityIdRouteImport.update({
+    id: '/$opportunityId',
+    path: '/$opportunityId',
+    getParentRoute: () => AuthenticatedSalesOpportunitiesRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -281,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
   '/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/settings/locations': typeof AuthenticatedSettingsLocationsRoute
   '/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
@@ -319,6 +327,7 @@ export interface FileRoutesByTo {
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
   '/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/settings/locations': typeof AuthenticatedSettingsLocationsRoute
   '/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
@@ -359,6 +368,7 @@ export interface FileRoutesById {
   '/_authenticated/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
   '/_authenticated/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/_authenticated/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/_authenticated/settings/locations': typeof AuthenticatedSettingsLocationsRoute
   '/_authenticated/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/_authenticated/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/_authenticated/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/sales/pipeline'
     | '/settings/agent-integrations'
     | '/settings/audit-logs'
+    | '/settings/locations'
     | '/settings/mcp-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/sales/pipeline'
     | '/settings/agent-integrations'
     | '/settings/audit-logs'
+    | '/settings/locations'
     | '/settings/mcp-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
@@ -476,6 +488,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sales/pipeline'
     | '/_authenticated/settings/agent-integrations'
     | '/_authenticated/settings/audit-logs'
+    | '/_authenticated/settings/locations'
     | '/_authenticated/settings/mcp-logs'
     | '/_authenticated/shipping/$shipmentId'
     | '/_authenticated/workspace/executive'
@@ -501,32 +514,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forgot-password': {
-      id: '/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof ForgotPasswordRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -536,88 +528,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/docs/mcp': {
-      id: '/docs/mcp'
-      path: '/docs/mcp'
-      fullPath: '/docs/mcp'
-      preLoaderRoute: typeof DocsMcpRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/workspace': {
-      id: '/_authenticated/workspace'
-      path: '/workspace'
-      fullPath: '/workspace'
-      preLoaderRoute: typeof AuthenticatedWorkspaceRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/shipping': {
-      id: '/_authenticated/shipping'
-      path: '/shipping'
-      fullPath: '/shipping'
-      preLoaderRoute: typeof AuthenticatedShippingRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/reports': {
-      id: '/_authenticated/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof AuthenticatedReportsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/quotations': {
-      id: '/_authenticated/quotations'
-      path: '/quotations'
-      fullPath: '/quotations'
-      preLoaderRoute: typeof AuthenticatedQuotationsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/projects': {
-      id: '/_authenticated/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof AuthenticatedProjectsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/production': {
-      id: '/_authenticated/production'
-      path: '/production'
-      fullPath: '/production'
-      preLoaderRoute: typeof AuthenticatedProductionRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/documents': {
-      id: '/_authenticated/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof AuthenticatedDocumentsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/ai': {
-      id: '/_authenticated/ai'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof AuthenticatedAiRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.mcp/list-tools': {
@@ -627,109 +563,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/settings/': {
-      id: '/_authenticated/settings/'
-      path: '/settings'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/ai': {
+      id: '/_authenticated/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AuthenticatedAiRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/workspace/executive': {
-      id: '/_authenticated/workspace/executive'
-      path: '/executive'
-      fullPath: '/workspace/executive'
-      preLoaderRoute: typeof AuthenticatedWorkspaceExecutiveRouteImport
-      parentRoute: typeof AuthenticatedWorkspaceRoute
-    }
-    '/_authenticated/shipping/$shipmentId': {
-      id: '/_authenticated/shipping/$shipmentId'
-      path: '/$shipmentId'
-      fullPath: '/shipping/$shipmentId'
-      preLoaderRoute: typeof AuthenticatedShippingShipmentIdRouteImport
-      parentRoute: typeof AuthenticatedShippingRoute
-    }
-    '/_authenticated/settings/mcp-logs': {
-      id: '/_authenticated/settings/mcp-logs'
-      path: '/settings/mcp-logs'
-      fullPath: '/settings/mcp-logs'
-      preLoaderRoute: typeof AuthenticatedSettingsMcpLogsRouteImport
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/settings/audit-logs': {
-      id: '/_authenticated/settings/audit-logs'
-      path: '/settings/audit-logs'
-      fullPath: '/settings/audit-logs'
-      preLoaderRoute: typeof AuthenticatedSettingsAuditLogsRouteImport
+    '/_authenticated/documents': {
+      id: '/_authenticated/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof AuthenticatedDocumentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/settings/agent-integrations': {
-      id: '/_authenticated/settings/agent-integrations'
-      path: '/settings/agent-integrations'
-      fullPath: '/settings/agent-integrations'
-      preLoaderRoute: typeof AuthenticatedSettingsAgentIntegrationsRouteImport
+    '/_authenticated/production': {
+      id: '/_authenticated/production'
+      path: '/production'
+      fullPath: '/production'
+      preLoaderRoute: typeof AuthenticatedProductionRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/sales/pipeline': {
-      id: '/_authenticated/sales/pipeline'
-      path: '/sales/pipeline'
-      fullPath: '/sales/pipeline'
-      preLoaderRoute: typeof AuthenticatedSalesPipelineRouteImport
+    '/_authenticated/projects': {
+      id: '/_authenticated/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof AuthenticatedProjectsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/sales/opportunities': {
-      id: '/_authenticated/sales/opportunities'
-      path: '/sales/opportunities'
-      fullPath: '/sales/opportunities'
-      preLoaderRoute: typeof AuthenticatedSalesOpportunitiesRouteImport
+    '/_authenticated/quotations': {
+      id: '/_authenticated/quotations'
+      path: '/quotations'
+      fullPath: '/quotations'
+      preLoaderRoute: typeof AuthenticatedQuotationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/quotations/$quotationId': {
-      id: '/_authenticated/quotations/$quotationId'
-      path: '/$quotationId'
-      fullPath: '/quotations/$quotationId'
-      preLoaderRoute: typeof AuthenticatedQuotationsQuotationIdRouteImport
-      parentRoute: typeof AuthenticatedQuotationsRoute
-    }
-    '/_authenticated/projects/$projectId': {
-      id: '/_authenticated/projects/$projectId'
-      path: '/$projectId'
-      fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof AuthenticatedProjectsProjectIdRouteImport
-      parentRoute: typeof AuthenticatedProjectsRoute
-    }
-    '/_authenticated/inventory/products': {
-      id: '/_authenticated/inventory/products'
-      path: '/inventory/products'
-      fullPath: '/inventory/products'
-      preLoaderRoute: typeof AuthenticatedInventoryProductsRouteImport
+    '/_authenticated/reports': {
+      id: '/_authenticated/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/inventory/pricing': {
-      id: '/_authenticated/inventory/pricing'
-      path: '/inventory/pricing'
-      fullPath: '/inventory/pricing'
-      preLoaderRoute: typeof AuthenticatedInventoryPricingRouteImport
+    '/_authenticated/shipping': {
+      id: '/_authenticated/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof AuthenticatedShippingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/crm/leads': {
-      id: '/_authenticated/crm/leads'
-      path: '/crm/leads'
-      fullPath: '/crm/leads'
-      preLoaderRoute: typeof AuthenticatedCrmLeadsRouteImport
+    '/_authenticated/workspace': {
+      id: '/_authenticated/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof AuthenticatedWorkspaceRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/crm/customers': {
-      id: '/_authenticated/crm/customers'
-      path: '/crm/customers'
-      fullPath: '/crm/customers'
-      preLoaderRoute: typeof AuthenticatedCrmCustomersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+    '/docs/mcp': {
+      id: '/docs/mcp'
+      path: '/docs/mcp'
+      fullPath: '/docs/mcp'
+      preLoaderRoute: typeof DocsMcpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.lovable/oauth/consent': {
@@ -739,12 +647,124 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/sales/opportunities/$opportunityId': {
-      id: '/_authenticated/sales/opportunities/$opportunityId'
-      path: '/$opportunityId'
-      fullPath: '/sales/opportunities/$opportunityId'
-      preLoaderRoute: typeof AuthenticatedSalesOpportunitiesOpportunityIdRouteImport
-      parentRoute: typeof AuthenticatedSalesOpportunitiesRoute
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/crm/customers': {
+      id: '/_authenticated/crm/customers'
+      path: '/crm/customers'
+      fullPath: '/crm/customers'
+      preLoaderRoute: typeof AuthenticatedCrmCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/crm/leads': {
+      id: '/_authenticated/crm/leads'
+      path: '/crm/leads'
+      fullPath: '/crm/leads'
+      preLoaderRoute: typeof AuthenticatedCrmLeadsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/pricing': {
+      id: '/_authenticated/inventory/pricing'
+      path: '/inventory/pricing'
+      fullPath: '/inventory/pricing'
+      preLoaderRoute: typeof AuthenticatedInventoryPricingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/products': {
+      id: '/_authenticated/inventory/products'
+      path: '/inventory/products'
+      fullPath: '/inventory/products'
+      preLoaderRoute: typeof AuthenticatedInventoryProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projects/$projectId': {
+      id: '/_authenticated/projects/$projectId'
+      path: '/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdRouteImport
+      parentRoute: typeof AuthenticatedProjectsRoute
+    }
+    '/_authenticated/quotations/$quotationId': {
+      id: '/_authenticated/quotations/$quotationId'
+      path: '/$quotationId'
+      fullPath: '/quotations/$quotationId'
+      preLoaderRoute: typeof AuthenticatedQuotationsQuotationIdRouteImport
+      parentRoute: typeof AuthenticatedQuotationsRoute
+    }
+    '/_authenticated/sales/opportunities': {
+      id: '/_authenticated/sales/opportunities'
+      path: '/sales/opportunities'
+      fullPath: '/sales/opportunities'
+      preLoaderRoute: typeof AuthenticatedSalesOpportunitiesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sales/pipeline': {
+      id: '/_authenticated/sales/pipeline'
+      path: '/sales/pipeline'
+      fullPath: '/sales/pipeline'
+      preLoaderRoute: typeof AuthenticatedSalesPipelineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/agent-integrations': {
+      id: '/_authenticated/settings/agent-integrations'
+      path: '/settings/agent-integrations'
+      fullPath: '/settings/agent-integrations'
+      preLoaderRoute: typeof AuthenticatedSettingsAgentIntegrationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/audit-logs': {
+      id: '/_authenticated/settings/audit-logs'
+      path: '/settings/audit-logs'
+      fullPath: '/settings/audit-logs'
+      preLoaderRoute: typeof AuthenticatedSettingsAuditLogsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/locations': {
+      id: '/_authenticated/settings/locations'
+      path: '/settings/locations'
+      fullPath: '/settings/locations'
+      preLoaderRoute: typeof AuthenticatedSettingsLocationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/mcp-logs': {
+      id: '/_authenticated/settings/mcp-logs'
+      path: '/settings/mcp-logs'
+      fullPath: '/settings/mcp-logs'
+      preLoaderRoute: typeof AuthenticatedSettingsMcpLogsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/shipping/$shipmentId': {
+      id: '/_authenticated/shipping/$shipmentId'
+      path: '/$shipmentId'
+      fullPath: '/shipping/$shipmentId'
+      preLoaderRoute: typeof AuthenticatedShippingShipmentIdRouteImport
+      parentRoute: typeof AuthenticatedShippingRoute
+    }
+    '/_authenticated/workspace/executive': {
+      id: '/_authenticated/workspace/executive'
+      path: '/executive'
+      fullPath: '/workspace/executive'
+      preLoaderRoute: typeof AuthenticatedWorkspaceExecutiveRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceRoute
+    }
+    '/_authenticated/crm/customers/$customerId': {
+      id: '/_authenticated/crm/customers/$customerId'
+      path: '/$customerId'
+      fullPath: '/crm/customers/$customerId'
+      preLoaderRoute: typeof AuthenticatedCrmCustomersCustomerIdRouteImport
+      parentRoute: typeof AuthenticatedCrmCustomersRoute
     }
     '/_authenticated/inventory/products/$productId': {
       id: '/_authenticated/inventory/products/$productId'
@@ -753,12 +773,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInventoryProductsProductIdRouteImport
       parentRoute: typeof AuthenticatedInventoryProductsRoute
     }
-    '/_authenticated/crm/customers/$customerId': {
-      id: '/_authenticated/crm/customers/$customerId'
-      path: '/$customerId'
-      fullPath: '/crm/customers/$customerId'
-      preLoaderRoute: typeof AuthenticatedCrmCustomersCustomerIdRouteImport
-      parentRoute: typeof AuthenticatedCrmCustomersRoute
+    '/_authenticated/sales/opportunities/$opportunityId': {
+      id: '/_authenticated/sales/opportunities/$opportunityId'
+      path: '/$opportunityId'
+      fullPath: '/sales/opportunities/$opportunityId'
+      preLoaderRoute: typeof AuthenticatedSalesOpportunitiesOpportunityIdRouteImport
+      parentRoute: typeof AuthenticatedSalesOpportunitiesRoute
     }
   }
 }
@@ -881,6 +901,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSalesPipelineRoute: typeof AuthenticatedSalesPipelineRoute
   AuthenticatedSettingsAgentIntegrationsRoute: typeof AuthenticatedSettingsAgentIntegrationsRoute
   AuthenticatedSettingsAuditLogsRoute: typeof AuthenticatedSettingsAuditLogsRoute
+  AuthenticatedSettingsLocationsRoute: typeof AuthenticatedSettingsLocationsRoute
   AuthenticatedSettingsMcpLogsRoute: typeof AuthenticatedSettingsMcpLogsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
@@ -906,6 +927,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsAgentIntegrationsRoute:
     AuthenticatedSettingsAgentIntegrationsRoute,
   AuthenticatedSettingsAuditLogsRoute: AuthenticatedSettingsAuditLogsRoute,
+  AuthenticatedSettingsLocationsRoute: AuthenticatedSettingsLocationsRoute,
   AuthenticatedSettingsMcpLogsRoute: AuthenticatedSettingsMcpLogsRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
 }

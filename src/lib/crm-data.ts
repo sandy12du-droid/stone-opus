@@ -1,4 +1,4 @@
-import { formatMoney } from "@/lib/location";
+import { formatMoney, getActiveLocation } from "@/lib/location";
 // Shared CRM mock data. Kept in one place so the customer list, workspace,
 // and command palette all draw from the same source. Swap for Supabase later.
 
@@ -58,7 +58,7 @@ export const HEALTH_STYLES: Record<Health, string> = {
 
 export const currency = (n: number) => formatMoney(n, "USD");
 
-export const getCustomer = (id: string) => CUSTOMERS.find((c) => c.id === id);
+export const getCustomer = (id: string) => forLocation(CUSTOMERS, getActiveLocation().warehouseCode).find((c) => c.id === id);
 
 /** HQ (code null) sees everything; other locations see only their own records. */
 export const forLocation = <T extends { locationCode?: string }>(rows: T[], code: string | null) =>
