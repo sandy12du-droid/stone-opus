@@ -4,6 +4,7 @@
  * stable across reloads.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation } from "@/context/LocationContext";
 import {
   notifications as seed,
   type AppNotification,
@@ -46,6 +47,7 @@ export interface UseNotifications {
 }
 
 export function useNotifications(): UseNotifications {
+  const { location } = useLocation();
   const [readIds, setReadIds] = useState<Set<string>>(() => readSet(READ_KEY));
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(() =>
     readSet(DISMISSED_KEY),
@@ -56,11 +58,11 @@ export function useNotifications(): UseNotifications {
 
   const items = useMemo(
     () =>
-      seed
+      (location.warehouseCode ? [] : seed)
         .filter((n) => !dismissedIds.has(n.id))
         .map((n) => ({ ...n, read: readIds.has(n.id) }))
         .sort((a, b) => (a.ts < b.ts ? 1 : -1)),
-    [readIds, dismissedIds],
+    [readIds, dismissedIds, location.warehouseCode],
   );
 
   const unreadCount = items.filter((n) => !n.read).length;

@@ -4,6 +4,7 @@
 // requireSupabaseAuth + a role check.
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 // -------- Helpers --------
 async function admin() {
@@ -39,6 +40,7 @@ async function logEvent(quotation_id: string, type: string, message: string, act
 
 // -------- Create --------
 export const createQuotation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: {
     customer_name: string;
     customer_company?: string;
@@ -64,8 +66,8 @@ export const createQuotation = createServerFn({ method: "POST" })
       })
       .parse(d),
   )
-  .handler(async ({ data }) => {
-    const supabaseAdmin = await admin();
+  .handler(async ({ data, context }) => {
+    const supabaseAdmin = context.supabase;
     const { data: row, error } = await supabaseAdmin
       .from("stone_quotations")
       .insert({
@@ -82,7 +84,7 @@ export const createQuotation = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw error;
-    await logEvent(row.id, "created", "Quotation created");
+    await supabaseAdmin.from("stone_quotation_events").insert({ quotation_id: row.id, type: "created", message: "Quotation created", actor: "System" });
     return { id: row.id };
   });
 

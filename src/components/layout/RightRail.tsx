@@ -8,6 +8,7 @@ import { ActivityTimeline } from "@/components/ActivityTimeline";
 import { getActivityFor, getGlobalActivity } from "@/lib/activity-data";
 import { NotificationsPanel } from "@/components/NotificationsPanel";
 import { useNotifications } from "@/hooks/use-notifications";
+import { useLocation } from "@/context/LocationContext";
 
 
 
@@ -132,10 +133,11 @@ function AIPanel() {
 
 
 function ActivityPanel() {
+  const { location } = useLocation();
   const { active } = useBusinessContext();
   const suggestions = getAiSuggestions(active);
   const { primary } = suggestions;
-  const events = primary ? getActivityFor(primary) : getGlobalActivity();
+  const events = location.warehouseCode ? [] : primary ? getActivityFor(primary) : getGlobalActivity();
 
   return (
     <div className="flex h-full flex-col">
