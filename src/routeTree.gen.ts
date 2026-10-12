@@ -17,7 +17,6 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
 import { Route as AuthenticatedShippingRouteImport } from './routes/_authenticated/shipping'
-import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedQuotationsRouteImport } from './routes/_authenticated/quotations'
 import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
@@ -27,6 +26,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAiRouteImport } from './routes/_authenticated/ai'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings.index'
 import { Route as AuthenticatedWorkspaceExecutiveRouteImport } from './routes/_authenticated/workspace.executive'
 import { Route as AuthenticatedShippingShipmentIdRouteImport } from './routes/_authenticated/shipping.$shipmentId'
 import { Route as AuthenticatedSettingsAuditLogsRouteImport } from './routes/_authenticated/settings.audit-logs'
@@ -83,11 +83,6 @@ const AuthenticatedShippingRoute = AuthenticatedShippingRouteImport.update({
   path: '/shipping',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -135,6 +130,12 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedWorkspaceExecutiveRoute =
   AuthenticatedWorkspaceExecutiveRouteImport.update({
     id: '/executive',
@@ -149,9 +150,9 @@ const AuthenticatedShippingShipmentIdRoute =
   } as any)
 const AuthenticatedSettingsAuditLogsRoute =
   AuthenticatedSettingsAuditLogsRouteImport.update({
-    id: '/audit-logs',
-    path: '/audit-logs',
-    getParentRoute: () => AuthenticatedSettingsRoute,
+    id: '/settings/audit-logs',
+    path: '/settings/audit-logs',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSalesPipelineRoute =
   AuthenticatedSalesPipelineRouteImport.update({
@@ -245,7 +246,6 @@ export interface FileRoutesByFullPath {
   '/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
-  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -261,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
+  '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
   '/inventory/products/$productId': typeof AuthenticatedInventoryProductsProductIdRoute
   '/sales/opportunities/$opportunityId': typeof AuthenticatedSalesOpportunitiesOpportunityIdRoute
@@ -280,7 +281,6 @@ export interface FileRoutesByTo {
   '/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
-  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -296,6 +296,7 @@ export interface FileRoutesByTo {
   '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
   '/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
   '/inventory/products/$productId': typeof AuthenticatedInventoryProductsProductIdRoute
   '/sales/opportunities/$opportunityId': typeof AuthenticatedSalesOpportunitiesOpportunityIdRoute
@@ -317,7 +318,6 @@ export interface FileRoutesById {
   '/_authenticated/projects': typeof AuthenticatedProjectsRouteWithChildren
   '/_authenticated/quotations': typeof AuthenticatedQuotationsRouteWithChildren
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
-  '/_authenticated/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/_authenticated/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -333,6 +333,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
   '/_authenticated/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/_authenticated/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/crm/customers/$customerId': typeof AuthenticatedCrmCustomersCustomerIdRoute
   '/_authenticated/inventory/products/$productId': typeof AuthenticatedInventoryProductsProductIdRoute
   '/_authenticated/sales/opportunities/$opportunityId': typeof AuthenticatedSalesOpportunitiesOpportunityIdRoute
@@ -354,7 +355,6 @@ export interface FileRouteTypes {
     | '/projects'
     | '/quotations'
     | '/reports'
-    | '/settings'
     | '/shipping'
     | '/workspace'
     | '/.lovable/oauth/consent'
@@ -370,6 +370,7 @@ export interface FileRouteTypes {
     | '/settings/audit-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
+    | '/settings/'
     | '/crm/customers/$customerId'
     | '/inventory/products/$productId'
     | '/sales/opportunities/$opportunityId'
@@ -389,7 +390,6 @@ export interface FileRouteTypes {
     | '/projects'
     | '/quotations'
     | '/reports'
-    | '/settings'
     | '/shipping'
     | '/workspace'
     | '/.lovable/oauth/consent'
@@ -405,6 +405,7 @@ export interface FileRouteTypes {
     | '/settings/audit-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
+    | '/settings'
     | '/crm/customers/$customerId'
     | '/inventory/products/$productId'
     | '/sales/opportunities/$opportunityId'
@@ -425,7 +426,6 @@ export interface FileRouteTypes {
     | '/_authenticated/projects'
     | '/_authenticated/quotations'
     | '/_authenticated/reports'
-    | '/_authenticated/settings'
     | '/_authenticated/shipping'
     | '/_authenticated/workspace'
     | '/.lovable/oauth/consent'
@@ -441,6 +441,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/audit-logs'
     | '/_authenticated/shipping/$shipmentId'
     | '/_authenticated/workspace/executive'
+    | '/_authenticated/settings/'
     | '/_authenticated/crm/customers/$customerId'
     | '/_authenticated/inventory/products/$productId'
     | '/_authenticated/sales/opportunities/$opportunityId'
@@ -517,13 +518,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedShippingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/reports': {
       id: '/_authenticated/reports'
       path: '/reports'
@@ -587,6 +581,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/workspace/executive': {
       id: '/_authenticated/workspace/executive'
       path: '/executive'
@@ -603,10 +604,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/settings/audit-logs': {
       id: '/_authenticated/settings/audit-logs'
-      path: '/audit-logs'
+      path: '/settings/audit-logs'
       fullPath: '/settings/audit-logs'
       preLoaderRoute: typeof AuthenticatedSettingsAuditLogsRouteImport
-      parentRoute: typeof AuthenticatedSettingsRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sales/pipeline': {
       id: '/_authenticated/sales/pipeline'
@@ -730,19 +731,6 @@ const AuthenticatedQuotationsRouteWithChildren =
     AuthenticatedQuotationsRouteChildren,
   )
 
-interface AuthenticatedSettingsRouteChildren {
-  AuthenticatedSettingsAuditLogsRoute: typeof AuthenticatedSettingsAuditLogsRoute
-}
-
-const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
-  AuthenticatedSettingsAuditLogsRoute: AuthenticatedSettingsAuditLogsRoute,
-}
-
-const AuthenticatedSettingsRouteWithChildren =
-  AuthenticatedSettingsRoute._addFileChildren(
-    AuthenticatedSettingsRouteChildren,
-  )
-
 interface AuthenticatedShippingRouteChildren {
   AuthenticatedShippingShipmentIdRoute: typeof AuthenticatedShippingShipmentIdRoute
 }
@@ -823,7 +811,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRouteWithChildren
   AuthenticatedQuotationsRoute: typeof AuthenticatedQuotationsRouteWithChildren
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
-  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRouteWithChildren
   AuthenticatedShippingRoute: typeof AuthenticatedShippingRouteWithChildren
   AuthenticatedWorkspaceRoute: typeof AuthenticatedWorkspaceRouteWithChildren
   AuthenticatedCrmCustomersRoute: typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -832,6 +819,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInventoryProductsRoute: typeof AuthenticatedInventoryProductsRouteWithChildren
   AuthenticatedSalesOpportunitiesRoute: typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   AuthenticatedSalesPipelineRoute: typeof AuthenticatedSalesPipelineRoute
+  AuthenticatedSettingsAuditLogsRoute: typeof AuthenticatedSettingsAuditLogsRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -842,7 +831,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProjectsRoute: AuthenticatedProjectsRouteWithChildren,
   AuthenticatedQuotationsRoute: AuthenticatedQuotationsRouteWithChildren,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
-  AuthenticatedSettingsRoute: AuthenticatedSettingsRouteWithChildren,
   AuthenticatedShippingRoute: AuthenticatedShippingRouteWithChildren,
   AuthenticatedWorkspaceRoute: AuthenticatedWorkspaceRouteWithChildren,
   AuthenticatedCrmCustomersRoute: AuthenticatedCrmCustomersRouteWithChildren,
@@ -853,6 +841,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSalesOpportunitiesRoute:
     AuthenticatedSalesOpportunitiesRouteWithChildren,
   AuthenticatedSalesPipelineRoute: AuthenticatedSalesPipelineRoute,
+  AuthenticatedSettingsAuditLogsRoute: AuthenticatedSettingsAuditLogsRoute,
+  AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
