@@ -1489,7 +1489,36 @@ export type Database = {
         Args: { p_company: string; p_write?: boolean }
         Returns: boolean
       }
+      erp_create_document: {
+        Args: {
+          p_company: string
+          p_currency: string
+          p_date: string
+          p_due: string
+          p_items: Json
+          p_kind: string
+          p_notes: string
+          p_party: string
+          p_rate: number
+          p_reference: string
+        }
+        Returns: string
+      }
       erp_initialize: { Args: { p_company: string }; Returns: undefined }
+      erp_post_document: {
+        Args: { p_document: string; p_payment_account?: string }
+        Returns: string
+      }
+      erp_record_payment: {
+        Args: {
+          p_account: string
+          p_amount: number
+          p_date: string
+          p_document: string
+          p_reference: string
+        }
+        Returns: string
+      }
       generate_project_code: { Args: never; Returns: string }
       generate_quotation_number: { Args: never; Returns: string }
       generate_shipment_reference: { Args: never; Returns: string }
