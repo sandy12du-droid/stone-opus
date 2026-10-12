@@ -1,3 +1,5 @@
+import { formatMoney } from "@/lib/location";
+import { useLocation } from "@/context/LocationContext";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
@@ -69,13 +71,13 @@ const initialFocus = [
   { id: "5", label: "FX hedge check-in with finance", done: true },
 ];
 
-const snapshot = [
-  { label: "USA Orders", value: "$1.42M", delta: "+8.2%", trend: "up" as const, hint: "42 active · 6 shipping this wk", icon: Flag },
+const snapshot = () => [
+  { label: "USA Orders", value: `${formatMoney(1420000, "USD", true)}`, delta: "+8.2%", trend: "up" as const, hint: "42 active · 6 shipping this wk", icon: Flag },
   { label: "Malaysia Inventory", value: "1,284", delta: "-3.1%", trend: "down" as const, hint: "slabs in Port Klang WH", icon: Boxes },
   { label: "Projects", value: "27", delta: "+2", trend: "up" as const, hint: "9 in fabrication", icon: Factory },
   { label: "Containers", value: "5", delta: "this wk", trend: "flat" as const, hint: "3 loading · 2 in transit", icon: ContainerIcon },
-  { label: "Revenue Pipeline", value: "$4.82M", delta: "+12.4%", trend: "up" as const, hint: "weighted, next 90 days", icon: BarChart3 },
-  { label: "Outstanding Payments", value: "$612k", delta: "9 overdue", trend: "down" as const, hint: "avg 14 days late", icon: AlertTriangle },
+  { label: "Revenue Pipeline", value: `${formatMoney(4820000, "USD", true)}`, delta: "+12.4%", trend: "up" as const, hint: "weighted, next 90 days", icon: BarChart3 },
+  { label: "Outstanding Payments", value: `${formatMoney(612000, "USD", true)}`, delta: "9 overdue", trend: "down" as const, hint: "avg 14 days late", icon: AlertTriangle },
 ];
 
 const quickActions = [
@@ -106,10 +108,10 @@ const aiExamples = [
   "Find delayed shipments",
 ];
 
-const newLeads = [
-  { name: "Concord Stoneworks", country: "United States · TX", value: "$47k" },
-  { name: "Nordic Slab Co.", country: "Sweden", value: "$61k" },
-  { name: "Al-Manar Interiors", country: "UAE", value: "$128k" },
+const newLeads = () => [
+  { name: "Concord Stoneworks", country: "United States · TX", value: `${formatMoney(47000, "USD", true)}` },
+  { name: "Nordic Slab Co.", country: "Sweden", value: `${formatMoney(61000, "USD", true)}` },
+  { name: "Al-Manar Interiors", country: "UAE", value: `${formatMoney(128000, "USD", true)}` },
 ];
 
 const emails = [
@@ -139,6 +141,7 @@ const meetings = [
 /* ------------------------------------------------------------------ */
 
 function WorkspacePage() {
+  useLocation();
   const [focus, setFocus] = useState(initialFocus);
   const toggle = (id: string) =>
     setFocus((f) => f.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
@@ -255,7 +258,7 @@ function WorkspacePage() {
       <section className="mt-6">
         <SectionLabel>Business Snapshot</SectionLabel>
         <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-          {snapshot.map((s) => (
+          {snapshot().map((s) => (
             <StatCard key={s.label} {...s} />
           ))}
         </div>
@@ -317,7 +320,7 @@ function WorkspacePage() {
         <div className="mt-3 grid grid-cols-1 gap-4 lg:grid-cols-3">
           <ActivityCard title="New Leads" icon={UserPlus} to="/crm/leads">
             <ul className="space-y-2">
-              {newLeads.map((l) => (
+              {newLeads().map((l) => (
                 <li
                   key={l.name}
                   className="flex items-center justify-between gap-2 rounded-md border border-border bg-surface-muted/40 px-3 py-2"
