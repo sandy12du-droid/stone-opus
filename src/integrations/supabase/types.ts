@@ -179,6 +179,7 @@ export type Database = {
           id: string
           net_amount: number
           quantity: number
+          stock_item: string | null
           tax_amount: number
           tax_code_id: string
           unit: string
@@ -192,6 +193,7 @@ export type Database = {
           id?: string
           net_amount: number
           quantity: number
+          stock_item?: string | null
           tax_amount: number
           tax_code_id: string
           unit?: string
@@ -205,6 +207,7 @@ export type Database = {
           id?: string
           net_amount?: number
           quantity?: number
+          stock_item?: string | null
           tax_amount?: number
           tax_code_id?: string
           unit?: string
@@ -370,6 +373,7 @@ export type Database = {
           journal_date: string
           source_document_id: string | null
           source_payment_id: string | null
+          source_stock_movement_id: string | null
         }
         Insert: {
           company_id: string
@@ -379,6 +383,7 @@ export type Database = {
           journal_date: string
           source_document_id?: string | null
           source_payment_id?: string | null
+          source_stock_movement_id?: string | null
         }
         Update: {
           company_id?: string
@@ -388,6 +393,7 @@ export type Database = {
           journal_date?: string
           source_document_id?: string | null
           source_payment_id?: string | null
+          source_stock_movement_id?: string | null
         }
         Relationships: [
           {
@@ -403,6 +409,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "erp_documents"
             referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "erp_journals_source_stock_movement_id_fkey"
+            columns: ["source_stock_movement_id"]
+            isOneToOne: true
+            referencedRelation: "erp_stock_movements"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "erp_source_payment_fk"
@@ -577,6 +590,88 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "erp_documents"
             referencedColumns: ["id", "company_id"]
+          },
+        ]
+      }
+      erp_stock_movements: {
+        Row: {
+          company_id: string
+          created_at: string
+          created_by: string
+          document_id: string | null
+          from_bin: string | null
+          id: string
+          item: string
+          kind: string
+          movement_date: string
+          quantity: number
+          reason: string | null
+          reference: string | null
+          to_bin: string | null
+          unit: string
+          unit_cost: number
+          value: number
+          warehouse_id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          created_by?: string
+          document_id?: string | null
+          from_bin?: string | null
+          id?: string
+          item: string
+          kind: string
+          movement_date?: string
+          quantity: number
+          reason?: string | null
+          reference?: string | null
+          to_bin?: string | null
+          unit?: string
+          unit_cost?: number
+          value?: number
+          warehouse_id: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          created_by?: string
+          document_id?: string | null
+          from_bin?: string | null
+          id?: string
+          item?: string
+          kind?: string
+          movement_date?: string
+          quantity?: number
+          reason?: string | null
+          reference?: string | null
+          to_bin?: string | null
+          unit?: string
+          unit_cost?: number
+          value?: number
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_stock_movements_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "erp_companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_stock_movements_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "erp_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_stock_movements_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "stone_warehouses"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1504,11 +1599,23 @@ export type Database = {
         }
         Returns: string
       }
+      erp_create_invoice: {
+        Args: {
+          p_company: string
+          p_date: string
+          p_due: string
+          p_items: Json
+          p_notes: string
+          p_party: string
+        }
+        Returns: string
+      }
       erp_initialize: { Args: { p_company: string }; Returns: undefined }
       erp_post_document: {
         Args: { p_document: string; p_payment_account?: string }
         Returns: string
       }
+      erp_post_invoice: { Args: { p_document: string }; Returns: string }
       erp_record_payment: {
         Args: {
           p_account: string
@@ -1516,6 +1623,22 @@ export type Database = {
           p_date: string
           p_document: string
           p_reference: string
+        }
+        Returns: string
+      }
+      erp_record_stock_movement: {
+        Args: {
+          p_company: string
+          p_date: string
+          p_from: string
+          p_item: string
+          p_kind: string
+          p_quantity: number
+          p_reason: string
+          p_reference: string
+          p_to: string
+          p_unit: string
+          p_unit_cost: number
         }
         Returns: string
       }
@@ -1531,6 +1654,22 @@ export type Database = {
           p_pin: string
         }
         Returns: undefined
+      }
+      erp_stock_balance: {
+        Args: { p_company: string; p_item: string }
+        Returns: Record<string, unknown>
+      }
+      erp_stock_post: {
+        Args: {
+          p_amount: number
+          p_company: string
+          p_credit: string
+          p_date: string
+          p_debit: string
+          p_label: string
+          p_movement: string
+        }
+        Returns: string
       }
       generate_project_code: { Args: never; Returns: string }
       generate_quotation_number: { Args: never; Returns: string }
