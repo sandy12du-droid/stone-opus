@@ -43,6 +43,13 @@
       "when": 1791768574452,
       "tag": "0005_kenya_foundation_settings_and_posting_gate",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791768753464,
+      "tag": "0006_kenya_ledger_defense_in_depth",
+      "breakpoints": true
     }
   ]
 }
