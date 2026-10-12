@@ -112,6 +112,8 @@ export function Sidebar() {
       { label: "Financial Overview", to: "/kenya/overview", icon: LayoutDashboard },
       { label: "Customers", to: "/kenya/customers", icon: Users },
       { label: "Suppliers", to: "/kenya/suppliers", icon: Building2 },
+      { label: "Sales Invoices", to: "/kenya/invoices", icon: Receipt },
+      { label: "Stock Movements", to: "/kenya/stock", icon: BookOpen },
       { label: "Chart of Accounts", to: "/kenya/accounts", icon: BookOpen },
       { label: "Journal Entries", to: "/kenya/journals", icon: Receipt },
       { label: "Company Settings", to: "/kenya/settings", icon: Settings },

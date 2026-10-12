@@ -3,7 +3,7 @@ import { readKenya } from "@/lib/kenya-erp.functions";
 
 export const kenyaSections = {
   overview: "Financial Overview", customers: "Customers", suppliers: "Suppliers",
-  invoices: "Sales Invoices", sales_orders: "Sales Orders", purchase_orders: "Purchase Orders",
+  invoices: "Sales Invoices", sales_orders: "Sales Orders", purchase_orders: "Purchase Orders", stock: "Stock Movements",
   bills: "Purchase Bills", payments: "Payments", expenses: "Expenses",
   accounts: "Chart of Accounts", journals: "Journal Entries", ledger: "General Ledger",
   receivables: "Accounts Receivable", payables: "Accounts Payable", reports: "Financial Reports",
