@@ -9,7 +9,7 @@ DO $$
 DECLARE
   co uuid; wh uuid; cust uuid; tax uuid; cash uuid; mpesa uuid;
   stock_id uuid; inv uuid; pay uuid; crn uuid; refund uuid; exp uuid; so uuid; so_inv uuid;
-  touched uuid[]; bad int; item text := 'ZZ_AUTOTEST_SLAB_' || floor(random() * 1e9)::text;
+  touched uuid[]; bad int; v_item text := 'ZZ_AUTOTEST_SLAB_' || floor(random() * 1e9)::text;
 BEGIN
   SELECT c.id, c.warehouse_id INTO co, wh FROM erp_companies c JOIN stone_warehouses w ON w.id = c.warehouse_id WHERE w.code = 'WH-NBO';
   IF co IS NULL THEN RAISE EXCEPTION 'FAIL: Kenya company not visible to owner'; END IF;
@@ -19,12 +19,12 @@ BEGIN
   SELECT id INTO mpesa FROM erp_accounts WHERE company_id = co AND code = '1020';
 
   -- Stock receipt + adjustment
-  stock_id := erp_record_stock_movement(co, 'receipt', item, 'Sqm', 10, 5000, '', 'A1', 'AUTOTEST', '', current_date);
-  PERFORM erp_record_stock_movement(co, 'adjustment', item, 'Sqm', -1, 5000, 'A1', '', 'AUTOTEST', 'Breakage test', current_date);
+  stock_id := erp_record_stock_movement(co, 'receipt', v_item, 'Sqm', 10, 5000, '', 'A1', 'AUTOTEST', '', current_date);
+  PERFORM erp_record_stock_movement(co, 'adjustment', v_item, 'Sqm', -1, 5000, 'A1', '', 'AUTOTEST', 'Breakage test', current_date);
 
   -- Invoice -> post -> payment -> credit note -> refund
   inv := erp_create_invoice(co, cust, current_date, current_date + 30, 'autotest',
-    jsonb_build_array(jsonb_build_object('description', item, 'stock_item', item, 'quantity', 2, 'unit', 'Sqm', 'unit_price', 9000, 'discount', 0, 'tax_code_id', tax)));
+    jsonb_build_array(jsonb_build_object('description', v_item, 'stock_item', v_item, 'quantity', 2, 'unit', 'Sqm', 'unit_price', 9000, 'discount', 0, 'tax_code_id', tax)));
   PERFORM erp_post_invoice(inv);
   pay := erp_record_payment(inv, mpesa, 1000, current_date, 'AUTOTEST-PAY');
   crn := erp_credit_invoice(inv, 'autotest reversal', current_date);
@@ -55,7 +55,7 @@ BEGIN
   IF bad > 0 THEN RAISE EXCEPTION 'FAIL: documents outside Kenya company/KES'; END IF;
   SELECT count(*) INTO bad FROM erp_journal_lines WHERE journal_id = ANY(touched) AND company_id <> co;
   IF bad > 0 THEN RAISE EXCEPTION 'FAIL: ledger lines leaked to other company'; END IF;
-  SELECT count(*) INTO bad FROM erp_stock_movements WHERE item = item AND warehouse_id <> wh AND reference = 'AUTOTEST';
+  SELECT count(*) INTO bad FROM erp_stock_movements WHERE item = v_item AND warehouse_id <> wh AND reference = 'AUTOTEST';
   IF bad > 0 THEN RAISE EXCEPTION 'FAIL: stock movement in other warehouse'; END IF;
   -- other locations: no ERP company for any other warehouse can see these records
   SELECT count(*) INTO bad FROM erp_documents d JOIN erp_companies c ON c.id = d.company_id WHERE d.id IN (inv, crn, exp, so, so_inv) AND c.warehouse_id IS DISTINCT FROM wh;
