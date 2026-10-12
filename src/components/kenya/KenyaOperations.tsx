@@ -11,6 +11,7 @@ import { createKenyaSalesOrder, createKenyaExpense, createKenyaInvoice, createKe
 import type { KenyaData } from "@/lib/kenya-erp";
 import { formatMoney } from "@/lib/location";
 import { downloadDocumentPdf } from "@/lib/kenya-pdf";
+import { InvoiceExtras, CsvButton, exportInvoicesCsv, exportStockCsv } from "./KenyaFinance";
 
 const ksh = (n: number) => formatMoney(n, "KES");
 const today = () => new Date().toISOString().slice(0, 10);
@@ -44,7 +45,7 @@ export function Invoices({ data }: { data: KenyaData }) {
   return <>
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
       <h2 className="text-sm font-semibold">Customer invoices · KSh</h2>
-      {canWrite(data.role) && <Button size="sm" onClick={() => setCreating(true)} disabled={data.accounts.length === 0}><Plus className="mr-1.5 h-4 w-4" />New invoice</Button>}
+      <div className="flex gap-2"><CsvButton onClick={() => exportInvoicesCsv(data)} />{canWrite(data.role) && <Button size="sm" onClick={() => setCreating(true)} disabled={data.accounts.length === 0}><Plus className="mr-1.5 h-4 w-4" />New invoice</Button>}</div>
     </div>
     {data.accounts.length === 0 && <p className="mb-4 text-sm text-muted-foreground">Initialize the chart of accounts before invoicing.</p>}
     <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Number</TableHead><TableHead>Customer</TableHead><TableHead>Date</TableHead><TableHead>Due</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Total</TableHead><TableHead className="text-right">Balance</TableHead></TableRow></TableHeader>
@@ -78,6 +79,7 @@ function InvoiceDetail({ data, invoice, paid, close, creditNote }: { data: Kenya
     <div className="overflow-x-auto border-y border-border"><Table><TableHeader><TableRow><TableHead>Description</TableHead><TableHead>Stock item</TableHead><TableHead className="text-right">Qty</TableHead><TableHead className="text-right">Price</TableHead><TableHead className="text-right">Net</TableHead><TableHead className="text-right">VAT</TableHead></TableRow></TableHeader>
       <TableBody>{items.map(i => <TableRow key={i.id}><TableCell>{i.description}</TableCell><TableCell>{i.stock_item || "—"}</TableCell><TableCell className="text-right tabular-nums">{Number(i.quantity)} {i.unit}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.unit_price))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.net_amount))}</TableCell><TableCell className="text-right tabular-nums">{ksh(Number(i.tax_amount))}</TableCell></TableRow>)}</TableBody></Table></div>
     <dl className="ml-auto mt-4 max-w-xs space-y-2 text-sm">{[["Subtotal", invoice.subtotal], ["VAT", invoice.tax_amount], ["Total", invoice.total], ["Paid", paid], ["Balance due", invoice.status === "posted" && !creditNote ? balance : 0]].map(([l, v]) => <div key={String(l)} className="flex justify-between"><dt className="text-muted-foreground">{l}</dt><dd className="font-medium tabular-nums">{ksh(Number(v))}</dd></div>)}</dl>
+    {invoice.kind === "invoice" && <InvoiceExtras data={data} invoice={invoice} creditNote={creditNote} paid={paid} />}
     {creditNote && <p className="mt-6 border-t border-border pt-4 text-sm">Cancelled by credit note <span className="font-mono">{creditNote.number}</span> on {creditNote.document_date} — {creditNote.notes}. Ledger and stock were reversed.</p>}
     {invoice.kind === "invoice" && invoice.status === "posted" && !creditNote && paid === 0 && writable && <form className="mt-6 flex flex-wrap items-end gap-3 border-t border-border pt-4" onSubmit={e => { e.preventDefault(); crediting.mutate(); }}>
       <div className="min-w-60 flex-1"><Label className="text-xs">Credit note reason</Label><Input required aria-label="Credit note reason" placeholder="Why is this invoice being cancelled?" value={reason} onChange={e => setReason(e.target.value)} /></div>
