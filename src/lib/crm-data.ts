@@ -1,3 +1,4 @@
+import { formatMoney } from "@/lib/location";
 // Shared CRM mock data. Kept in one place so the customer list, workspace,
 // and command palette all draw from the same source. Swap for Supabase later.
 
@@ -50,7 +51,6 @@ export const HEALTH_STYLES: Record<Health, string> = {
   Churning: "bg-destructive/10 text-destructive border-destructive/20",
 };
 
-export const currency = (n: number) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+export const currency = (n: number) => formatMoney(n, "USD");
 
 export const getCustomer = (id: string) => CUSTOMERS.find((c) => c.id === id);

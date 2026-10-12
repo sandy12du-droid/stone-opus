@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { LocationProvider } from "@/context/LocationContext";
 import { BusinessContextProvider } from "@/context/BusinessContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -145,10 +146,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <LocationProvider>
       <BusinessContextProvider>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
       </BusinessContextProvider>
+      </LocationProvider>
     </QueryClientProvider>
   );
 }

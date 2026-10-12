@@ -1,3 +1,4 @@
+import { formatMoney } from "@/lib/location";
 // Shipping & Logistics read layer.
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,8 +42,7 @@ export const STATUS_TONE: Record<string, string> = {
 
 export const MODE_LABEL: Record<string, string> = { sea: "Sea", air: "Air", road: "Road", rail: "Rail" };
 
-export const currency = (n: number, code = "USD") =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: code, maximumFractionDigits: 0 }).format(n);
+export const currency = (n: number, code = "USD") => formatMoney(n, code);
 
 export const fmtDate = (d: string | null | undefined) =>
   d ? new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";

@@ -1,3 +1,4 @@
+import { formatMoney } from "@/lib/location";
 // Shared sales workflow domain model.
 // Mock data now — designed so each entity can be swapped 1:1 with a Supabase
 // table (opportunities, contacts, activities, tasks) without changing the UI.
@@ -311,5 +312,6 @@ export const FOLLOWUPS: Record<string, FollowUp[]> = {
 };
 
 export function currencyFmt(n: number, ccy: string) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: ccy, maximumFractionDigits: 0 }).format(n);
+  return formatMoney(n, ccy);
+}).format(n);
 }

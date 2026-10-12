@@ -3,6 +3,7 @@ import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { RightRail } from "./RightRail";
 import { ContextBreadcrumbs } from "./ContextBreadcrumbs";
+import { useLocation } from "@/context/LocationContext";
 import { CommandPalette } from "@/components/CommandPalette";
 
 interface AppShellProps {
@@ -13,6 +14,7 @@ interface AppShellProps {
 }
 
 export function AppShell({ children, title, subtitle, actions }: AppShellProps) {
+  const { location } = useLocation();
   return (
     <div className="flex min-h-screen w-full bg-canvas text-foreground">
       <CommandPalette />
@@ -38,7 +40,7 @@ export function AppShell({ children, title, subtitle, actions }: AppShellProps) 
                   {actions && <div className="flex items-center gap-2">{actions}</div>}
                 </header>
               )}
-              {children}
+              <div key={location.id}>{children}</div>
             </div>
           </main>
           <RightRail />
