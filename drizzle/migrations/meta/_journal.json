@@ -8,6 +8,13 @@
       "when": 1791764049790,
       "tag": "0000_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791765206091,
+      "tag": "0001_location_code_on_records",
+      "breakpoints": true
     }
   ]
 }

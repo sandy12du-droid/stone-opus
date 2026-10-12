@@ -1,3 +1,4 @@
+import { getActiveLocation } from "@/lib/location";
 import { formatMoney } from "@/lib/location";
 // Shipping & Logistics read layer.
 import { queryOptions } from "@tanstack/react-query";
@@ -66,10 +67,12 @@ export const shipmentsListOptions = () =>
     queryKey: ["shipments", "list"],
     staleTime: 20_000,
     queryFn: async () => {
-      const { data, error } = await supabase
+      const q = supabase
         .from("stone_shipments")
         .select("*, items:stone_shipment_items(id, project_id, description, quantity, unit)")
         .order("etd", { ascending: false, nullsFirst: false });
+      const loc = getActiveLocation().warehouseCode;
+      const { data, error } = await (loc ? q.eq("location_code", loc) : q);
       if (error) throw error;
       return data ?? [];
     },

@@ -1,3 +1,4 @@
+import { getActiveLocation } from "@/lib/location";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -223,7 +224,7 @@ function NewProjectDialog() {
   const qc = useQueryClient();
   const create = useServerFn(createProject);
   const mutation = useMutation({
-    mutationFn: create,
+    mutationFn: (v: Parameters<typeof create>[0]) => create({ ...v, data: { ...v.data, location_code: getActiveLocation().warehouseCode } }),
     onSuccess: (row) => {
       qc.invalidateQueries({ queryKey: ["projects"] });
       setOpen(false);

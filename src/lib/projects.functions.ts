@@ -19,8 +19,10 @@ export const createProject = createServerFn({ method: "POST" })
     contract_value?: number;
     target_delivery_date?: string;
     notes?: string;
+    location_code?: string | null;
   }) =>
     z.object({
+        location_code: z.string().nullable().optional(),
       name: z.string().min(1),
       customer_name: z.string().optional(),
       customer_country: z.string().optional(),
@@ -47,6 +49,7 @@ export const createProject = createServerFn({ method: "POST" })
         po_number: data.po_number,
         currency: data.currency ?? "USD",
         contract_value: data.contract_value ?? 0,
+        location_code: (data as { location_code?: string | null }).location_code ?? null,
         target_delivery_date: data.target_delivery_date || null,
         notes: data.notes,
       })

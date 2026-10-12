@@ -48,6 +48,7 @@ export const createQuotation = createServerFn({ method: "POST" })
     incoterm?: string;
     currency?: string;
     owner_name?: string;
+    location_code?: string | null;
   }) =>
     z
       .object({
@@ -59,6 +60,7 @@ export const createQuotation = createServerFn({ method: "POST" })
         incoterm: z.string().optional(),
         currency: z.string().optional(),
         owner_name: z.string().optional(),
+        location_code: z.string().nullable().optional(),
       })
       .parse(d),
   )
@@ -75,6 +77,7 @@ export const createQuotation = createServerFn({ method: "POST" })
         incoterm: data.incoterm ?? "FOB",
         currency: data.currency ?? "USD",
         owner_name: data.owner_name ?? "Unassigned",
+        location_code: (data as { location_code?: string | null }).location_code ?? null,
       })
       .select("id")
       .single();

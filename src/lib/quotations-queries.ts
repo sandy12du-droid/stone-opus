@@ -1,3 +1,4 @@
+import { getActiveLocation } from "@/lib/location";
 import { formatMoney } from "@/lib/location";
 // Quotations read layer — public catalogue-style reads via the browser client.
 import { queryOptions } from "@tanstack/react-query";
@@ -23,10 +24,12 @@ export const quotationsListOptions = () =>
     queryKey: ["quotations", "list"],
     staleTime: 15_000,
     queryFn: async (): Promise<QuotationListItem[]> => {
-      const { data, error } = await supabase
+      const q = supabase
         .from("stone_quotations")
         .select("*, items:stone_quotation_items(id, quantity, line_total)")
         .order("created_at", { ascending: false });
+      const loc = getActiveLocation().warehouseCode;
+      const { data, error } = await (loc ? q.eq("location_code", loc) : q);
       if (error) throw error;
       return (data ?? []) as unknown as QuotationListItem[];
     },

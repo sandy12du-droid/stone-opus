@@ -243,6 +243,7 @@ export type Database = {
           customer_country: string | null
           customer_name: string | null
           id: string
+          location_code: string | null
           name: string
           notes: string | null
           po_number: string | null
@@ -261,6 +262,7 @@ export type Database = {
           customer_country?: string | null
           customer_name?: string | null
           id?: string
+          location_code?: string | null
           name: string
           notes?: string | null
           po_number?: string | null
@@ -279,6 +281,7 @@ export type Database = {
           customer_country?: string | null
           customer_name?: string | null
           id?: string
+          location_code?: string | null
           name?: string
           notes?: string | null
           po_number?: string | null
@@ -415,6 +418,7 @@ export type Database = {
           decided_at: string | null
           id: string
           incoterm: string
+          location_code: string | null
           notes: string | null
           number: string
           owner_name: string
@@ -439,6 +443,7 @@ export type Database = {
           decided_at?: string | null
           id?: string
           incoterm?: string
+          location_code?: string | null
           notes?: string | null
           number?: string
           owner_name?: string
@@ -463,6 +468,7 @@ export type Database = {
           decided_at?: string | null
           id?: string
           incoterm?: string
+          location_code?: string | null
           notes?: string | null
           number?: string
           owner_name?: string
@@ -597,6 +603,7 @@ export type Database = {
           freight_cost: number | null
           id: string
           incoterm: string | null
+          location_code: string | null
           mode: string
           notes: string | null
           origin_country: string | null
@@ -623,6 +630,7 @@ export type Database = {
           freight_cost?: number | null
           id?: string
           incoterm?: string | null
+          location_code?: string | null
           mode?: string
           notes?: string | null
           origin_country?: string | null
@@ -649,6 +657,7 @@ export type Database = {
           freight_cost?: number | null
           id?: string
           incoterm?: string | null
+          location_code?: string | null
           mode?: string
           notes?: string | null
           origin_country?: string | null

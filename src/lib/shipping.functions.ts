@@ -21,8 +21,10 @@ export const createShipment = createServerFn({ method: "POST" })
     etd?: string;
     eta?: string;
     notes?: string;
+    location_code?: string | null;
   }) =>
     z.object({
+        location_code: z.string().nullable().optional(),
       carrier: z.string().optional(),
       mode: z.string().optional(),
       container_number: z.string().optional(),
@@ -45,6 +47,7 @@ export const createShipment = createServerFn({ method: "POST" })
       .from("stone_shipments")
       .insert({
         reference,
+        location_code: (data as { location_code?: string | null }).location_code ?? null,
         carrier: data.carrier,
         mode: data.mode ?? "sea",
         container_number: data.container_number,
