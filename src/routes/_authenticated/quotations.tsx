@@ -1,3 +1,4 @@
+import { getActiveLocation } from "@/lib/location";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { EntityLink } from "@/components/EntityLink";
 import { useMemo, useState } from "react";
@@ -254,7 +255,7 @@ function NewQuotationButton() {
   const qc = useQueryClient();
   const create = useServerFn(createQuotation);
   const mutation = useMutation({
-    mutationFn: (input: typeof form) => create({ data: input }),
+    mutationFn: (input: typeof form) => create({ data: { ...input, location_code: getActiveLocation().warehouseCode } }),
     onSuccess: async (res) => {
       await qc.invalidateQueries({ queryKey: ["quotations"] });
       setOpen(false);

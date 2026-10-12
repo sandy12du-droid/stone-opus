@@ -21,6 +21,7 @@ export const createShipment = createServerFn({ method: "POST" })
     etd?: string;
     eta?: string;
     notes?: string;
+    location_code?: string | null;
   }) =>
     z.object({
         location_code: z.string().nullable().optional(),

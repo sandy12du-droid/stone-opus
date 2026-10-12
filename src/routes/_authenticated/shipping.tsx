@@ -1,3 +1,4 @@
+import { getActiveLocation } from "@/lib/location";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -239,7 +240,7 @@ function NewShipmentDialog() {
   const qc = useQueryClient();
   const create = useServerFn(createShipment);
   const mut = useMutation({
-    mutationFn: create,
+    mutationFn: (v: Parameters<typeof create>[0]) => create({ ...v, data: { ...v.data, location_code: getActiveLocation().warehouseCode } }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["shipments"] });
       setOpen(false);

@@ -19,6 +19,7 @@ export const createProject = createServerFn({ method: "POST" })
     contract_value?: number;
     target_delivery_date?: string;
     notes?: string;
+    location_code?: string | null;
   }) =>
     z.object({
         location_code: z.string().nullable().optional(),
