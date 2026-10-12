@@ -10,7 +10,7 @@ export default defineTool({
   inputSchema: {
     id: z.string().uuid().describe("Shipment id (uuid)."),
     status: z
-      .enum(["planned", "booked", "in_transit", "at_port", "customs", "arrived", "delivered", "delayed", "cancelled"])
+      .enum(["planned", "booked", "in_transit", "customs", "arrived", "delivered", "delayed", "cancelled"])
       .describe("New shipment status."),
     location: z.string().trim().nullable().default(null).describe("Current location or port."),
     message: z.string().trim().nullable().default(null).describe("Event note."),

@@ -119,7 +119,8 @@ export function canAccessModule(roles: AppRole[], moduleKey: ModuleKey | null) {
 
 export function canAccessPath(roles: AppRole[], pathname: string) {
   // The audit log screen is administrator-only regardless of module access.
-  if (pathname.startsWith("/settings/audit-logs")) return roles.includes("admin");
+  if (pathname.startsWith("/settings/audit-logs") || pathname.startsWith("/settings/mcp-logs"))
+    return roles.includes("admin");
   return canAccessModule(roles, moduleForPath(pathname));
 }
 
