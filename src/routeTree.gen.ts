@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DocsMcpRouteImport } from './routes/docs.mcp'
 import { Route as AuthenticatedWorkspaceRouteImport } from './routes/_authenticated/workspace'
 import { Route as AuthenticatedShippingRouteImport } from './routes/_authenticated/shipping'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
@@ -29,7 +30,9 @@ import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings.index'
 import { Route as AuthenticatedWorkspaceExecutiveRouteImport } from './routes/_authenticated/workspace.executive'
 import { Route as AuthenticatedShippingShipmentIdRouteImport } from './routes/_authenticated/shipping.$shipmentId'
+import { Route as AuthenticatedSettingsMcpLogsRouteImport } from './routes/_authenticated/settings.mcp-logs'
 import { Route as AuthenticatedSettingsAuditLogsRouteImport } from './routes/_authenticated/settings.audit-logs'
+import { Route as AuthenticatedSettingsAgentIntegrationsRouteImport } from './routes/_authenticated/settings.agent-integrations'
 import { Route as AuthenticatedSalesPipelineRouteImport } from './routes/_authenticated/sales.pipeline'
 import { Route as AuthenticatedSalesOpportunitiesRouteImport } from './routes/_authenticated/sales.opportunities'
 import { Route as AuthenticatedQuotationsQuotationIdRouteImport } from './routes/_authenticated/quotations.$quotationId'
@@ -71,6 +74,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsMcpRoute = DocsMcpRouteImport.update({
+  id: '/docs/mcp',
+  path: '/docs/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedWorkspaceRoute = AuthenticatedWorkspaceRouteImport.update({
@@ -148,10 +156,22 @@ const AuthenticatedShippingShipmentIdRoute =
     path: '/$shipmentId',
     getParentRoute: () => AuthenticatedShippingRoute,
   } as any)
+const AuthenticatedSettingsMcpLogsRoute =
+  AuthenticatedSettingsMcpLogsRouteImport.update({
+    id: '/settings/mcp-logs',
+    path: '/settings/mcp-logs',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsAuditLogsRoute =
   AuthenticatedSettingsAuditLogsRouteImport.update({
     id: '/settings/audit-logs',
     path: '/settings/audit-logs',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsAgentIntegrationsRoute =
+  AuthenticatedSettingsAgentIntegrationsRouteImport.update({
+    id: '/settings/agent-integrations',
+    path: '/settings/agent-integrations',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSalesPipelineRoute =
@@ -248,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AuthenticatedReportsRoute
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/docs/mcp': typeof DocsMcpRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -258,7 +279,9 @@ export interface FileRoutesByFullPath {
   '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
@@ -283,6 +306,7 @@ export interface FileRoutesByTo {
   '/reports': typeof AuthenticatedReportsRoute
   '/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/docs/mcp': typeof DocsMcpRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -293,7 +317,9 @@ export interface FileRoutesByTo {
   '/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
@@ -320,6 +346,7 @@ export interface FileRoutesById {
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/shipping': typeof AuthenticatedShippingRouteWithChildren
   '/_authenticated/workspace': typeof AuthenticatedWorkspaceRouteWithChildren
+  '/docs/mcp': typeof DocsMcpRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/crm/customers': typeof AuthenticatedCrmCustomersRouteWithChildren
@@ -330,7 +357,9 @@ export interface FileRoutesById {
   '/_authenticated/quotations/$quotationId': typeof AuthenticatedQuotationsQuotationIdRoute
   '/_authenticated/sales/opportunities': typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   '/_authenticated/sales/pipeline': typeof AuthenticatedSalesPipelineRoute
+  '/_authenticated/settings/agent-integrations': typeof AuthenticatedSettingsAgentIntegrationsRoute
   '/_authenticated/settings/audit-logs': typeof AuthenticatedSettingsAuditLogsRoute
+  '/_authenticated/settings/mcp-logs': typeof AuthenticatedSettingsMcpLogsRoute
   '/_authenticated/shipping/$shipmentId': typeof AuthenticatedShippingShipmentIdRoute
   '/_authenticated/workspace/executive': typeof AuthenticatedWorkspaceExecutiveRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
@@ -357,6 +386,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/shipping'
     | '/workspace'
+    | '/docs/mcp'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/crm/customers'
@@ -367,7 +397,9 @@ export interface FileRouteTypes {
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/settings/agent-integrations'
     | '/settings/audit-logs'
+    | '/settings/mcp-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
     | '/settings/'
@@ -392,6 +424,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/shipping'
     | '/workspace'
+    | '/docs/mcp'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/crm/customers'
@@ -402,7 +435,9 @@ export interface FileRouteTypes {
     | '/quotations/$quotationId'
     | '/sales/opportunities'
     | '/sales/pipeline'
+    | '/settings/agent-integrations'
     | '/settings/audit-logs'
+    | '/settings/mcp-logs'
     | '/shipping/$shipmentId'
     | '/workspace/executive'
     | '/settings'
@@ -428,6 +463,7 @@ export interface FileRouteTypes {
     | '/_authenticated/reports'
     | '/_authenticated/shipping'
     | '/_authenticated/workspace'
+    | '/docs/mcp'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/crm/customers'
@@ -438,7 +474,9 @@ export interface FileRouteTypes {
     | '/_authenticated/quotations/$quotationId'
     | '/_authenticated/sales/opportunities'
     | '/_authenticated/sales/pipeline'
+    | '/_authenticated/settings/agent-integrations'
     | '/_authenticated/settings/audit-logs'
+    | '/_authenticated/settings/mcp-logs'
     | '/_authenticated/shipping/$shipmentId'
     | '/_authenticated/workspace/executive'
     | '/_authenticated/settings/'
@@ -456,6 +494,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  DocsMcpRoute: typeof DocsMcpRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -502,6 +541,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/mcp': {
+      id: '/docs/mcp'
+      path: '/docs/mcp'
+      fullPath: '/docs/mcp'
+      preLoaderRoute: typeof DocsMcpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/workspace': {
@@ -602,11 +648,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedShippingShipmentIdRouteImport
       parentRoute: typeof AuthenticatedShippingRoute
     }
+    '/_authenticated/settings/mcp-logs': {
+      id: '/_authenticated/settings/mcp-logs'
+      path: '/settings/mcp-logs'
+      fullPath: '/settings/mcp-logs'
+      preLoaderRoute: typeof AuthenticatedSettingsMcpLogsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/audit-logs': {
       id: '/_authenticated/settings/audit-logs'
       path: '/settings/audit-logs'
       fullPath: '/settings/audit-logs'
       preLoaderRoute: typeof AuthenticatedSettingsAuditLogsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/agent-integrations': {
+      id: '/_authenticated/settings/agent-integrations'
+      path: '/settings/agent-integrations'
+      fullPath: '/settings/agent-integrations'
+      preLoaderRoute: typeof AuthenticatedSettingsAgentIntegrationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sales/pipeline': {
@@ -819,7 +879,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedInventoryProductsRoute: typeof AuthenticatedInventoryProductsRouteWithChildren
   AuthenticatedSalesOpportunitiesRoute: typeof AuthenticatedSalesOpportunitiesRouteWithChildren
   AuthenticatedSalesPipelineRoute: typeof AuthenticatedSalesPipelineRoute
+  AuthenticatedSettingsAgentIntegrationsRoute: typeof AuthenticatedSettingsAgentIntegrationsRoute
   AuthenticatedSettingsAuditLogsRoute: typeof AuthenticatedSettingsAuditLogsRoute
+  AuthenticatedSettingsMcpLogsRoute: typeof AuthenticatedSettingsMcpLogsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
@@ -841,7 +903,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSalesOpportunitiesRoute:
     AuthenticatedSalesOpportunitiesRouteWithChildren,
   AuthenticatedSalesPipelineRoute: AuthenticatedSalesPipelineRoute,
+  AuthenticatedSettingsAgentIntegrationsRoute:
+    AuthenticatedSettingsAgentIntegrationsRoute,
   AuthenticatedSettingsAuditLogsRoute: AuthenticatedSettingsAuditLogsRoute,
+  AuthenticatedSettingsMcpLogsRoute: AuthenticatedSettingsMcpLogsRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
 }
 
@@ -858,6 +923,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  DocsMcpRoute: DocsMcpRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
