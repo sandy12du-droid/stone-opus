@@ -57,6 +57,13 @@
       "when": 1791768846311,
       "tag": "0007_kenya_explicit_private_table_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1791769368443,
+      "tag": "0008_kenya_invoicing_and_stock_movements",
+      "breakpoints": true
     }
   ]
 }
