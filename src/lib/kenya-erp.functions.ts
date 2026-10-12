@@ -58,3 +58,16 @@ export const recordKenyaStock = createServerFn({ method: "POST" }).middleware([r
     const r = await context.supabase.rpc("erp_record_stock_movement", { p_company: data.company_id, p_kind: data.kind, p_item: data.item, p_unit: data.unit, p_quantity: data.quantity, p_unit_cost: data.unit_cost, p_from: data.from_bin, p_to: data.to_bin, p_reference: data.reference, p_reason: data.reason, p_date: data.date });
     rpcError(r.error); return { id: r.data as string };
   });
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+export const createKenyaPurchaseOrder = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ company_id: z.string().uuid(), party_id: z.string().uuid(), date: isoDate, due: isoDate, notes: z.string().max(2000), items: z.array(invoiceItem).min(1).max(100) }))
+  .handler(async ({ data, context }) => {
+    const r = await context.supabase.rpc("erp_create_purchase_order", { p_company: data.company_id, p_party: data.party_id, p_date: data.date, p_due: data.due, p_notes: data.notes, p_items: data.items });
+    rpcError(r.error); return { id: r.data as string };
+  });
+export const receiveKenyaPurchaseOrder = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ document_id: z.string().uuid(), supplier_ref: text.min(1), date: isoDate, bin: text }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_receive_purchase_order", { p_po: data.document_id, p_supplier_ref: data.supplier_ref, p_date: data.date, p_bin: data.bin }); rpcError(r.error); return { id: r.data as string }; });
+export const creditKenyaInvoice = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ document_id: z.string().uuid(), reason: text.min(1), date: isoDate }))
+  .handler(async ({ data, context }) => { const r = await context.supabase.rpc("erp_credit_invoice", { p_invoice: data.document_id, p_reason: data.reason, p_date: data.date }); rpcError(r.error); return { id: r.data as string }; });
