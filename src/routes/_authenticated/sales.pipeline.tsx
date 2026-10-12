@@ -109,10 +109,10 @@ function PipelinePage() {
       </div>
 
       {/* AI insight strip */}
-      <div className="mb-6 flex items-start gap-3 rounded-lg border border-accent/30 bg-accent/5 p-4">
+{!location.warehouseCode && (      <div className="mb-6 flex items-start gap-3 rounded-lg border border-accent/30 bg-accent/5 p-4">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent/15 text-accent">
           <Sparkles className="h-4.5 w-4.5" />
-        </div>
+        </div>)}
         <div className="flex-1">
           <div className="text-[13px] font-semibold text-foreground">AI Pipeline Coach</div>
           <p className="mt-0.5 text-[12px] text-muted-foreground">

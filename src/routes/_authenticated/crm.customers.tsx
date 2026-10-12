@@ -140,7 +140,7 @@ function CustomersPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-accent/30 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 shadow-sm">
+{!location.warehouseCode && (        <Card className="border-accent/30 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm font-semibold">
               <Sparkles className="h-4 w-4 text-accent" /> AI insights
@@ -160,7 +160,7 @@ function CustomersPage() {
               <p className="mt-1 text-xs text-foreground/80">Al Habtoor Marble matches profile for premium Onyx line (est. +{formatMoney(180000, "USD", true)}).</p>
             </div>
           </CardContent>
-        </Card>
+        </Card>)}
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

@@ -150,7 +150,7 @@ function PricingPage() {
         ))}
       </div>
 
-      <Card className="mt-6 border-accent/30 bg-gradient-to-r from-accent/5 via-transparent to-primary/5 shadow-sm">
+{!location.warehouseCode && (      <Card className="mt-6 border-accent/30 bg-gradient-to-r from-accent/5 via-transparent to-primary/5 shadow-sm">
         <CardContent className="flex items-start gap-3 p-4">
           <div className="grid h-9 w-9 place-items-center rounded-lg bg-accent/15 text-accent">
             <Sparkles className="h-4 w-4" />
@@ -165,7 +165,7 @@ function PricingPage() {
             Apply repricing
           </Button>
         </CardContent>
-      </Card>
+      </Card>)}
 
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="border-border/60 shadow-sm lg:col-span-2">

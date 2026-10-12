@@ -169,7 +169,7 @@ const chatSample = [
 /* ------------------------------------------------------------------ */
 
 function AiCommandCenter() {
-  useLocation();
+  const { location } = useLocation();
   const [section, setSection] = useState<SectionKey>("chat");
   const [input, setInput] = useState("");
 
@@ -237,15 +237,15 @@ function AiCommandCenter() {
 
         {/* Main pane */}
         <main className="min-w-0 space-y-4">
-          {section === "chat" && <ChatPane input={input} setInput={setInput} />}
+          {section === "chat" && (location.warehouseCode ? <div className="py-8 text-sm text-muted-foreground">No conversations yet.</div> : <ChatPane input={input} setInput={setInput} />)}
           {section === "commands" && <QuickCommandsPane />}
-          {section === "tasks" && <RecentTasksPane />}
+          {section === "tasks" && (location.warehouseCode ? <div className="py-8 text-sm text-muted-foreground">No tasks yet.</div> : <RecentTasksPane />)}
           {section === "agents" && <AgentsPane />}
           {section === "console" && <AgentTestConsole />}
-          {section === "insights" && <InsightsPane />}
+          {section === "insights" && (location.warehouseCode ? <div className="py-8 text-sm text-muted-foreground">No insights yet.</div> : <InsightsPane />)}
           {section === "prompts" && <SavedPromptsPane />}
           {section === "knowledge" && <KnowledgePane />}
-          {section === "activity" && <ActivityPane />}
+          {section === "activity" && (location.warehouseCode ? <div className="py-8 text-sm text-muted-foreground">No activity yet.</div> : <ActivityPane />)}
         </main>
       </div>
     </AppShell>
