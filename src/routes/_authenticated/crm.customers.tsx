@@ -29,6 +29,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useLocation } from "@/context/LocationContext";
+import { formatMoney } from "@/lib/location";
 import { CUSTOMERS as ALL_CUSTOMERS, forLocation, TIER_STYLES, HEALTH_STYLES, currency, type Tier } from "@/lib/crm-data";
 
 
@@ -156,7 +157,7 @@ function CustomersPage() {
             </div>
             <div className="rounded-md border border-border/60 bg-card/60 p-3">
               <div className="text-xs font-semibold text-success">Upsell opportunity</div>
-              <p className="mt-1 text-xs text-foreground/80">Al Habtoor Marble matches profile for premium Onyx line (est. +$180k).</p>
+              <p className="mt-1 text-xs text-foreground/80">Al Habtoor Marble matches profile for premium Onyx line (est. +{formatMoney(180000, "USD", true)}).</p>
             </div>
           </CardContent>
         </Card>
