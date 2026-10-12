@@ -28,7 +28,8 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { CUSTOMERS, TIER_STYLES, HEALTH_STYLES, currency, type Tier } from "@/lib/crm-data";
+import { useLocation } from "@/context/LocationContext";
+import { CUSTOMERS as ALL_CUSTOMERS, forLocation, TIER_STYLES, HEALTH_STYLES, currency, type Tier } from "@/lib/crm-data";
 
 
 export const Route = createFileRoute("/_authenticated/crm/customers")({
@@ -47,6 +48,8 @@ export const Route = createFileRoute("/_authenticated/crm/customers")({
 
 
 function CustomersPage() {
+  const { location } = useLocation();
+  const CUSTOMERS = useMemo(() => forLocation(ALL_CUSTOMERS, location.warehouseCode), [location.warehouseCode]);
   const [query, setQuery] = useState("");
   const [tierFilter, setTierFilter] = useState<Tier | "All">("All");
 
@@ -57,7 +60,7 @@ function CustomersPage() {
       if (!q) return true;
       return c.name.toLowerCase().includes(q) || c.country.toLowerCase().includes(q);
     });
-  }, [query, tierFilter]);
+  }, [CUSTOMERS, query, tierFilter]);
 
   const totalLtv = CUSTOMERS.reduce((s, c) => s + c.ltv, 0);
   const totalYtd = CUSTOMERS.reduce((s, c) => s + c.ytd, 0);
