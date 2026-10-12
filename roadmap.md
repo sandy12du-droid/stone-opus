@@ -7,9 +7,10 @@
 ## Kenya accounting and inventory ERP
 - [x] Define Kenya-only architecture, schema, accounting rules and transaction flows from the uploaded brief.
 - [x] Build secured company setup, persisted customer/supplier masters and transaction-derived financial overview; verify saved records, zero balances and HQ isolation.
-- [ ] Build purchasing, sales orders, invoices and audited slab/stock workflows.
-- [ ] Implement immutable double-entry posting, payments, expenses, credit notes and financial statements.
+- [x] Kenya sales invoices (KSh), stock receiving/transfers/adjustments with audit trail, invoice + stock posting to ledger, customer payments.
+- [ ] Build purchasing, sales orders and purchase bills.
+- [ ] Implement expenses, credit notes and financial statements.
 - [ ] Implement invoice printing/sharing, configurable Kenya tax and clearly labelled eTIMS test integration.
 - [ ] Add approvals, scoped search, exports and end-to-end accounting/location-isolation tests.
 
-Posting remains unavailable to application accounts until audited stock fulfillment, credit notes, period locks and approval safeguards are implemented. Live email, WhatsApp Business and KRA eTIMS require provider configuration.
+Invoices post through the stock-aware posting function; period locks and approvals are still pending. Live email, WhatsApp Business and KRA eTIMS require provider configuration.
