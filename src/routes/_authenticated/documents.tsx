@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_authenticated/documents")({
     context.queryClient.ensureQueryData(shipmentsListOptions());
   },
   errorComponent: ({ error }) => (
-    <AppShell title="Documents"><div role="alert" className="text-sm text-destructive">{error.message}</div></AppShell>
+    <AppShell title="Documents"><div role="alert" className="text-sm text-destructive">{(error as Error).message}</div></AppShell>
   ),
   notFoundComponent: () => <AppShell title="Documents"><div>Not found.</div></AppShell>,
   component: DocumentsPage,

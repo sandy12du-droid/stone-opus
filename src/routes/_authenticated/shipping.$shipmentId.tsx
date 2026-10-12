@@ -40,7 +40,7 @@ export const Route = createFileRoute("/_authenticated/shipping/$shipmentId")({
     return s;
   },
   errorComponent: ({ error }) => (
-    <AppShell title="Shipment"><div role="alert" className="text-sm text-destructive">{error.message}</div></AppShell>
+    <AppShell title="Shipment"><div role="alert" className="text-sm text-destructive">{(error as Error).message}</div></AppShell>
   ),
   notFoundComponent: () => (
     <AppShell title="Shipment"><div className="text-sm text-muted-foreground">Shipment not found. <Link to="/shipping" className="text-primary underline">Back to shipping</Link></div></AppShell>

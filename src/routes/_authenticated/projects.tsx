@@ -37,7 +37,7 @@ export const Route = createFileRoute("/_authenticated/projects")({
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(projectsListOptions()),
   errorComponent: ({ error }) => (
-    <AppShell title="Projects"><div role="alert" className="text-sm text-destructive">{error.message}</div></AppShell>
+    <AppShell title="Projects"><div role="alert" className="text-sm text-destructive">{(error as Error).message}</div></AppShell>
   ),
   notFoundComponent: () => <AppShell title="Projects"><div>Not found.</div></AppShell>,
   component: ProjectsPage,

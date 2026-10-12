@@ -96,6 +96,7 @@ export function Sidebar() {
               items: [
                 ...g.items,
                 { label: "Audit Logs", to: "/settings/audit-logs", icon: ShieldCheck },
+                { label: "MCP Usage Logs", to: "/settings/mcp-logs", icon: ShieldCheck },
               ],
             }
           : g,
