@@ -1,4 +1,5 @@
-import { getActiveLocation } from "@/lib/location";
+import { useLocation } from "@/context/LocationContext";
+import { getActiveLocation, toUsd } from "@/lib/location";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -54,6 +55,7 @@ const MODE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 function ShippingPage() {
+  useLocation();
   const { data: rows } = useSuspenseQuery(shipmentsListOptions());
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"all" | ShipmentStatus>("all");
@@ -82,7 +84,7 @@ function ShippingPage() {
       if (!r.eta) return false;
       return new Date(r.eta) < new Date();
     }).length;
-    const freight = rows.reduce((s, r) => s + Number(r.freight_cost ?? 0), 0);
+    const freight = rows.reduce((s, r) => s + toUsd(Number(r.freight_cost ?? 0), r.currency), 0);
     return { total: rows.length, inTransit, arriving, delayed, freight };
   }, [rows]);
 
@@ -240,7 +242,7 @@ function NewShipmentDialog() {
   const qc = useQueryClient();
   const create = useServerFn(createShipment);
   const mut = useMutation({
-    mutationFn: (v: Parameters<typeof create>[0]) => create({ ...v, data: { ...v.data, location_code: getActiveLocation().warehouseCode } }),
+    mutationFn: (v: Parameters<typeof create>[0]) => create({ ...v, data: { ...v.data, location_code: getActiveLocation().warehouseCode, currency: getActiveLocation().currency } }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["shipments"] });
       setOpen(false);

@@ -1,3 +1,4 @@
+import { LocationOverview } from "@/components/layout/LocationOverview";
 import { formatMoney } from "@/lib/location";
 import { useLocation } from "@/context/LocationContext";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -111,7 +112,9 @@ const recommendations = [
 /* ------------------------------------------------------------------ */
 
 function DashboardPage() {
-  useLocation();
+  const { location } = useLocation();
+  if (location.warehouseCode) return <AppShell><LocationOverview title="Dashboard" /></AppShell>;
+
   return (
     <AppShell
       title="Dashboard"

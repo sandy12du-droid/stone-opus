@@ -1,3 +1,4 @@
+import { LocationOverview } from "@/components/layout/LocationOverview";
 import { formatMoney } from "@/lib/location";
 import { useLocation } from "@/context/LocationContext";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -150,7 +151,9 @@ const briefings = [
 /* ------------------------------------------------------------------ */
 
 function ExecutiveWorkspacePage() {
-  useLocation();
+  const { location } = useLocation();
+  if (location.warehouseCode) return <AppShell><LocationOverview title="Executive" /></AppShell>;
+
   return (
     <AppShell>
       {/* Header */}

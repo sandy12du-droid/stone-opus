@@ -1,4 +1,5 @@
-import { getActiveLocation } from "@/lib/location";
+import { useLocation } from "@/context/LocationContext";
+import { getActiveLocation, toUsd } from "@/lib/location";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { EntityLink } from "@/components/EntityLink";
 import { useMemo, useState } from "react";
@@ -54,6 +55,7 @@ const STATUS_FILTERS: { key: "all" | QuotationStatus; label: string }[] = [
 ];
 
 function QuotationsPage() {
+  useLocation();
   const { data: rows } = useSuspenseQuery(quotationsListOptions());
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"all" | QuotationStatus>("all");
@@ -76,7 +78,7 @@ function QuotationsPage() {
     const open = rows.filter((r) => r.status === "sent" || r.status === "in_review");
     const accepted = rows.filter((r) => r.status === "accepted");
     const draft = rows.filter((r) => r.status === "draft");
-    const sum = (arr: typeof rows) => arr.reduce((s, r) => s + Number(r.total ?? 0), 0);
+    const sum = (arr: typeof rows) => arr.reduce((s, r) => s + toUsd(Number(r.total ?? 0), r.currency), 0);
     return {
       openValue: sum(open),
       openCount: open.length,
@@ -249,7 +251,7 @@ function NewQuotationButton() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     customer_name: "", customer_company: "", customer_country: "",
-    project_name: "", incoterm: "FOB", currency: "USD", owner_name: "Sofia Marin",
+    project_name: "", incoterm: "FOB", currency: getActiveLocation().currency, owner_name: "Sofia Marin",
   });
   const navigate = useNavigate();
   const qc = useQueryClient();

@@ -1,3 +1,4 @@
+import { LocationOverview } from "@/components/layout/LocationOverview";
 import { formatMoney } from "@/lib/location";
 import { useLocation } from "@/context/LocationContext";
 import { useState } from "react";
@@ -141,10 +142,12 @@ const meetings = [
 /* ------------------------------------------------------------------ */
 
 function WorkspacePage() {
-  useLocation();
+  const { location } = useLocation();
   const [focus, setFocus] = useState(initialFocus);
   const toggle = (id: string) =>
     setFocus((f) => f.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
+
+  if (location.warehouseCode) return <AppShell><LocationOverview title="Workspace" /></AppShell>;
 
   return (
     <AppShell>

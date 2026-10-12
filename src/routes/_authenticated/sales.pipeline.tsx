@@ -1,3 +1,5 @@
+import { useLocation } from "@/context/LocationContext";
+import { forLocation } from "@/lib/crm-data";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { EntityLink } from "@/components/EntityLink";
 import { useMemo, useState } from "react";
@@ -25,7 +27,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import {
-  OPPORTUNITIES,
+  OPPORTUNITIES as ALL_OPPORTUNITIES,
   SALES_STAGES,
   currencyFmt,
   type SalesStage,
@@ -48,6 +50,8 @@ export const Route = createFileRoute("/_authenticated/sales/pipeline")({
 });
 
 function PipelinePage() {
+  const { location } = useLocation();
+  const OPPORTUNITIES = useMemo(() => forLocation(ALL_OPPORTUNITIES, location.warehouseCode), [location.warehouseCode]);
   const [view, setView] = useState<"kanban" | "table">("kanban");
   const [q, setQ] = useState("");
 
@@ -60,7 +64,7 @@ function PipelinePage() {
         o.customer.toLowerCase().includes(needle) ||
         o.country.toLowerCase().includes(needle),
     );
-  }, [q]);
+  }, [q, OPPORTUNITIES]);
 
   const totals = useMemo(() => {
     const open = filtered.filter((o) => o.stage !== "Completed");

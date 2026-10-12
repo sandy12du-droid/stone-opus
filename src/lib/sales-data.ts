@@ -1,4 +1,4 @@
-import { formatMoney } from "@/lib/location";
+import { formatMoney, getActiveLocation } from "@/lib/location";
 // Shared sales workflow domain model.
 // Mock data now — designed so each entity can be swapped 1:1 with a Supabase
 // table (opportunities, contacts, activities, tasks) without changing the UI.
@@ -72,6 +72,7 @@ export type FollowUp = {
 };
 
 export type Opportunity = {
+  locationCode?: string;
   id: string;
   name: string;
   customer: string;
@@ -289,7 +290,7 @@ export const OPPORTUNITIES: Opportunity[] = [
 ];
 
 export function getOpportunity(id: string): Opportunity | undefined {
-  return OPPORTUNITIES.find((o) => o.id === id);
+  return OPPORTUNITIES.find((o) => o.id === id && (!getActiveLocation().warehouseCode || o.locationCode === getActiveLocation().warehouseCode));
 }
 
 export const ACTIVITY_TIMELINE: Record<string, Activity[]> = {
