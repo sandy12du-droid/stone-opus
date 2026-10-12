@@ -64,6 +64,13 @@
       "when": 1791769368443,
       "tag": "0008_kenya_invoicing_and_stock_movements",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791769571649,
+      "tag": "0009_kenya_payment_check_definer",
+      "breakpoints": true
     }
   ]
 }
