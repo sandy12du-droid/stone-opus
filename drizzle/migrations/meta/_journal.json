@@ -71,6 +71,13 @@
       "when": 1791769571649,
       "tag": "0009_kenya_payment_check_definer",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1791769810871,
+      "tag": "0010_kenya_credit_notes_and_purchasing",
+      "breakpoints": true
     }
   ]
 }
