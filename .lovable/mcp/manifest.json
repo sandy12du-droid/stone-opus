@@ -12,7 +12,7 @@
   "mcp": {
     "server": {
       "name": "arquane-stone-os",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "Arquane Stone OS"
     },
     "tools": [
@@ -236,6 +236,361 @@
               "description": "Maximum shipments to return (1-50)."
             }
           }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_quotation",
+        "title": "Create quotation",
+        "description": "Create a new draft quotation for a customer. Requires a staff role.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "customer_name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Customer contact name."
+            },
+            "customer_company": {
+              "default": null,
+              "description": "Customer company.",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "customer_country": {
+              "default": null,
+              "description": "Customer country.",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "project_name": {
+              "default": null,
+              "description": "Project name.",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "incoterm": {
+              "default": "FOB",
+              "description": "Incoterm, e.g. FOB, CIF, EXW.",
+              "type": "string"
+            },
+            "currency": {
+              "default": "USD",
+              "description": "ISO currency code.",
+              "type": "string"
+            },
+            "notes": {
+              "default": null,
+              "description": "Internal notes.",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "customer_name"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_quotation",
+        "title": "Update quotation",
+        "description": "Update a quotation's status or commercial header fields (project, incoterm, currency, validity, notes). Requires a staff role.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "Quotation id (uuid)."
+            },
+            "status": {
+              "default": null,
+              "description": "New status.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "draft",
+                    "in_review",
+                    "sent",
+                    "accepted",
+                    "rejected",
+                    "expired",
+                    "cancelled"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "project_name": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "incoterm": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "currency": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "valid_until": {
+              "default": null,
+              "description": "Validity date, YYYY-MM-DD.",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "notes": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_project",
+        "title": "Create project",
+        "description": "Create a fabrication/supply project. Requires a staff role.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Project name."
+            },
+            "customer_name": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "customer_country": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "priority": {
+              "default": "normal",
+              "type": "string",
+              "enum": [
+                "low",
+                "normal",
+                "high",
+                "urgent"
+              ]
+            },
+            "po_number": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "currency": {
+              "default": "USD",
+              "type": "string"
+            },
+            "contract_value": {
+              "default": 0,
+              "type": "number",
+              "minimum": 0
+            },
+            "target_delivery_date": {
+              "default": null,
+              "description": "YYYY-MM-DD.",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "notes": {
+              "default": null,
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_shipment_status",
+        "title": "Update shipment status",
+        "description": "Change a shipment's transit status and record a tracking event. Requires a staff role.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "Shipment id (uuid)."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "planned",
+                "booked",
+                "in_transit",
+                "customs",
+                "arrived",
+                "delivered",
+                "delayed",
+                "cancelled"
+              ],
+              "description": "New shipment status."
+            },
+            "location": {
+              "default": null,
+              "description": "Current location or port.",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "message": {
+              "default": null,
+              "description": "Event note.",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "status"
+          ]
         },
         "outputSchema": null
       }
