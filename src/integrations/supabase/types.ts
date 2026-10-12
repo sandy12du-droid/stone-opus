@@ -117,14 +117,67 @@ export type Database = {
           },
         ]
       }
+      erp_communications: {
+        Row: {
+          channel: string
+          company_id: string
+          created_at: string
+          created_by: string
+          document_id: string
+          id: string
+          note: string | null
+          recipient: string
+          status: string
+        }
+        Insert: {
+          channel: string
+          company_id: string
+          created_at?: string
+          created_by?: string
+          document_id: string
+          id?: string
+          note?: string | null
+          recipient: string
+          status: string
+        }
+        Update: {
+          channel?: string
+          company_id?: string
+          created_at?: string
+          created_by?: string
+          document_id?: string
+          id?: string
+          note?: string | null
+          recipient?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_communications_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "erp_companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_communications_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "erp_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       erp_companies: {
         Row: {
           address: string | null
+          approval_threshold: number
           bank_details: string | null
           base_currency: string
           country: string
           created_at: string
           email: string | null
+          etims_mode: string
           id: string
           kra_pin: string | null
           mpesa_details: string | null
@@ -134,11 +187,13 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          approval_threshold?: number
           bank_details?: string | null
           base_currency?: string
           country?: string
           created_at?: string
           email?: string | null
+          etims_mode?: string
           id?: string
           kra_pin?: string | null
           mpesa_details?: string | null
@@ -148,11 +203,13 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          approval_threshold?: number
           bank_details?: string | null
           base_currency?: string
           country?: string
           created_at?: string
           email?: string | null
+          etims_mode?: string
           id?: string
           kra_pin?: string | null
           mpesa_details?: string | null
@@ -239,6 +296,11 @@ export type Database = {
       }
       erp_documents: {
         Row: {
+          approval_note: string | null
+          approval_requested_by: string | null
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
           company_id: string
           created_at: string
           created_by: string
@@ -260,6 +322,11 @@ export type Database = {
           total: number
         }
         Insert: {
+          approval_note?: string | null
+          approval_requested_by?: string | null
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           company_id: string
           created_at?: string
           created_by?: string
@@ -281,6 +348,11 @@ export type Database = {
           total?: number
         }
         Update: {
+          approval_note?: string | null
+          approval_requested_by?: string | null
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           company_id?: string
           created_at?: string
           created_by?: string
@@ -322,6 +394,57 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "erp_parties"
             referencedColumns: ["id", "company_id"]
+          },
+        ]
+      }
+      erp_etims_submissions: {
+        Row: {
+          company_id: string
+          created_at: string
+          created_by: string
+          document_id: string
+          errors: string[]
+          id: string
+          mode: string
+          payload: Json
+          status: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          created_by?: string
+          document_id: string
+          errors?: string[]
+          id?: string
+          mode?: string
+          payload: Json
+          status: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          created_by?: string
+          document_id?: string
+          errors?: string[]
+          id?: string
+          mode?: string
+          payload?: Json
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_etims_submissions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "erp_companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_etims_submissions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "erp_documents"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1594,6 +1717,10 @@ export type Database = {
         Args: { p_company: string; p_write?: boolean }
         Returns: boolean
       }
+      erp_convert_sales_order: {
+        Args: { p_date: string; p_order: string }
+        Returns: string
+      }
       erp_create_document: {
         Args: {
           p_company: string
@@ -1605,6 +1732,17 @@ export type Database = {
           p_notes: string
           p_party: string
           p_rate: number
+          p_reference: string
+        }
+        Returns: string
+      }
+      erp_create_expense: {
+        Args: {
+          p_company: string
+          p_date: string
+          p_items: Json
+          p_notes: string
+          p_party: string
           p_reference: string
         }
         Returns: string
@@ -1631,13 +1769,43 @@ export type Database = {
         }
         Returns: string
       }
+      erp_create_sales_order: {
+        Args: {
+          p_company: string
+          p_date: string
+          p_due: string
+          p_items: Json
+          p_notes: string
+          p_party: string
+        }
+        Returns: string
+      }
       erp_credit_invoice: {
         Args: { p_date: string; p_invoice: string; p_reason: string }
         Returns: string
       }
+      erp_decide_approval: {
+        Args: { p_approve: boolean; p_document: string; p_note: string }
+        Returns: undefined
+      }
+      erp_etims_test_validate: { Args: { p_document: string }; Returns: string }
       erp_initialize: { Args: { p_company: string }; Returns: undefined }
+      erp_log_communication: {
+        Args: {
+          p_channel: string
+          p_document: string
+          p_note: string
+          p_recipient: string
+          p_status: string
+        }
+        Returns: string
+      }
       erp_post_document: {
         Args: { p_document: string; p_payment_account?: string }
+        Returns: string
+      }
+      erp_post_expense: {
+        Args: { p_account: string; p_document: string }
         Returns: string
       }
       erp_post_invoice: { Args: { p_document: string }; Returns: string }
@@ -1676,6 +1844,17 @@ export type Database = {
         }
         Returns: string
       }
+      erp_refund_customer: {
+        Args: {
+          p_account: string
+          p_amount: number
+          p_credit_note: string
+          p_date: string
+          p_reference: string
+        }
+        Returns: string
+      }
+      erp_request_approval: { Args: { p_document: string }; Returns: undefined }
       erp_save_company: {
         Args: {
           p_address: string
@@ -1688,6 +1867,20 @@ export type Database = {
           p_pin: string
         }
         Returns: undefined
+      }
+      erp_save_controls: {
+        Args: { p_company: string; p_etims_mode: string; p_threshold: number }
+        Returns: undefined
+      }
+      erp_save_tax_code: {
+        Args: {
+          p_company: string
+          p_id: string
+          p_name: string
+          p_rate: number
+          p_treatment: string
+        }
+        Returns: string
       }
       erp_stock_balance: {
         Args: { p_company: string; p_item: string }
