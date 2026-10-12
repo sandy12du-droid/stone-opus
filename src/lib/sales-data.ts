@@ -313,5 +313,3 @@ export const FOLLOWUPS: Record<string, FollowUp[]> = {
 
 export function currencyFmt(n: number, ccy: string) {
   return formatMoney(n, ccy);
-}).format(n);
-}
